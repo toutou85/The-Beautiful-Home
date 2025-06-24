@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>?????? Beautiful Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .product {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .product img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+
+    .product h3 {
+      color: #333;
+      margin: 10px 0 5px;
+    }
+
+    .product p {
+      color: #28a745;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>?????? Beautiful Home</h1>
+  <div class="products" id="productList"></div>
+
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9nYnM5TLmTo_yfA2-5JoMkjbQlcPCxOM9dvFm85UsQUEtzobcQ7nP8LMs_hReB3OmFNU4AWl7tVjz/pub?output=csv";
+
+    fetch(sheetURL)
+      .then(response => response.text())
+      .then(data => {
+        const rows = data.split("\n").slice(1); // Remove header
+        const productList = document.getElementById("productList");
+
+        rows.forEach(row => {
+          const [nom, image, prix] = row.split(",");
+          if (nom && image && prix) {
+            const product = document.createElement("div");
+            product.className = "product";
+            product.innerHTML = `
+              <img src="${image.trim()}" alt="${nom.trim()}">
+              <h3>${nom.trim()}</h3>
+              <p>${prix.trim()} ??</p>
+            `;
+            productList.appendChild(product);
+          }
+        });
+      })
+      .catch(error => {
+        document.getElementById("productList").textContent = "?? ??? ?? ????? ????????";
+        console.error(error);
+      });
+  </script>
+</body>
+</html>
