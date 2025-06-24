@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>????? ??????? - Beautiful Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      color: #005f73;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+    th {
+      background-color: #0a9396;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .back-link a {
+      background: #005f73;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>????? ????? ???????</h1>
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>??????</th>
+        <th>????? ??????</th>
+        <th>??? ??????</th>
+        <th>???????</th>
+        <th>??? ???????</th>
+        <th>???????</th>
+        <th>????? ?????</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="back-link">
+    <a href="admin.html">?? ?????? ??? ???????</a>
+  </div>
+
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9nYnM5TLmTo_yfA2-5JoMkjbQlcPCxOM9dvFm85UsQUEtzobcQ7nP8LMs_hReB3OmFNU4AWl7tVjz/pub?output=csv";
+
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(data => {
+        const rows = data.split("\\n").slice(1);
+        const tbody = document.querySelector("#ordersTable tbody");
+
+        rows.forEach(row => {
+          const cells = row.split(",");
+          if (cells.length >= 7) {
+            const tr = document.createElement("tr");
+            cells.slice(0, 7).forEach(cell => {
+              const td = document.createElement("td");
+              td.textContent = cell.trim();
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          }
+        });
+      })
+      .catch(error => {
+        document.querySelector("#ordersTable tbody").innerHTML =
+          "<tr><td colspan='7'>?? ???? ????? ????????</td></tr>";
+        console.error("Error:", error);
+      });
+  </script>
+</body>
+</html>
