@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة منتج جديد - Beautiful Home</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #003366;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    main {
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      background: white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin-top: 40px;
+      border-radius: 10px;
+    }
+
+    h2 {
+      color: #003366;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    img#preview {
+      max-width: 100%;
+      margin-top: 10px;
+      display: none;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .link-btn {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .link-btn a {
+      color: #003366;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>مرحبًا بكم في Beautiful Home</header>
+  <main>
+    <h2>إضافة منتج جديد</h2>
+    <input type="text" id="name" placeholder="اسم المنتج">
+    <input type="text" id="image" placeholder="رابط صورة المنتج">
+    <input type="text" id="price" placeholder="السعر (دج)">
+    <img id="preview" alt="معاينة الصورة">
+    <button onclick="addProduct()" id="submitBtn">إضافة</button>
+    <div class="success" id="successMsg"></div>
+    <div class="link-btn">
+      <a href="produits.html">عرض قائمة المنتجات</a>
+    </div>
+  </main>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxhbbzs0owqt8SxhCD4aqmABFHIL3QxnL1q1D4ggW3lflL--5ilPrvzM9UUez1tL0L-/exec";
+
+    const imageInput = document.getElementById("image");
+    const preview = document.getElementById("preview");
+
+    imageInput.addEventListener("input", () => {
+      const url = imageInput.value.trim();
+      if (url.match(/\.(jpeg|jpg|gif|png)$/)) {
+        preview.src = url;
+        preview.style.display = "block";
+      } else {
+        preview.style.display = "none";
+      }
+    });
+
+    function addProduct() {
+      const name = document.getElementById("name").value.trim();
+      const image = document.getElementById("image").value.trim();
+      const price = document.getElementById("price").value.trim();
+      const button = document.getElementById("submitBtn");
+
+      if (!name || !image || !price) {
+        alert("يرجى ملء جميع الحقول.");
+        return;
+      }
+
+      if (!image.match(/\.(jpeg|jpg|gif|png)$/)) {
+        alert("رابط الصورة غير صالح.");
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.append("nom", name);
+      params.append("image", image);
+      params.append("prix", price);
+
+      button.disabled = true;
+      button.textContent = "جاري الإرسال...";
+
+      fetch(apiUrl, {
+        method: "POST",
+        body: params
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("successMsg").textContent = "تمت إضافة المنتج بنجاح!";
+        document.getElementById("name").value = "";
+        document.getElementById("image").value = "";
+        document.getElementById("price").value = "";
+        preview.style.display = "none";
+      })
+      .catch(error => alert("حدث خطأ: " + error))
+      .finally(() => {
+        button.disabled = false;
+        button.textContent = "إضافة";
+      });
+    }
+  </script>
+</body>
+</html>
