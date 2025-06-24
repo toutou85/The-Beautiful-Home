@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>?????? Beautiful Home</title>
+  <title>قائمة منتجات Beautiful Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -49,7 +50,7 @@
   </style>
 </head>
 <body>
-  <h1>?????? Beautiful Home</h1>
+  <h1>قائمة منتجات Beautiful Home</h1>
   <div class="products" id="productList"></div>
 
   <script>
@@ -69,14 +70,14 @@
             product.innerHTML = `
               <img src="${image.trim()}" alt="${nom.trim()}">
               <h3>${nom.trim()}</h3>
-              <p>${prix.trim()} ??</p>
+              <p>${prix.trim()} دج</p>
             `;
             productList.appendChild(product);
           }
         });
       })
       .catch(error => {
-        document.getElementById("productList").textContent = "?? ??? ?? ????? ????????";
+        document.getElementById("productList").textContent = "حدث خطأ في تحميل المنتجات.";
         console.error(error);
       });
   </script>
