@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -25,18 +25,18 @@
   <div class="form-popup" id="orderForm">
     <h3>نموذج الطلب</h3>
     <form id="form">
-      <input type="text" id="clientName" name="nom" placeholder="الاسم" required />
-      <input type="tel" id="clientPhone" name="telephone" placeholder="رقم الهاتف" required />
+      <input type="text" id="clientName" name="name" placeholder="الاسم الكامل" required />
+      <input type="tel" id="clientPhone" name="phone" placeholder="رقم الهاتف" required />
       <select id="wilaya" name="wilaya" required onchange="updateDelivery()">
         <option value="">اختر ولايتك</option>
       </select>
-      <select id="deliveryType" name="livraison" onchange="updateDelivery()">
+      <select id="deliveryType" name="deliveryType" onchange="updateDelivery()">
         <option value="home">توصيل للمنزل</option>
         <option value="office">مكتب التوصيل</option>
       </select>
-      <textarea id="clientAddress" name="adresse" placeholder="العنوان بالتفصيل" required></textarea>
+      <textarea id="clientAddress" name="address" placeholder="العنوان بالتفصيل" required></textarea>
       <p id="deliveryInfo"></p>
-      <input type="hidden" id="selectedProduct" name="produit" />
+      <input type="hidden" id="selectedProduct" name="product" />
       <button type="submit">تأكيد الطلب</button>
       <button type="button" onclick="closeForm()" style="background:#d62828;margin-top:5px">إلغاء</button>
     </form>
@@ -102,7 +102,6 @@
     };
 
 
-
     const wilayaSelect = document.getElementById("wilaya");
     for (const wilaya in deliveryData) {
       const opt = document.createElement("option");
@@ -143,7 +142,8 @@
         .catch(() => alert("❌ حدث خطأ أثناء إرسال الطلب."));
     });
 
-    const sheetURL = https://script.google.com/macros/s/AKfycby7uoxu61hpg2bOTAg2qqN3V_eqcVXJdB1i5QkaoK7a4t5mCGoqiX2IDXAwnSWqr5ZK/exec
+    // تحميل المنتجات من Google Sheets
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
     fetch(sheetURL)
       .then(res => res.text())
       .then(text => {
