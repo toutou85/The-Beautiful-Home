@@ -43,7 +43,65 @@
   </div>
 
   <script>
-    const deliveryData = { /* تم حذفه اختصارًا للطول */ };
+   const deliveryData = {
+      "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
+      "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
+      "الأغواط": { home: 750, office: 500, time: "1-3 أيام" },
+      "أم البواقي": { home: 700, office: 400, time: "1-3 أيام" },
+      "باتنة": { home: 650, office: 350, time: "1-3 أيام" },
+      "بجاية": { home: 550, office: 300, time: "1-3 أيام" },
+      "بسكرة": { home: 800, office: 500, time: "2-4 أيام" },
+      "بشار": { home: 1050, office: 700, time: "3-5 أيام" },
+      "البليدة": { home: 250, office: 0, time: "24 ساعة" },
+      "البويرة": { home: 600, office: 400, time: "1-2 أيام" },
+      "تمنراست": { home: 1200, office: 600, time: "1-3 أيام" },
+      "تبسة": { home: 700, office: 450, time: "1-3 أيام" },
+      "تلمسان": { home: 700, office: 400, time: "1-3 أيام" },
+      "تيارت": { home: 700, office: 400, time: "1-3 أيام" },
+      "تيزي وزو": { home: 550, office: 350, time: "1-2 أيام" },
+      "الجزائر": { home: 250, office: 100, time: "24 ساعة" },
+      "الجلفة": { home: 750, office: 500, time: "1-2 أيام" },
+      "جيجل": { home: 600, office: 400, time: "1-3 أيام" },
+      "سطيف": { home: 550, office: 350, time: "1-3 أيام" },
+      "سعيدة": { home: 750, office: 450, time: "1-3 أيام" },
+      "سكيكدة": { home: 650, office: 400, time: "1-3 أيام" },
+      "سيدي بلعباس": { home: 650, office: 400, time: "1-3 أيام" },
+      "عنابة": { home: 550, office: 350, time: "1-3 أيام" },
+      "قالمة": { home: 700, office: 400, time: "1-3 أيام" },
+      "قسنطينة": { home: 550, office: 350, time: "1-3 أيام" },
+      "المدية": { home: 600, office: 400, time: "1-2 أيام" },
+      "مستغانم": { home: 600, office: 400, time: "1-3 أيام" },
+      "المسيلة": { home: 650, office: 400, time: "2-4 أيام" },
+      "معسكر": { home: 650, office: 400, time: "1-3 أيام" },
+      "ورقلة": { home: 800, office: 500, time: "2-4 أيام" },
+      "وهران": { home: 550, office: 300, time: "1-3 أيام" },
+      "البيض": { home: 850, office: 550, time: "2-4 أيام" },
+      "إليزي": { home: 1300, office: 900, time: "3-7 أيام" },
+      "برج بوعريريج": { home: 600, office: 400, time: "1-3 أيام" },
+      "بومرداس": { home: 500, office: 350, time: "1-2 أيام" },
+      "الطارف": { home: 700, office: 700, time: "1-3 أيام" },
+      "تندوف": { home: 1300, office: 900, time: "3-7 أيام" },
+      "تيسمسيلت": { home: 700, office: 400, time: "1-3 أيام" },
+      "الوادي": { home: 800, office: 500, time: "2-4 أيام" },
+      "خنشلة": { home: 700, office: 450, time: "1-3 أيام" },
+      "سوق أهراس": { home: 800, office: 450, time: "1-3 أيام" },
+      "تيبازة": { home: 500, office: 350, time: "1-2 أيام" },
+      "ميلة": { home: 650, office: 400, time: "1-3 أيام" },
+      "عين الدفلى": { home: 600, office: 400, time: "1-2 أيام" },
+      "النعامة": { home: 900, office: 600, time: "3-5 أيام" },
+      "عين تموشنت": { home: 600, office: 450, time: "1-3 أيام" },
+      "غرداية": { home: 850, office: 500, time: "2-4 أيام" },
+      "غليزان": { home: 600, office: 450, time: "1-3 أيام" },
+      "تيميمون": { home: 1200, office: 1200, time: "3-7 أيام" },
+      "اولاد جلال": { home: 800, office: 800, time: "3-7 أيام" },
+      "بني عباس": { home: 1100, office: 1100, time: "3-7 أيام" },
+      "عين صالح": { home: 1200, office: 1200, time: "3-7 أيام" },
+      "تقرت": { home: 850, office: 850, time: "2-4 أيام" },
+      "المغير": { home: 900, office: 900, time: "2-4 أيام" },
+      "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
+    };
+
+
 
     const wilayaSelect = document.getElementById("wilaya");
     for (const wilaya in deliveryData) {
