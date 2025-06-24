@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>????? ??????? - Beautiful Home</title>
+  <title>طلبات الزبائن - Beautiful Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -50,24 +51,24 @@
   </style>
 </head>
 <body>
-  <h1>????? ????? ???????</h1>
+  <h1>قائمة طلبات الزبائن</h1>
   <table id="ordersTable">
     <thead>
       <tr>
-        <th>??????</th>
-        <th>????? ??????</th>
-        <th>??? ??????</th>
-        <th>???????</th>
-        <th>??? ???????</th>
-        <th>???????</th>
-        <th>????? ?????</th>
+        <th>المنتج</th>
+        <th>الاسم الكامل</th>
+        <th>رقم الهاتف</th>
+        <th>الولاية</th>
+        <th>نوع التوصيل</th>
+        <th>العنوان</th>
+        <th>تاريخ الطلب</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
   <div class="back-link">
-    <a href="admin.html">?? ?????? ??? ???????</a>
+    <a href="admin.html">🔙 الرجوع إلى الإدارة</a>
   </div>
 
   <script>
@@ -76,7 +77,7 @@
     fetch(sheetURL)
       .then(res => res.text())
       .then(data => {
-        const rows = data.split("\\n").slice(1);
+        const rows = data.split("\n").slice(1);
         const tbody = document.querySelector("#ordersTable tbody");
 
         rows.forEach(row => {
@@ -94,7 +95,7 @@
       })
       .catch(error => {
         document.querySelector("#ordersTable tbody").innerHTML =
-          "<tr><td colspan='7'>?? ???? ????? ????????</td></tr>";
+          "<tr><td colspan='7'>⚠️ تعذر تحميل البيانات</td></tr>";
         console.error("Error:", error);
       });
   </script>
