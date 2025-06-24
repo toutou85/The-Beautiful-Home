@@ -1,101 +1,30 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>طلبات الزبائن - Beautiful Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>📦 قائمة الطلبيات</title>
   <style>
     body {
-      font-family: Tahoma, sans-serif;
-      background: #f8f9fa;
-      padding: 20px;
-      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f2f2f2;
+      padding: 30px;
     }
-    h1 {
+    h2 {
+      color: #333;
       text-align: center;
-      color: #005f73;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
     }
     th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
       text-align: center;
-      font-size: 14px;
     }
     th {
-      background-color: #0a9396;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background-color: #f1f1f1;
-    }
-    .back-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-    .back-link a {
-      background: #005f73;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h1>قائمة طلبات الزبائن</h1>
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>المنتج</th>
-        <th>الاسم الكامل</th>
-        <th>رقم الهاتف</th>
-        <th>الولاية</th>
-        <th>نوع التوصيل</th>
-        <th>العنوان</th>
-        <th>تاريخ الطلب</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div class="back-link">
-    <a href="admin.html">🔙 الرجوع إلى الإدارة</a>
-  </div>
-
-  <script>
-    const sheetURL = https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pubhtml?gid=0&single=true   fetch(sheetURL)
-      .then(res => res.text())
-      .then(data => {
-        const rows = data.split("\n").slice(1);
-        const tbody = document.querySelector("#ordersTable tbody");
-
-        rows.forEach(row => {
-          const cells = row.split(",");
-          if (cells.length >= 7) {
-            const tr = document.createElement("tr");
-            cells.slice(0, 7).forEach(cell => {
-              const td = document.createElement("td");
-              td.textContent = cell.trim();
-              tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
-          }
-        });
-      })
-      .catch(error => {
-        document.querySelector("#ordersTable tbody").innerHTML =
-          "<tr><td colspan='7'>⚠️ تعذر تحميل البيانات</td></tr>";
-        console.error("Error:", error);
-      });
-  </script>
-</body>
-</html>
+      background-color: #0096
