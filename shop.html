@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -84,11 +83,41 @@
 
     document.getElementById("form").addEventListener("submit", function(e) {
       e.preventDefault();
-      alert("✅ تم استلام طلبك بنجاح! سيتم الاتصال بك قريبًا.");
-      closeForm();
-      this.reset();
+
+      const product = document.getElementById("selectedProduct").value;
+      const name = document.getElementById("clientName").value;
+      const phone = document.getElementById("clientPhone").value;
+      const wilaya = document.getElementById("wilaya").value;
+      const delivery = document.getElementById("deliveryType").value;
+      const address = document.getElementById("clientAddress").value;
+
+      const url = "https://script.google.com/macros/s/AKfycbz00-gepcpmwv3OINcCxMUiy2Te4nKXMZOM7TgMeBFk8cPQ30r8MEk3cC8GMTKxAsdS/exec";
+
+      const formData = new FormData();
+      formData.append("product", product);
+      formData.append("name", name);
+      formData.append("phone", phone);
+      formData.append("wilaya", wilaya);
+      formData.append("delivery", delivery);
+      formData.append("address", address);
+
+      fetch(url, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        alert("✅ تم استلام طلبك بنجاح! سيتم الاتصال بك قريبًا.");
+        closeForm();
+        this.reset();
+      })
+      .catch(error => {
+        alert("❌ حدث خطأ أثناء إرسال الطلب.");
+        console.error(error);
+      });
     });
 
+    // عرض المنتجات الوهمية (يمكن ربطه بجدول لاحقًا)
     const demoProducts = [
       { name: "منتج 1", image: "https://via.placeholder.com/250x180", price: "2500 دج" },
       { name: "منتج 2", image: "https://via.placeholder.com/250x180", price: "3200 دج" }
