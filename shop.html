@@ -142,7 +142,8 @@
     });
 
     // جلب المنتجات من Google Sheets
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+    const sheetURL = const url = "https://script.google.com/macros/s/AKfycbyhSXQ4CKCa0k4ImSmsBZxis7CooiJtDzrjvvPtkluZb3VvIq_WBfWd7jd8Xg367PCn/exec";
+
 
     fetch(sheetURL)
       .then(res => res.text())
