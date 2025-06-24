@@ -101,7 +101,6 @@
       "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
     };
 
-    // ملء الولايات
     const wilayaSelect = document.getElementById("wilaya");
     for (const wilaya in deliveryData) {
       const opt = document.createElement("option");
@@ -128,7 +127,6 @@
       document.getElementById("overlay").style.display = 'none';
     }
 
-    // إرسال الطلب
     document.getElementById("form").addEventListener("submit", function(e) {
       e.preventDefault();
       const formData = new FormData(this);
@@ -144,8 +142,10 @@
     });
 
     // جلب المنتجات من Google Sheets
-    const sheetURL = https://script.google.com/macros/s/AKfycbz4bIQrEOQaKa1TBnpnywHi4R1KRe6Rwr8Vqxe0aKHxkJaE9_zWJ3mXffTO9fJ8Cr8t/exec
-      .then(r => r.text())
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+
+    fetch(sheetURL)
+      .then(res => res.text())
       .then(text => {
         const rows = text.trim().split("\n").slice(1);
         const container = document.getElementById("productList");
