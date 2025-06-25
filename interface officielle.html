@@ -160,4 +160,77 @@
     <img src="logo.png" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
-    <div class
+    <div class="hand second" id="secondHand"></div>
+  </div>
+
+  <div class="digital" id="digitalClock">--:--:--</div>
+
+  <div class="dates" id="dateBlock">
+    <div>📆 Date grégorienne : ...</div>
+    <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div> <!-- ثابتة إذا لم تستخدم مكتبة تحويل -->
+  </div>
+
+  <section>
+    <h2>Que proposons-nous ?</h2>
+    <div class="categories">
+      <div class="category">🛋️ Meubles de maison</div>
+      <div class="category">🖼️ Décoration murale</div>
+      <div class="category">🕯️ Accessoires</div>
+      <div class="category">⭐ Favoris</div>
+      <div class="category">🚚 Société de livraison</div>
+    </div>
+    <button class="btn-enter" onclick="location.href='shop.html'">Entrer dans la boutique 🛒</button>
+  </section>
+
+  <div class="slider">
+    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331939.png" alt="Vitesse" />
+    <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Confiance" />
+    <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Livraison" />
+    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Confort" />
+  </div>
+
+  <footer>
+    Tous droits réservés © Beautiful Home 2025
+  </footer>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+
+      // الحصول على توقيت الجزائر
+      const options = { timeZone: 'Africa/Algiers' };
+      const timeInAlgeria = new Date(now.toLocaleString('en-US', options));
+
+      const seconds = timeInAlgeria.getSeconds();
+      const minutes = timeInAlgeria.getMinutes();
+      const hours = timeInAlgeria.getHours();
+
+      const secondDeg = seconds * 6;
+      const minuteDeg = minutes * 6 + seconds * 0.1;
+      const hourDeg = ((hours % 12) + minutes / 60) * 30;
+
+      document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
+      document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
+
+      // تنسيق الساعة الرقمية
+      const formattedTime = timeInAlgeria.toLocaleTimeString('fr-FR', options);
+      document.getElementById('digitalClock').textContent = formattedTime;
+
+      // تنسيق التاريخ الغريغوري
+      const formattedDate = timeInAlgeria.toLocaleDateString('fr-FR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'Africa/Algiers'
+      });
+
+      document.getElementById('dateBlock').children[0].textContent = `📆 Date grégorienne : ${formattedDate}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
