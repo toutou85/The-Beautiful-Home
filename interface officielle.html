@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bienvenue chez Beautiful Home</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beautiful Home</title>
   <style>
     body {
       margin: 0;
@@ -36,8 +36,7 @@
       bottom: 50%;
       left: 50%;
       transform-origin: bottom;
-      transform: rotate(90deg);
-      z-index: 1;
+      z-index: 2;
     }
 
     .hand.hour {
@@ -66,12 +65,11 @@
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
-      z-index: 0;
+      z-index: 1;
     }
 
     .digital {
       font-size: 1.5rem;
-      color: #003366;
       margin-top: 10px;
     }
 
@@ -80,84 +78,17 @@
       font-size: 1rem;
       color: #555;
     }
-
-    section {
-      padding: 2rem;
-    }
-
-    .categories {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .category {
-      background: #ffffff;
-      border: 2px solid #ccc;
-      padding: 1rem;
-      width: 180px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer;
-    }
-
-    .category:hover {
-      background: #e0f7fa;
-    }
-
-    .slider {
-      margin: 2rem auto;
-      overflow: hidden;
-      white-space: nowrap;
-      width: 90%;
-    }
-
-    .slider img {
-      height: 150px;
-      margin: 0 10px;
-      animation: slide 20s linear infinite;
-    }
-
-    @keyframes slide {
-      from { transform: translateX(100%); }
-      to { transform: translateX(-100%); }
-    }
-
-    footer {
-      margin-top: 2rem;
-      padding: 1rem;
-      background: #005f73;
-      color: white;
-    }
-
-    .btn-enter {
-      margin-top: 2rem;
-      padding: 1rem 2rem;
-      font-size: 1.2rem;
-      background-color: #0a9396;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-enter:hover {
-      background-color: #007f7f;
-    }
   </style>
 </head>
-
 <body>
 
   <header>
     🌟 Bienvenue dans la boutique Beautiful Home 🌟
   </header>
 
-  <!-- Horloge avec logo -->
   <div class="clock-circle">
-    <img src="logo.png" class="logo-center" alt="Logo" />
+    <!-- يمكنك استبدال هذا الرابط بصورة شعارك -->
+    <img src="https://via.placeholder.com/220/005f73/ffffff?text=Logo" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
     <div class="hand second" id="secondHand"></div>
@@ -166,37 +97,12 @@
   <div class="digital" id="digitalClock">--:--:--</div>
 
   <div class="dates">
-    <!-- جملة التاريخ الغريغوري محذوفة -->
     <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div>
   </div>
-
-  <section>
-    <h2>Que proposons-nous ?</h2>
-    <div class="categories">
-      <div class="category">🛋️ Meubles de maison</div>
-      <div class="category">🖼️ Décoration murale</div>
-      <div class="category">🕯️ Accessoires</div>
-      <div class="category">⭐ Favoris</div>
-      <div class="category">🚚 Société de livraison</div>
-    </div>
-    <button class="btn-enter" onclick="location.href='shop.html'">Entrer dans la boutique 🛒</button>
-  </section>
-
-  <div class="slider">
-    <img src="https://cdn-icons-png.flaticon.com/512/2331/2331939.png" alt="Vitesse" />
-    <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Confiance" />
-    <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Livraison" />
-    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Confort" />
-  </div>
-
-  <footer>
-    Tous droits réservés © Beautiful Home 2025
-  </footer>
 
   <script>
     function updateClock() {
       const now = new Date();
-
       const seconds = now.getSeconds();
       const minutes = now.getMinutes();
       const hours = now.getHours();
@@ -216,5 +122,6 @@
     setInterval(updateClock, 1000);
     updateClock();
   </script>
+
 </body>
 </html>
