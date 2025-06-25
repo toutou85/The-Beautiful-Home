@@ -73,7 +73,7 @@
       margin-top: 10px;
     }
 
-    .dates {
+    .date-only {
       margin-top: 10px;
       font-size: 1rem;
       color: #555;
@@ -87,7 +87,7 @@
   </header>
 
   <div class="clock-circle">
-    <!-- يمكنك استبدال هذا الرابط بصورة شعارك -->
+    <!-- يمكنك استبدال الرابط التالي برابط صورة شعارك أو بـ logo.png -->
     <img src="https://via.placeholder.com/220/005f73/ffffff?text=Logo" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
@@ -96,9 +96,7 @@
 
   <div class="digital" id="digitalClock">--:--:--</div>
 
-  <div class="dates">
-    <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div>
-  </div>
+  <div class="date-only" id="todayDate">--</div>
 
   <script>
     function updateClock() {
@@ -117,6 +115,10 @@
 
       const formattedTime = now.toLocaleTimeString('fr-FR');
       document.getElementById('digitalClock').textContent = formattedTime;
+
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = now.toLocaleDateString('fr-FR', options);
+      document.getElementById('todayDate').textContent = formattedDate;
     }
 
     setInterval(updateClock, 1000);
