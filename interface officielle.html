@@ -1,9 +1,8 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bienvenue chez Beautiful Home</title>
   <style>
     body {
@@ -21,13 +20,62 @@
       font-size: 2rem;
     }
 
-    .clock {
-      font-size: 1.3rem;
-      margin: 1rem auto;
-      background: #e0f7fa;
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
+    .clock-circle {
+      width: 220px;
+      height: 220px;
+      border: 8px solid #005f73;
+      border-radius: 50%;
+      position: relative;
+      margin: 40px auto 20px auto;
+      background: white;
+    }
+
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom;
+      transform: rotate(90deg);
+    }
+
+    .hand.hour {
+      height: 50px;
+      width: 6px;
+      background: #0a9396;
+    }
+
+    .hand.minute {
+      height: 70px;
+      width: 4px;
+      background: #007f7f;
+    }
+
+    .hand.second {
+      height: 90px;
+      width: 2px;
+      background: red;
+    }
+
+    .logo-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .digital {
+      font-size: 1.5rem;
+      color: #003366;
+      margin-top: 10px;
+    }
+
+    .dates {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #555;
     }
 
     section {
@@ -97,13 +145,25 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
     🌟 Bienvenue dans la boutique Beautiful Home 🌟
   </header>
 
-  <div class="clock / dat" id="clock / dat"> : ...</div>
+  <!-- Horloge avec logo -->
+  <div class="clock-circle">
+    <img src="logo.png" class="logo-center" alt="Logo" />
+    <div class="hand hour" id="hourHand"></div>
+    <div class="hand minute" id="minuteHand"></div>
+    <div class="hand second" id="secondHand"></div>
+  </div>
+  <div class="digital" id="digitalClock">--:--:--</div>
+  <div class="dates">
+    <div>📆 Date grégorienne : Lundi 23 Juin 2025</div>
+    <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div>
+  </div>
 
   <section>
     <h2>Que proposons-nous ?</h2>
@@ -114,7 +174,6 @@
       <div class="category">⭐ Favoris</div>
       <div class="category">🚚 Société de livraison</div>
     </div>
-
     <button class="btn-enter" onclick="location.href='shop.html'">Entrer dans la boutique 🛒</button>
   </section>
 
@@ -132,13 +191,24 @@
   <script>
     function updateClock() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      document.getElementById('clock').textContent = 'Heure actuelle : ' + timeStr;
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours();
+
+      const secondDeg = seconds * 6;
+      const minuteDeg = minutes * 6 + seconds * 0.1;
+      const hourDeg = ((hours % 12) + minutes / 60) * 30;
+
+      document.getElementById('secondHand').style.transform = `rotate(${secondDeg}deg)`;
+      document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
+
+      const formattedTime = now.toLocaleTimeString('fr-FR');
+      document.getElementById('digitalClock').textContent = formattedTime;
     }
 
     setInterval(updateClock, 1000);
     updateClock();
   </script>
-
 </body>
 </html>
