@@ -28,6 +28,7 @@
       position: relative;
       margin: 40px auto 20px auto;
       background: white;
+      overflow: hidden;
     }
 
     .hand {
@@ -36,6 +37,7 @@
       left: 50%;
       transform-origin: bottom;
       transform: rotate(90deg);
+      z-index: 1;
     }
 
     .hand.hour {
@@ -58,12 +60,13 @@
 
     .logo-center {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 60px;
-      height: 60px;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       border-radius: 50%;
+      z-index: 0;
     }
 
     .digital {
@@ -159,7 +162,9 @@
     <div class="hand minute" id="minuteHand"></div>
     <div class="hand second" id="secondHand"></div>
   </div>
+
   <div class="digital" id="digitalClock">--:--:--</div>
+
   <div class="dates">
     <div>📆 Date grégorienne : Lundi 23 Juin 2025</div>
     <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div>
@@ -191,9 +196,15 @@
   <script>
     function updateClock() {
       const now = new Date();
-      const seconds = now.getSeconds();
-      const minutes = now.getMinutes();
-      const hours = now.getHours();
+
+      // Temps local algérien
+      const timeInAlgeria = new Date(
+        now.toLocaleString("en-US", { timeZone: "Africa/Algiers" })
+      );
+
+      const seconds = timeInAlgeria.getSeconds();
+      const minutes = timeInAlgeria.getMinutes();
+      const hours = timeInAlgeria.getHours();
 
       const secondDeg = seconds * 6;
       const minuteDeg = minutes * 6 + seconds * 0.1;
@@ -203,7 +214,7 @@
       document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
       document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
 
-      const formattedTime = now.toLocaleTimeString('fr-FR');
+      const formattedTime = timeInAlgeria.toLocaleTimeString('fr-FR', { timeZone: 'Africa/Algiers' });
       document.getElementById('digitalClock').textContent = formattedTime;
     }
 
