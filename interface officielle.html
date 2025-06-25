@@ -69,14 +69,30 @@
     }
 
     .digital {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-top: 10px;
+      color: #003366;
     }
 
     .date-only {
-      margin-top: 10px;
-      font-size: 1rem;
-      color: #555;
+      margin-top: 5px;
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    .btn-enter {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background-color: #0a9396;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn-enter:hover {
+      background-color: #007f7f;
     }
   </style>
 </head>
@@ -87,7 +103,7 @@
   </header>
 
   <div class="clock-circle">
-    <!-- يمكنك استبدال الرابط التالي برابط صورة شعارك أو بـ logo.png -->
+    <!-- استبدل هذا الرابط بـ logo.png إذا كان عندك شعار محلي -->
     <img src="https://via.placeholder.com/220/005f73/ffffff?text=Logo" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
@@ -95,8 +111,9 @@
   </div>
 
   <div class="digital" id="digitalClock">--:--:--</div>
-
   <div class="date-only" id="todayDate">--</div>
+
+  <button class="btn-enter" onclick="location.href='shop.html'">Entrer dans la boutique 🛒</button>
 
   <script>
     function updateClock() {
