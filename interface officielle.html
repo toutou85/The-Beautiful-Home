@@ -165,9 +165,9 @@
 
   <div class="digital" id="digitalClock">--:--:--</div>
 
-  <div class="dates" id="dateBlock">
-    <div>📆 Date grégorienne : ...</div>
-    <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div> <!-- ثابتة إذا لم تستخدم مكتبة تحويل -->
+  <div class="dates">
+    <div>📆 Date grégorienne : Lundi 23 Juin 2025</div>
+    <div>🕌 Date hégirienne : 27 Dhou al-Hijja 1446 H</div>
   </div>
 
   <section>
@@ -197,9 +197,10 @@
     function updateClock() {
       const now = new Date();
 
-      // الحصول على توقيت الجزائر
-      const options = { timeZone: 'Africa/Algiers' };
-      const timeInAlgeria = new Date(now.toLocaleString('en-US', options));
+      // Temps local algérien
+      const timeInAlgeria = new Date(
+        now.toLocaleString("en-US", { timeZone: "Africa/Algiers" })
+      );
 
       const seconds = timeInAlgeria.getSeconds();
       const minutes = timeInAlgeria.getMinutes();
@@ -213,20 +214,8 @@
       document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
       document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
 
-      // تنسيق الساعة الرقمية
-      const formattedTime = timeInAlgeria.toLocaleTimeString('fr-FR', options);
+      const formattedTime = timeInAlgeria.toLocaleTimeString('fr-FR', { timeZone: 'Africa/Algiers' });
       document.getElementById('digitalClock').textContent = formattedTime;
-
-      // تنسيق التاريخ الغريغوري
-      const formattedDate = timeInAlgeria.toLocaleDateString('fr-FR', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        timeZone: 'Africa/Algiers'
-      });
-
-      document.getElementById('dateBlock').children[0].textContent = `📆 Date grégorienne : ${formattedDate}`;
     }
 
     setInterval(updateClock, 1000);
