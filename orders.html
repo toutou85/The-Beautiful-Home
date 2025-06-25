@@ -3,26 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>طلبات الزبائن</title>
+  <title>طلبيات الزبائن</title>
   <style>
-    body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 2rem; }
-    h2 { text-align: center; color: #004d61; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; }
-    th, td { border: 1px solid #ddd; padding: 0.75rem; text-align: center; }
-    th { background-color: #008080; color: white; }
-    .pagination { margin-top: 1rem; text-align: center; }
-    .pagination button { padding: 0.5rem 1rem; margin: 0 0.25rem; background: #008080; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    .pagination button:disabled { background: #ccc; cursor: not-allowed; }
+    body { font-family: Tahoma, sans-serif; background: #f4f4f4; padding: 2rem; }
+    h1 { text-align: center; color: #005f73; margin-bottom: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; font-size: 0.9rem; }
+    th { background-color: #0a9396; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    .controls { text-align: center; margin: 20px 0; }
+    button { margin: 5px; padding: 10px 15px; background-color: #005f73; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background-color: #0a9396; }
+    .pagination { text-align: center; margin-top: 1rem; }
+    .pagination button { margin: 3px; background: #ccc; color: #000; }
+    .pagination button.active { background: #005f73; color: white; }
   </style>
 </head>
 <body>
-<h1>📝 طلبيات الزبائن</h1>
+
+  <h1>📝 طلبيات الزبائن</h1>
 
   <div class="controls">
     <button onclick="print()">🖨️ طباعة</button>
     <button onclick="downloadCSV()">⬇️ تحميل كـ Excel</button>
   </div>
-  <h2>طلبات الزبائن</h2>
   <table>
     <thead>
       <tr>
