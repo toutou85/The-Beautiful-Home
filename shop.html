@@ -1,13 +1,151 @@
 ﻿<<!DOCTYPE html>
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>المتجر - Beautiful Home</title>
+  <style>
+    body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    header {
+      background-color: #005f73;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.6rem;
+      position: relative;
+    }
+    .logo {
+      position: absolute;
+      left: 1rem;
+      top: 0.5rem;
+      height: 40px;
+    }
+    .search-bar {
+      margin: 1rem auto;
+      max-width: 400px;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .search-bar input {
+      width: 70%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .search-bar button {
+      padding: 0.5rem 1rem;
+      background-color: #0a9396;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn-return {
+      margin: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #fbbf24;
+      color: #003366;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .product {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .product button {
+      margin-top: 10px;
+      padding: 0.5rem 1rem;
+      background: #0a9396;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-popup, .overlay {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+    }
+    .form-popup {
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 1rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+    }
+    .form-popup input, .form-popup select, .form-popup textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form-popup button { background: #005f73; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; }
+    .overlay {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+    }
+    .pagination {
+      text-align: center;
+      margin: 1rem;
+    }
+    .pagination button {
+      margin: 0 5px;
+      padding: 0.5rem 1rem;
+      border: none;
+      background: #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .pagination button.active {
+      background: #005f73;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" class="logo" alt="Logo">
+    منتجات Beautiful Home
+  </header>  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+    <button onclick="filterProducts()">بحث</button>
+  </div><button class="btn-return" onclick="location.href='interface.html'">🔙 الرجوع إلى الواجهة الرسمية</button>
+
+  <section class="products" id="productList">جاري التحميل...</section>
+  <div class="pagination" id="pagination"></div>  <!-- نموذج الطلب & overlay يبقيان كما هما (نفس الكود الذي كتبته سابقًا) -->  <!-- سيتم إكمال سكريبت الجافاسكريبت لاحقًا لتفعيل البحث والتصفية والتنقل بين الصف
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>المتجر - Beautiful Home</title>
   <style>
-
-<button class="btn-return" onclick="location.href='interface.html'">🔙 الرجوع إلى الواجهة الرسمية</button>
-
     body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
     header { background-color: #005f73; color: white; padding: 1rem; text-align: center; font-size: 1.6rem; }
     .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 1rem; }
