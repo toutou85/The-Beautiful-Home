@@ -359,7 +359,7 @@
         document.getElementById("productList").textContent = "⚠️ لم يتم تحميل المنتجات.";
  </body>
  <footer>
-<div class="social-icons"> })
+    <div class="social-icons">
       <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><i class="fab fa-facebook"></i></a>
       <a href="https://www.instagram.com/tgtmhb99?igsh=bm9yMDcwdHYwdmdy" target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><i class="fab fa-tiktok"></i></a>
@@ -367,7 +367,37 @@
     <p>جميع الحقوق محفوظة &copy; 2025</p>
   </footer>
 
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(text => {
+        const rows = text.trim().split("\n").slice(1);
+        const container = document.getElementById("productList");
+        container.innerHTML = "";
+        rows.forEach(row => {
+          const [name, image, price] = row.split(",");
+          if (name && image && price) {
+            const div = document.createElement("div");
+            div.className = "product";
+            div.innerHTML = `
+              <img src="${image.trim()}" alt="${name.trim()}">
+              <h3>${name.trim()}</h3>
+              <p>${price.trim()} دج</p>
+              <button onclick="openForm('${name.trim()}')">اطلب الآن</button>
+            `;
+            container.appendChild(div);
+          }
+        });
+      })
+      .catch(err => {
+        console.error("خطأ في تحميل المنتجات:", err);
+        document.getElementById("productList").textContent = "⚠️ لم يتم تحميل المنتجات.";
+      });
+  </script>
+
   <script src="https://cdn.jsdelivr.net/gh/TahaBerguiga/wilaya-data@main/wilaya.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/TahaBerguiga/order-form-script@main/form.js"></script>
 </body>
 </html>
+
