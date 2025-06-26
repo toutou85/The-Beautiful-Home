@@ -348,32 +348,7 @@
     });
   </script>
 
-   const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(text => {
-        const rows = text.trim().split("\n").slice(1);
-        const container = document.getElementById("productList");
-        container.innerHTML = "";
-        rows.forEach(row => {
-          const [name, image, price] = row.split(",");
-          if (name && image && price) {
-            const div = document.createElement("div");
-            div.className = "product";
-            div.innerHTML = 
-              <img src="${image.trim()}" alt="${name.trim()}">
-              <h3>${name.trim()}</h3>
-              <p>${price.trim()} دج</p>
-              <button onclick="openForm('${name.trim()}')">اطلب الآن</button>
-            ;
-            container.appendChild(div);
-          }
-        });
-      })
-      .catch(err => {
-        console.error("خطأ في تحميل المنتجات:", err);
-        document.getElementById("productList").textContent = "⚠️ لم يتم تحميل المنتجات.";
-      });
+ 
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
     fetch(sheetURL)
