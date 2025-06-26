@@ -201,15 +201,19 @@
     <a href="#">من نحن</a>
     <a href="#">اتصل بنا</a>
   </div>
+
   <header>
     <img src="logo.png" class="logo" alt="Logo">
     منتجات Beautiful Home
   </header>
+
   <div class="search-bar">
     <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
     <button onclick="filterProducts()">بحث</button>
   </div>
+
   <button class="btn-return" onclick="location.href='interface officielle'">🔙 الرجوع إلى الواجهة الرسمية</button>
+  
   <section class="products" id="productList">جاري التحميل...</section>
   <div class="pagination" id="pagination"></div>
 
@@ -233,8 +237,19 @@
       <button type="button" onclick="closeForm()" style="background:#d62828;margin-top:5px">إلغاء</button>
     </form>
   </div>
+
+  <footer>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/tgtmhb99?igsh=bm9yMDcwdHYwdmdy" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <p>جميع الحقوق محفوظة &copy; 2025</p>
+  </footer>
+
+  <!-- سكربت تحميل الولايات وبيانات التوصيل -->
   <script>
-   const deliveryData = {
+    const deliveryData = {
       "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
       "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
       "الأغواط": { home: 750, office: 500, time: "1-3 أيام" },
