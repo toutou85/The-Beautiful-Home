@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -103,7 +103,7 @@
   </header>
 
   <div class="clock-circle">
-    <!-- ✳️ استبدل الرابط أدناه بـ logo.png إذا كانت الصورة محفوظة عندك -->
+    <!-- ✳️ استبدل هذا الرابط بصورة الشعار الحقيقي -->
     <img src="https://via.placeholder.com/220/005f73/ffffff?text=Logo" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
@@ -113,8 +113,8 @@
   <div class="digital" id="digitalClock">--:--:--</div>
 
   <div class="dates">
-    <div id="gregorianDate">📅 Date grégorienne : --</div>
-    <div id="hijriDate">🕌 Date hégirienne : --</div>
+    <div id="gregorianDate">📅 --</div>
+    <div id="hijriDate">🕌 --</div>
   </div>
 
   <button class="btn-enter" onclick="location.href='shop.html'">Entrer dans la boutique 🛒</button>
@@ -137,22 +137,4 @@
       const formattedTime = now.toLocaleTimeString('fr-FR');
       document.getElementById('digitalClock').textContent = formattedTime;
 
-      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formattedDate = now.toLocaleDateString('fr-FR', dateOptions);
-      document.getElementById('gregorianDate').textContent = "📅 Date grégorienne : " + formattedDate;
-
-      try {
-        const hijriFormatter = new Intl.DateTimeFormat('fr-TN-u-ca-islamic', dateOptions);
-        const hijriDate = hijriFormatter.format(now);
-        document.getElementById('hijriDate').textContent = "🕌 Date hégirienne : " + hijriDate;
-      } catch (e) {
-        document.getElementById('hijriDate').textContent = "🕌 Date hégirienne : non prise en charge";
-      }
-    }
-
-    setInterval(updateClock, 1000);
-    updateClock();
-  </script>
-
-</body>
-</html>
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
