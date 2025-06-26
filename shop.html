@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+صحح الكود <<!DOCTYPE html>
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>المتجر - Beautiful Home</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
     header {
@@ -20,49 +19,6 @@
       left: 1rem;
       top: 0.5rem;
       height: 40px;
-    }
-    .menu-button {
-      font-size: 30px;
-      cursor: pointer;
-      background: #333;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 1001;
-    }
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background-color: #111;
-      overflow-x: hidden;
-      transition: 0.5s;
-      padding-top: 60px;
-      z-index: 1000;
-    }
-    .sidebar a {
-      padding: 10px 25px;
-      text-decoration: none;
-      font-size: 20px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-    .sidebar a:hover {
-      background-color: #575757;
-    }
-    .closebtn {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      font-size: 30px;
-      cursor: pointer;
-      color: white;
     }
     .search-bar {
       margin: 1rem auto;
@@ -147,14 +103,7 @@
       border: 1px solid #ccc;
       border-radius: 5px;
     }
-    .form-popup button {
-      background: #005f73;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+    .form-popup button { background: #005f73; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; }
     .overlay {
       top: 0;
       left: 0;
@@ -178,40 +127,129 @@
       background: #005f73;
       color: white;
     }
-    footer {
-      background: #003344;
-      padding: 1rem;
-      text-align: center;
-      color: white;
+  </style>
+  <!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>قائمة جانبية</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      direction: rtl;
     }
-    .social-icons a {
+
+    /* زر الميني */
+    .menu-button {
+      font-size: 30px;
+      cursor: pointer;
+      background: #333;
       color: white;
-      margin: 0 10px;
-      font-size: 24px;
+      border: none;
+      padding: 10px 15px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1001;
+    }
+
+    /* القائمة الجانبية */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+
+    .sidebar a {
+      padding: 10px 25px;
       text-decoration: none;
+      font-size: 20px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: #575757;
+    }
+
+    .closebtn {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <button class="menu-button" onclick="openNav()">☰</button>
-  <div id="mySidebar" class="sidebar">
-    <span class="closebtn" onclick="closeNav()">×</span>
-    <a href="#">الرئيسية</a>
-    <a href="#">المنتجات</a>
-    <a href="#">من نحن</a>
-    <a href="#">اتصل بنا</a>
-  </div>
+
+<!-- زر القائمة -->
+<button class="menu-button" onclick="openNav()">☰</button>
+
+<!-- القائمة الجانبية -->
+<div id="mySidebar" class="sidebar">
+  <span class="closebtn" onclick="closeNav()">×</span>
+  <a href="#">الرئيسية</a>
+  <a href="#">المنتجات</a>
+  <a href="#">من نحن</a>
+  <a href="#">اتصل بنا</a>
+</div>
+
+<!-- سكريبت التحكم -->
+<script>
+  function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+  }
+
+  function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+  }
+</script>
+
+</body>
+</html>
+</head>
+<body>
   <header>
     <img src="logo.png" class="logo" alt="Logo">
     منتجات Beautiful Home
-  </header>
-  <div class="search-bar">
+  </header>  <div class="search-bar">
     <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
     <button onclick="filterProducts()">بحث</button>
-  </div>
-  <button class="btn-return" onclick="location.href='interface officielle'">🔙 الرجوع إلى الواجهة الرسمية</button>
+  </div><button class="btn-return" onclick="location.href='interface officielle'">🔙 الرجوع إلى الواجهة الرسمية</button>
   <section class="products" id="productList">جاري التحميل...</section>
-  <div class="pagination" id="pagination"></div>
+  <div class="pagination" id="pagination"></div> 
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <style>
+    body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    header { background-color: #005f73; color: white; padding: 1rem; text-align: center; font-size: 1.6rem; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; padding: 1rem; }
+    .product { background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
+    .product img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; }
+    .product button { margin-top: 10px; padding: 0.5rem 1rem; background: #0a9396; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .form-popup { display: none; position: fixed; top: 5%; left: 50%; transform: translateX(-50%); background: white; padding: 1rem; box-shadow: 0 0 20px rgba(0,0,0,0.3); border-radius: 10px; z-index: 1000; width: 90%; max-width: 500px; }
+    .form-popup input, .form-popup select, .form-popup textarea { width: 100%; padding: 0.5rem; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .form-popup button { background: #005f73; color: white; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; }
+    .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; }
+  </style>
+</head>
+<body>
+  <header>منتجات Beautiful Home</header>
+  <section class="products" id="productList">جاري التحميل...</section>
 
   <div class="overlay" id="overlay" onclick="closeForm()"></div>
   <div class="form-popup" id="orderForm">
@@ -233,7 +271,8 @@
       <button type="button" onclick="closeForm()" style="background:#d62828;margin-top:5px">إلغاء</button>
     </form>
   </div>
- <script>
+
+  <script>
    const deliveryData = {
       "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
       "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
@@ -291,7 +330,9 @@
       "المغير": { home: 900, office: 900, time: "2-4 أيام" },
       "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
     };
-      const wilayaSelect = document.getElementById("wilaya");
+
+
+    const wilayaSelect = document.getElementById("wilaya");
     for (const wilaya in deliveryData) {
       const opt = document.createElement("option");
       opt.value = wilaya;
@@ -357,18 +398,7 @@
       .catch(err => {
         console.error("خطأ في تحميل المنتجات:", err);
         document.getElementById("productList").textContent = "⚠️ لم يتم تحميل المنتجات.";
-         <footer>
-    <div class="social-icons"> })
-     <footer>
-    <div class="social-icons">
-      <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.instagram.com/tgtmhb99?igsh=bm9yMDcwdHYwdmdy" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><i class="fab fa-tiktok"></i></a>
-    </div>
-    <p>جميع الحقوق محفوظة &copy; 2025</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/gh/TahaBerguiga/wilaya-data@main/wilaya.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/TahaBerguiga/order-form-script@main/form.js"></script>
+      });
+  </script>
 </body>
 </html>
