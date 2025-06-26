@@ -1,9 +1,10 @@
+<
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Beautiful Home</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bienvenue chez Beautiful Home</title>
   <style>
     body {
       margin: 0;
@@ -36,7 +37,8 @@
       bottom: 50%;
       left: 50%;
       transform-origin: bottom;
-      z-index: 2;
+      transform: rotate(90deg);
+      z-index: 1;
     }
 
     .hand.hour {
@@ -65,19 +67,70 @@
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
-      z-index: 1;
+      z-index: 0;
     }
 
     .digital {
-      font-size: 1.8rem;
-      margin-top: 10px;
+      font-size: 1.5rem;
       color: #003366;
+      margin-top: 10px;
     }
 
     .dates {
       margin-top: 10px;
       font-size: 1rem;
       color: #555;
+    }
+
+    section {
+      padding: 2rem;
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .category {
+      background: #ffffff;
+      border: 2px solid #ccc;
+      padding: 1rem;
+      width: 180px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    .category:hover {
+      background: #e0f7fa;
+    }
+
+    .slider {
+      margin: 2rem auto;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 90%;
+    }
+
+    .slider img {
+      height: 150px;
+      margin: 0 10px;
+      animation: slide 20s linear infinite;
+    }
+
+    @keyframes slide {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
+    }
+
+    footer {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #005f73;
+      color: white;
     }
 
     .btn-enter {
@@ -96,21 +149,20 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
     🌟 Bienvenue dans la boutique Beautiful Home 🌟
   </header>
 
+  <!-- Horloge avec logo -->
   <div class="clock-circle">
-    <!-- ✳️ استبدل هذا الرابط بصورة الشعار الحقيقي -->
     <img src="logo.png" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
     <div class="hand second" id="secondHand"></div>
-  </div>
-
-  <div class="digital" id="digitalClock">--:--:--</div>
+  </divid="digitalClock">--:--:--</div>
 
   <div class="dates">
     <div id="gregorianDate">📅 --</div>
