@@ -74,10 +74,10 @@
       color: #003366;
     }
 
-    .date-only {
-      margin-top: 5px;
-      font-size: 1.1rem;
-      color: #666;
+    .dates {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #555;
     }
 
     .btn-enter {
@@ -103,7 +103,7 @@
   </header>
 
   <div class="clock-circle">
-    <!-- استبدل هذا الرابط بـ logo.png إذا كان عندك شعار محلي -->
+    <!-- ✳️ استبدل الرابط أدناه بـ logo.png إذا كانت الصورة محفوظة عندك -->
     <img src="https://via.placeholder.com/220/005f73/ffffff?text=Logo" class="logo-center" alt="Logo" />
     <div class="hand hour" id="hourHand"></div>
     <div class="hand minute" id="minuteHand"></div>
@@ -111,7 +111,11 @@
   </div>
 
   <div class="digital" id="digitalClock">--:--:--</div>
-  <div class="date-only" id="todayDate">--</div>
+
+  <div class="dates">
+    <div id="gregorianDate">📅 Date grégorienne : --</div>
+    <div id="hijriDate">🕌 Date hégirienne : --</div>
+  </div>
 
   <button class="btn-enter" onclick="location.href='shop.html'">Entrer dans la boutique 🛒</button>
 
@@ -133,9 +137,17 @@
       const formattedTime = now.toLocaleTimeString('fr-FR');
       document.getElementById('digitalClock').textContent = formattedTime;
 
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formattedDate = now.toLocaleDateString('fr-FR', options);
-      document.getElementById('todayDate').textContent = formattedDate;
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = now.toLocaleDateString('fr-FR', dateOptions);
+      document.getElementById('gregorianDate').textContent = "📅 Date grégorienne : " + formattedDate;
+
+      try {
+        const hijriFormatter = new Intl.DateTimeFormat('fr-TN-u-ca-islamic', dateOptions);
+        const hijriDate = hijriFormatter.format(now);
+        document.getElementById('hijriDate').textContent = "🕌 Date hégirienne : " + hijriDate;
+      } catch (e) {
+        document.getElementById('hijriDate').textContent = "🕌 Date hégirienne : non prise en charge";
+      }
     }
 
     setInterval(updateClock, 1000);
