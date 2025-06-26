@@ -134,7 +134,27 @@
       document.getElementById('minuteHand').style.transform = `rotate(${minuteDeg}deg)`;
       document.getElementById('hourHand').style.transform = `rotate(${hourDeg}deg)`;
 
-      const formattedTime = now.toLocaleTimeString('fr-FR');
+      const formattedTime = now.toLocaleTimeString('fr-FR'); // HH:mm:ss
       document.getElementById('digitalClock').textContent = formattedTime;
 
-      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      // Date Grégorienne en français
+      const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const formattedDate = now.toLocaleDateString('fr-FR', dateOptions);
+      document.getElementById('gregorianDate').textContent = "📅 " + formattedDate;
+
+      // Date Hijri en arabe
+      try {
+        const hijriFormatter = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', dateOptions);
+        const hijriDate = hijriFormatter.format(now);
+        document.getElementById('hijriDate').textContent = "🕌 " + hijriDate;
+      } catch (e) {
+        document.getElementById('hijriDate').textContent = "🕌 غير مدعوم";
+      }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+
+</body>
+</html>
