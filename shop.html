@@ -6,7 +6,7 @@
   <title>المتجر - Beautiful Home</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+       body { font-family: Tahoma, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
     header {
       background-color: #005f73;
       color: white;
@@ -251,7 +251,7 @@
   <script>
     const deliveryData = {
       "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
-      "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
+          "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
       "الأغواط": { home: 750, office: 500, time: "1-3 أيام" },
       "أم البواقي": { home: 700, office: 400, time: "1-3 أيام" },
       "باتنة": { home: 650, office: 350, time: "1-3 أيام" },
@@ -307,7 +307,6 @@
       "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
     };
 
-
     const wilayaSelect = document.getElementById("wilaya");
     for (const wilaya in deliveryData) {
       const opt = document.createElement("option");
@@ -347,16 +346,9 @@
         })
         .catch(() => alert("❌ حدث خطأ أثناء إرسال الطلب."));
     });
- <footer>
-  <div class="social-icons">
-    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><i class="fab fa-facebook"></i></a>
-    <a href="https://www.instagram.com/tgtmhb99?igsh=bm9yMDcwdHYwdmdy" target="_blank"><i class="fab fa-instagram"></i></a>
-    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><i class="fab fa-tiktok"></i></a>
-  </div>
-  <p>جميع الحقوق محفوظة &copy; 2025</p>
-<script> 
-</footer>
-   
+  </script>
+
+  <!-- سكربت تحميل المنتجات من جوجل شيت -->
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
     fetch(sheetURL)
@@ -386,7 +378,6 @@
       });
   </script>
 
-  <script src="https://cdn.jsdelivr.net/gh/TahaBerguiga/wilaya-data@main/wilaya.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/TahaBerguiga/order-form-script@main/form.js"></script>
 </body>
 </html>
+
