@@ -1,5 +1,5 @@
-﻿<<!DOCTYPE html>
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -19,6 +19,49 @@
       left: 1rem;
       top: 0.5rem;
       height: 40px;
+    }
+    .menu-button {
+      font-size: 30px;
+      cursor: pointer;
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1001;
+    }
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+    .sidebar a {
+      padding: 10px 25px;
+      text-decoration: none;
+      font-size: 20px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+    .sidebar a:hover {
+      background-color: #575757;
+    }
+    .closebtn {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: 30px;
+      cursor: pointer;
+      color: white;
     }
     .search-bar {
       margin: 1rem auto;
@@ -128,98 +171,16 @@
       color: white;
     }
   </style>
-  <!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <title>قائمة جانبية</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      direction: rtl;
-    }
-
-    /* زر الميني */
-    .menu-button {
-      font-size: 30px;
-      cursor: pointer;
-      background: #333;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 1001;
-    }
-
-    /* القائمة الجانبية */
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background-color: #111;
-      overflow-x: hidden;
-      transition: 0.5s;
-      padding-top: 60px;
-      z-index: 1000;
-    }
-
-    .sidebar a {
-      padding: 10px 25px;
-      text-decoration: none;
-      font-size: 20px;
-      color: white;
-      display: block;
-      transition: 0.3s;
-    }
-
-    .sidebar a:hover {
-      background-color: #575757;
-    }
-
-    .closebtn {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      font-size: 30px;
-      cursor: pointer;
-      color: white;
-    }
-  </style>
 </head>
 <body>
-
-<!-- زر القائمة -->
-<button class="menu-button" onclick="openNav()">☰</button>
-
-<!-- القائمة الجانبية -->
-<div id="mySidebar" class="sidebar">
-  <span class="closebtn" onclick="closeNav()">×</span>
-  <a href="#">الرئيسية</a>
-  <a href="#">المنتجات</a>
-  <a href="#">من نحن</a>
-  <a href="#">اتصل بنا</a>
-</div>
-
-<!-- سكريبت التحكم -->
-<script>
-  function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-  }
-
-  function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-  }
-</script>
-
-</body>
-</html>
-</head>
-<body>
+  <button class="menu-button" onclick="openNav()">☰</button>
+  <div id="mySidebar" class="sidebar">
+    <span class="closebtn" onclick="closeNav()">×</span>
+    <a href="#">الرئيسية</a>
+    <a href="#">المنتجات</a>
+    <a href="#">من نحن</a>
+    <a href="#">اتصل بنا</a>
+  </div>
   <header>
     <img src="logo.png" class="logo" alt="Logo">
     منتجات Beautiful Home
