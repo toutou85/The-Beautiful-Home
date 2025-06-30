@@ -5,55 +5,144 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نموذج الطلب</title>
   <style>
-    body { font-family: Tahoma; background: #f0f0f0; padding: 2rem; }
-    .form-box {
+    body {
+      font-family: Tahoma, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    h2 {
+      text-align: center;
+      color: #005f73;
+    }
+
+    form {
       background: white;
       max-width: 500px;
       margin: auto;
       padding: 1.5rem;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
     input, select, textarea {
       width: 100%;
-      margin-bottom: 1rem;
       padding: 0.6rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background: #005f73;
-      color: white;
-      padding: 0.6rem 1rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    h2 {
-      text-align: center;
       margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #0a9396;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    #deliveryInfo {
+      font-weight: bold;
+      margin-top: -10px;
+      margin-bottom: 1rem;
+      color: #005f73;
     }
   </style>
 </head>
 <body>
 
-  <div class="form-box">
-    <h2>نموذج الطلب</h2>
-    <form id="orderForm">
-      <input type="text" name="product" id="productField" readonly />
-      <input type="text" name="name" placeholder="الاسم الكامل" required />
-      <input type="tel" name="phone" placeholder="رقم الهاتف" required />
-      <textarea name="address" placeholder="العنوان الكامل" required></textarea>
-      <button type="submit">تأكيد الطلب</button>
-    </form>
-  </div>
+<h2>نموذج الطلب</h2>
 
-  <script>
-    // قراءة اسم المنتج من الرابط
-    const urlParams = new URLSearchParams(window.location.search);
-    const productName = urlParams.get('product');
-    document.getElementById('productField').value = productName || '';
-  </script>
+<form id="orderForm">
+  <input type="text" name="name" placeholder="الاسم الكامل" required>
+  <input type="tel" name="phone" placeholder="رقم الهاتف" required>
+
+  <select name="wilaya" id="wilaya" required onchange="updateDelivery()">
+    <option value="">اختر ولايتك</option>
+  </select>
+
+  <select name="deliveryType" id="deliveryType" onchange="updateDelivery()">
+    <option value="home">توصيل للمنزل</option>
+    <option value="office">استلام من مكتب التوصيل</option>
+  </select>
+
+  <div id="deliveryInfo"></div>
+
+  <textarea name="address" placeholder="العنوان بالتفصيل" required></textarea>
+
+  <input type="text" name="product" id="productInput" readonly>
+
+  <button type="submit">تأكيد الطلب</button>
+</form>
+
+<script>
+  // بيانات التوصيل حسب الولاية
+  const deliveryData = {
+    "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
+    "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
+    "الأغواط": { home: 750, office: 500, time: "1-3 أيام" },
+    "أم البواقي": { home: 700, office: 400, time: "1-3 أيام" },
+    "باتنة": { home: 650, office: 350, time: "1-3 أيام" },
+    "بجاية": { home: 550, office: 300, time: "1-3 أيام" },
+    "بسكرة": { home: 800, office: 500, time: "2-4 أيام" },
+    "بشار": { home: 1050, office: 700, time: "3-5 أيام" },
+    "البليدة": { home: 250, office: 0, time: "24 ساعة" },
+    "الجزائر": { home: 250, office: 100, time: "24 ساعة" },
+    "عنابة": { home: 550, office: 350, time: "1-3 أيام" },
+    "وهران": { home: 550, office: 300, time: "1-3 أيام" },
+    "ورقلة": { home: 800, office: 500, time: "2-4 أيام" },
+    "سطيف": { home: 550, office: 350, time: "1-3 أيام" },
+    // ➕ يمكنك إضافة باقي الولايات هنا...
+  };
+
+  // تعبئة قائمة الولايات
+  const wilayaSelect = document.getElementById("wilaya");
+  for (const wilaya in deliveryData) {
+    const option = document.createElement("option");
+    option.value = wilaya;
+    option.textContent = wilaya;
+    wilayaSelect.appendChild(option);
+  }
+
+  function updateDelivery() {
+    const wilaya = wilayaSelect.value;
+    const type = document.getElementById("deliveryType").value;
+    const info = deliveryData[wilaya];
+    if (info) {
+      document.getElementById("deliveryInfo").textContent =
+        `⏱️ المدة: ${info.time} | 💰 التكلفة: ${info[type]} دج`;
+    } else {
+      document.getElementById("deliveryInfo").textContent = '';
+    }
+  }
+
+  // استقبال اسم المنتج من الرابط
+  const urlParams = new URLSearchParams(window.location.search);
+  const product = urlParams.get("product");
+  document.getElementById("productInput").value = product || '';
+
+  // إرسال البيانات إلى Google Apps Script
+  document.getElementById("orderForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const scriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec"; // ضع رابط السكربت هنا
+
+    fetch(scriptURL, { method: "POST", body: formData })
+      .then(res => res.text())
+      .then(() => {
+        alert("✅ تم إرسال طلبك بنجاح!");
+        this.reset();
+        document.getElementById("deliveryInfo").textContent = '';
+      })
+      .catch(() => {
+        alert("❌ حدث خطأ أثناء الإرسال.");
+      });
+  });
+</script>
 
 </body>
 </html>
