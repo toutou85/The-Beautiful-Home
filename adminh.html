@@ -2,130 +2,123 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>منتجات Beautiful Home</title>
+  <title>تعديل المنتجات</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      margin: 0;
       padding: 20px;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
       color: #003366;
     }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    #searchBox {
+      width: 100%;
+      max-width: 400px;
+      margin: auto;
+      display: block;
+    }
     .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
       margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     .product {
       background: white;
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
+    }
+    .product label {
+      display: block;
+      margin: 5px 0 2px;
     }
     .product img {
-      max-width: 100%;
-      border-radius: 10px;
-      height: 200px;
-      object-fit: contain;
+      max-width: 100px;
+      margin-bottom: 10px;
     }
-    .product h3 {
-      margin: 10px 0 5px;
-      color: #333;
-    }
-    .product p {
-      color: #28a745;
-      font-weight: bold;
-    }
-    form {
-      max-width: 400px;
-      margin: 30px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    form input, form button {
-      padding: 10px;
-      font-size: 16px;
-    }
-    form button {
+    .save-btn {
       background-color: #28a745;
       color: white;
       border: none;
       border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <h1>قائمة المنتجات</h1>
-  <div class="products" id="productList"></div>
+<h1>🔍 تعديل منتج</h1>
+<input type="text" id="searchBox" placeholder="أدخل اسم المنتج للبحث">
 
-  <h2>إضافة منتج جديد</h2>
-  <form id="addProductForm">
-    <input type="text" name="nom" placeholder="اسم المنتج" required>
-    <input type="url" name="image" placeholder="رابط الصورة" required>
-    <input type="number" name="prix" placeholder="السعر" required>
-    <button type="submit">إضافة</button>
-  </form>
+<div class="products" id="productResults"></div>
 
-  <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pubhtml?gid=0&single=true";
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwV2k4wxbVJvOHbSiwcfZpgupF2VymswQH6DqvTrOa27__IhE18SXHDZ3Le5gZ0Lf6a/exec"; // ← ضع رابط السكربت هنا
+<script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+const scriptURL = "https://script.google.com/macros/s/AKfycbxq6r1VosF_v4RLVsRX1gFZYunYYClC4yV7k76xPCZvg4Q0keYmwlf9vHv7PpXaIk8B/exec"; // لتعديل السعر والصورة
 
-    // عرض المنتجات
-    fetch(sheetURL)
-      .then(response => response.text())
-      .then(data => {
-        const rows = data.split("\n").slice(1);
-        const productList = document.getElementById("productList");
+let allProducts = [];
 
-        rows.forEach(row => {
-          const [nom, image, prix] = row.split(",");
-          if (nom && image && prix) {
-            const product = document.createElement("div");
-            product.className = "product";
-            product.innerHTML = `
-              <img src="${image.trim()}" alt="${nom.trim()}">
-              <h3>${nom.trim()}</h3>
-              <p>${prix.trim()} دج</p>
-            `;
-            productList.appendChild(product);
-          }
-        });
-      });
-
-    // إرسال المنتج
-    const form = document.getElementById("addProductForm");
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-
-      fetch(scriptURL, {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.text())
-      .then(msg => {
-        alert(msg);
-        form.reset();
-      })
-      .catch(err => {
-        alert("حدث خطأ أثناء الإرسال");
-        console.error(err);
-      });
+fetch(sheetURL)
+  .then(response => response.text())
+  .then(data => {
+    const rows = data.split("\n").slice(1);
+    allProducts = rows.map((row, index) => {
+      const [nom, image, prix] = row.split(",");
+      return { index: index + 2, nom, image, prix }; // index+2 لأنه يبدأ من السطر 2 في الجدول
     });
-  </script>
+  });
+
+document.getElementById("searchBox").addEventListener("input", function() {
+  const searchTerm = this.value.trim().toLowerCase();
+  const filtered = allProducts.filter(p => p.nom.toLowerCase().includes(searchTerm)).slice(0, 3);
+
+  const container = document.getElementById("productResults");
+  container.innerHTML = "";
+
+  filtered.forEach(prod => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <label>📦 الاسم:</label>
+      <input type="text" value="${prod.nom}" disabled>
+      <label>💰 السعر:</label>
+      <input type="number" id="prix-${prod.index}" value="${prod.prix.trim()}">
+      <label>🖼️ رابط الصورة:</label>
+      <input type="url" id="image-${prod.index}" value="${prod.image.trim()}">
+      <br>
+      <button class="save-btn" onclick="saveChange(${prod.index})">💾 حفظ التعديل</button>
+    `;
+    container.appendChild(div);
+  });
+});
+
+function saveChange(row) {
+  const prix = document.getElementById(`prix-${row}`).value;
+  const image = document.getElementById(`image-${row}`).value;
+
+  fetch(scriptURL, {
+    method: "POST",
+    body: new URLSearchParams({
+      action: "update",
+      row: row,
+      prix: prix,
+      image: image
+    })
+  })
+  .then(res => res.text())
+  .then(msg => alert("✅ تم الحفظ: " + msg))
+  .catch(err => alert("❌ فشل التحديث"));
+}
+</script>
 
 </body>
 </html>
