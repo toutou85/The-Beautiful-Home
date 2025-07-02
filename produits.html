@@ -11,7 +11,7 @@
       margin: 0;
       padding: 20px;
     }
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #003366;
     }
@@ -31,6 +31,8 @@
     .product img {
       max-width: 100%;
       border-radius: 10px;
+      height: 200px;
+      object-fit: contain;
     }
     .product h3 {
       color: #333;
@@ -40,15 +42,49 @@
       color: #28a745;
       font-weight: bold;
     }
+    form {
+      max-width: 400px;
+      margin: 30px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    form input, form button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    form button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
+
   <h1>قائمة منتجات Beautiful Home</h1>
+
   <div class="products" id="productList"></div>
+
+  <h2>إضافة منتج جديد</h2>
+  <form id="addProductForm">
+    <input type="text" placeholder="اسم المنتج" id="nom" required>
+    <input type="url" placeholder="رابط الصورة" id="image" required>
+    <input type="number" placeholder="السعر" id="prix" required>
+    <button type="submit">إضافة</button>
+  </form>
 
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+    const scriptURL = "https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_URL_HERE/exec"; // ← غيّره برابط نشر السكربت
 
+    // عرض المنتجات
     fetch(sheetURL)
       .then(response => response.text())
       .then(data => {
@@ -63,7 +99,7 @@
             product.innerHTML = `
               <img src="${image.trim()}" alt="${nom.trim()}">
               <h3>${nom.trim()}</h3>
-              <p>${prix.trim()}</p>
+              <p>${prix.trim()} دج</p>
             `;
             productList.appendChild(product);
           }
@@ -73,6 +109,31 @@
         document.getElementById("productList").textContent = "حدث خطأ في تحميل المنتجات.";
         console.error(error);
       });
+
+    // إضافة منتج جديد
+    const form = document.getElementById("addProductForm");
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const nom = document.getElementById("nom").value.trim();
+      const image = document.getElementById("image").value.trim();
+      const prix = document.getElementById("prix").value.trim();
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ nom, image, prix }),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.text())
+      .then(msg => {
+        alert(msg);
+        form.reset();
+      })
+      .catch(err => {
+        alert("حدث خطأ أثناء الإرسال");
+        console.error(err);
+      });
+    });
   </script>
 </body>
 </html>
