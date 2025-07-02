@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نموذج الطلب</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Tahoma, sans-serif;
@@ -11,12 +11,10 @@
       margin: 0;
       padding: 1rem;
     }
-
     h2 {
       text-align: center;
       color: #005f73;
     }
-
     form {
       background: white;
       max-width: 500px;
@@ -25,8 +23,7 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    input, select, textarea {
+    input, select {
       width: 100%;
       padding: 0.6rem;
       margin-bottom: 1rem;
@@ -34,7 +31,6 @@
       border-radius: 5px;
       font-size: 1rem;
     }
-
     button {
       background-color: #0a9396;
       color: white;
@@ -44,12 +40,23 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
-    #deliveryInfo {
+    #deliveryInfo, #totalPrice {
       font-weight: bold;
-      margin-top: -10px;
-      margin-bottom: 1rem;
+      margin: -10px 0 1rem;
       color: #005f73;
+    }
+    #waitingMessage {
+      display: none;
+      text-align: center;
+      color: #0a9396;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
@@ -58,8 +65,8 @@
 <h2>نموذج الطلب</h2>
 
 <form id="orderForm">
-  <input type="text" name="name" placeholder="الاسم الكامل" required>
-  <input type="tel" name="phone" placeholder="رقم الهاتف" required>
+  <input type="text" name="name" placeholder="الاسم واللقب" required>
+  <input type="tel" name="phone" id="phone" placeholder="رقم الهاتف" required pattern="^(05|06|07)[0-9]{8}$">
 
   <select name="wilaya" id="wilaya" required onchange="updateDelivery()">
     <option value="">اختر ولايتك</option>
@@ -72,15 +79,19 @@
 
   <div id="deliveryInfo"></div>
 
-  <textarea name="address" placeholder="العنوان بالتفصيل" required></textarea>
+  <input type="number" name="quantity" id="quantity" placeholder="الكمية" required min="1" onchange="calculateTotal()">
 
   <input type="text" name="product" id="productInput" readonly>
+  <input type="number" name="unitPrice" id="unitPriceInput" readonly>
 
-  <button type="submit">تأكيد الطلب</button>
+  <div id="totalPrice">💵 المجموع الكلي: 0 دج</div>
+
+  <div id="waitingMessage">⏳ الرجاء الانتظار... استغفر الله العظيم ❤️</div>
+
+  <button type="submit">✅ تأكيد الطلب</button>
 </form>
 
 <script>
-  // بيانات التوصيل حسب الولاية
   const deliveryData = {
     "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
     "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
@@ -91,51 +102,54 @@
     "بسكرة": { home: 800, office: 500, time: "2-4 أيام" },
     "بشار": { home: 1050, office: 700, time: "3-5 أيام" },
     "البليدة": { home: 250, office: 0, time: "24 ساعة" },
+    "البويرة": { home: 600, office: 400, time: "1-2 أيام" },
+    "تمنراست": { home: 1300, office: 900, time: "3-7 أيام" },
+    "تبسة": { home: 700, office: 400, time: "1-3 أيام" },
+    "تلمسان": { home: 650, office: 400, time: "1-3 أيام" },
+    "تيارت": { home: 700, office: 400, time: "1-3 أيام" },
+    "تيزي وزو": { home: 600, office: 400, time: "1-2 أيام" },
     "الجزائر": { home: 250, office: 100, time: "24 ساعة" },
-    "عنابة": { home: 550, office: 350, time: "1-3 أيام" },
-    "وهران": { home: 550, office: 300, time: "1-3 أيام" },
-    "ورقلة": { home: 800, office: 500, time: "2-4 أيام" },
+    "الجلفة": { home: 700, office: 400, time: "1-3 أيام" },
+    "جيجل": { home: 650, office: 400, time: "1-3 أيام" },
     "سطيف": { home: 550, office: 350, time: "1-3 أيام" },
-     "سعيدة": { home: 750, office: 450, time: "1-3 أيام" },
-      "سكيكدة": { home: 650, office: 400, time: "1-3 أيام" },
-      "سيدي بلعباس": { home: 650, office: 400, time: "1-3 أيام" },
-      "عنابة": { home: 550, office: 350, time: "1-3 أيام" },
-      "قالمة": { home: 700, office: 400, time: "1-3 أيام" },
-      "قسنطينة": { home: 550, office: 350, time: "1-3 أيام" },
-      "المدية": { home: 600, office: 400, time: "1-2 أيام" },
-      "مستغانم": { home: 600, office: 400, time: "1-3 أيام" },
-      "المسيلة": { home: 650, office: 400, time: "2-4 أيام" },
-      "معسكر": { home: 650, office: 400, time: "1-3 أيام" },
-      "ورقلة": { home: 800, office: 500, time: "2-4 أيام" },
-      "وهران": { home: 550, office: 300, time: "1-3 أيام" },
-      "البيض": { home: 850, office: 550, time: "2-4 أيام" },
-      "إليزي": { home: 1300, office: 900, time: "3-7 أيام" },
-      "برج بوعريريج": { home: 600, office: 400, time: "1-3 أيام" },
-      "بومرداس": { home: 500, office: 350, time: "1-2 أيام" },
-      "الطارف": { home: 700, office: 700, time: "1-3 أيام" },
-      "تندوف": { home: 1300, office: 900, time: "3-7 أيام" },
-      "تيسمسيلت": { home: 700, office: 400, time: "1-3 أيام" },
-      "الوادي": { home: 800, office: 500, time: "2-4 أيام" },
-      "خنشلة": { home: 700, office: 450, time: "1-3 أيام" },
-      "سوق أهراس": { home: 800, office: 450, time: "1-3 أيام" },
-      "تيبازة": { home: 500, office: 350, time: "1-2 أيام" },
-      "ميلة": { home: 650, office: 400, time: "1-3 أيام" },
-      "عين الدفلى": { home: 600, office: 400, time: "1-2 أيام" },
-      "النعامة": { home: 900, office: 600, time: "3-5 أيام" },
-      "عين تموشنت": { home: 600, office: 450, time: "1-3 أيام" },
-      "غرداية": { home: 850, office: 500, time: "2-4 أيام" },
-      "غليزان": { home: 600, office: 450, time: "1-3 أيام" },
-      "تيميمون": { home: 1200, office: 1200, time: "3-7 أيام" },
-      "اولاد جلال": { home: 800, office: 800, time: "3-7 أيام" },
-      "بني عباس": { home: 1100, office: 1100, time: "3-7 أيام" },
-      "عين صالح": { home: 1200, office: 1200, time: "3-7 أيام" },
-      "تقرت": { home: 850, office: 850, time: "2-4 أيام" },
-      "المغير": { home: 900, office: 900, time: "2-4 أيام" },
-      "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
-   
+    "سعيدة": { home: 750, office: 450, time: "1-3 أيام" },
+    "سكيكدة": { home: 650, office: 400, time: "1-3 أيام" },
+    "سيدي بلعباس": { home: 650, office: 400, time: "1-3 أيام" },
+    "عنابة": { home: 550, office: 350, time: "1-3 أيام" },
+    "قالمة": { home: 700, office: 400, time: "1-3 أيام" },
+    "قسنطينة": { home: 550, office: 350, time: "1-3 أيام" },
+    "المدية": { home: 600, office: 400, time: "1-2 أيام" },
+    "مستغانم": { home: 600, office: 400, time: "1-3 أيام" },
+    "المسيلة": { home: 650, office: 400, time: "2-4 أيام" },
+    "معسكر": { home: 650, office: 400, time: "1-3 أيام" },
+    "ورقلة": { home: 800, office: 500, time: "2-4 أيام" },
+    "وهران": { home: 550, office: 300, time: "1-3 أيام" },
+    "البيض": { home: 850, office: 550, time: "2-4 أيام" },
+    "إليزي": { home: 1300, office: 900, time: "3-7 أيام" },
+    "برج بوعريريج": { home: 600, office: 400, time: "1-3 أيام" },
+    "بومرداس": { home: 500, office: 350, time: "1-2 أيام" },
+    "الطارف": { home: 700, office: 700, time: "1-3 أيام" },
+    "تندوف": { home: 1300, office: 900, time: "3-7 أيام" },
+    "تيسمسيلت": { home: 700, office: 400, time: "1-3 أيام" },
+    "الوادي": { home: 800, office: 500, time: "2-4 أيام" },
+    "خنشلة": { home: 700, office: 450, time: "1-3 أيام" },
+    "سوق أهراس": { home: 800, office: 450, time: "1-3 أيام" },
+    "تيبازة": { home: 500, office: 350, time: "1-2 أيام" },
+    "ميلة": { home: 650, office: 400, time: "1-3 أيام" },
+    "عين الدفلى": { home: 600, office: 400, time: "1-2 أيام" },
+    "النعامة": { home: 900, office: 600, time: "3-5 أيام" },
+    "عين تموشنت": { home: 600, office: 450, time: "1-3 أيام" },
+    "غرداية": { home: 850, office: 500, time: "2-4 أيام" },
+    "غليزان": { home: 600, office: 450, time: "1-3 أيام" },
+    "تيميمون": { home: 1200, office: 1200, time: "3-7 أيام" },
+    "اولاد جلال": { home: 800, office: 800, time: "3-7 أيام" },
+    "بني عباس": { home: 1100, office: 1100, time: "3-7 أيام" },
+    "عين صالح": { home: 1200, office: 1200, time: "3-7 أيام" },
+    "تقرت": { home: 850, office: 850, time: "2-4 أيام" },
+    "المغير": { home: 900, office: 900, time: "2-4 أيام" },
+    "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
   };
 
-  // تعبئة قائمة الولايات
   const wilayaSelect = document.getElementById("wilaya");
   for (const wilaya in deliveryData) {
     const option = document.createElement("option");
@@ -144,39 +158,57 @@
     wilayaSelect.appendChild(option);
   }
 
+  let deliveryFee = 0;
+  let unitPrice = 0;
+
   function updateDelivery() {
     const wilaya = wilayaSelect.value;
     const type = document.getElementById("deliveryType").value;
     const info = deliveryData[wilaya];
     if (info) {
-      document.getElementById("deliveryInfo").textContent =
-        `⏱️ المدة: ${info.time} | 💰 التكلفة: ${info[type]} دج`;
+      deliveryFee = parseInt(info[type]);
+      document.getElementById("deliveryInfo").textContent = `⏱️ المدة: ${info.time} | 💰 التوصيل: ${deliveryFee} دج`;
     } else {
+      deliveryFee = 0;
       document.getElementById("deliveryInfo").textContent = '';
     }
+    calculateTotal();
   }
 
-  // استقبال اسم المنتج من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const product = urlParams.get("product");
-  document.getElementById("productInput").value = product || '';
+  function calculateTotal() {
+    const quantity = parseInt(document.getElementById("quantity").value) || 0;
+    const total = (unitPrice * quantity) + deliveryFee;
+    document.getElementById("totalPrice").textContent = `💵 المجموع الكلي: ${total} دج`;
+  }
 
-  // إرسال البيانات إلى Google Apps Script
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get("product");
+  const price = params.get("price");
+
+  document.getElementById("productInput").value = product || '';
+  document.getElementById("unitPriceInput").value = price || '';
+  unitPrice = parseInt(price) || 0;
+
   document.getElementById("orderForm").addEventListener("submit", function(e) {
     e.preventDefault();
+    document.getElementById("waitingMessage").style.display = "block";
+    const phone = document.getElementById("phone").value;
     const formData = new FormData(this);
-    const scriptURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec"; // ضع رابط السكربت هنا
 
-    fetch(scriptURL, { method: "POST", body: formData })
-      .then(res => res.text())
-      .then(() => {
-        alert("✅ تم إرسال طلبك بنجاح!");
-        this.reset();
-        document.getElementById("deliveryInfo").textContent = '';
-      })
-      .catch(() => {
-        alert("❌ حدث خطأ أثناء الإرسال.");
-      });
+    fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.text())
+    .then(() => {
+      setTimeout(() => {
+        window.location.href = `order.html?phone=${encodeURIComponent(phone)}`;
+      }, 1500);
+    })
+    .catch(() => {
+      document.getElementById("waitingMessage").style.display = "none";
+      alert("❌ فشل إرسال الطلب");
+    });
   });
 </script>
 
