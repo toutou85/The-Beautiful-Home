@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>📦 طلباتي</title>
   <style>
     body {
       font-family: Tahoma, sans-serif;
       background: #f4f4f4;
       margin: 0;
-      padding: 20px;
+      padding: 1rem;
       text-align: center;
     }
 
@@ -17,30 +17,60 @@
       background-color: #005f73;
       color: white;
       padding: 1rem;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
+      border-bottom: 3px solid #0a9396;
     }
 
     .box {
-      max-width: 400px;
+      max-width: 420px;
       background: white;
-      margin: 20px auto;
-      padding: 20px;
+      margin: 1rem auto;
+      padding: 1rem;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     input, button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-top: 10px;
-      font-size: 16px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #0a9396;
+      color: white;
+      border: none;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+
+    #countdown {
+      font-size: 0.95rem;
+      color: #007bff;
+      margin-top: 10px;
+    }
+
+    #ordersSection {
+      overflow-x: auto;
+      margin-top: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
-      font-size: 14px;
+      font-size: 0.85rem;
+      min-width: 900px;
     }
 
     th, td {
@@ -54,16 +84,11 @@
       color: white;
     }
 
-    .error {
-      color: red;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-
-    #countdown {
-      font-size: 16px;
-      color: #007bff;
-      margin-top: 10px;
+    @media (max-width: 600px) {
+      th, td {
+        padding: 6px;
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -72,36 +97,38 @@
 <header>📦 طلباتي</header>
 
 <div class="box">
-  <h2>📦 عرض طلبياتك</h2>
-  <input type="tel" id="phoneInput" placeholder="أدخل رقم هاتفك (مثال: 065...)" />
-  <button id="fetchBtn" onclick="fetchMyOrders()">🔍 عرض طلباتي</button>
+  <h2>🔍 عرض طلبياتك</h2>
+  <input type="tel" id="phoneInput" placeholder="📞 أدخل رقم هاتفك (مثال: 065...)" />
+  <button id="fetchBtn" onclick="fetchMyOrders()">📥 عرض الطلبات</button>
   <p class="error" id="errorMsg"></p>
   <div id="countdown"></div>
 </div>
 
 <div id="ordersSection" style="display:none;">
   <h3>📋 قائمة الطلبيات</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>الاسم</th>
-<th>الهاتف</th>
-<th>الولاية</th>
-<th>نوع التوصيل</th>
-<th>العنوان</th>
-<th>رقم</th>
-<th>اسم المنتج</th>
-<th>اسم المنتج </th>
-<th>سعر التوصيل</th>
-<th>الكمية</th>
-<th>المجموع</th>
-<th>ملاحظة</th>
-<th>التاريخ</th>
-<th>الحالة</th>
-      </tr>
-    </thead>
-    <tbody id="ordersTable"></tbody>
-  </table>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>👤 الاسم</th>
+          <th>📞 الهاتف</th>
+          <th>📍 الولاية</th>
+          <th>🚚 نوع التوصيل</th>
+          <th>🏠 العنوان</th>
+          <th>🔢 رقم</th>
+          <th>🛒 اسم المنتج</th>
+          <th>🛒 اسم المنتج</th>
+          <th>💵 سعر التوصيل</th>
+          <th>📦 الكمية</th>
+          <th>💰 المجموع</th>
+          <th>📝 ملاحظة</th>
+          <th>📅 التاريخ</th>
+          <th>🔄 الحالة</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTable"></tbody>
+    </table>
+  </div>
 </div>
 
 <script>
@@ -128,9 +155,7 @@ function fetchMyOrders() {
     .then(res => res.text())
     .then(text => {
       const rows = text.trim().split('\n').slice(1).reverse();
-      const myOrders = rows
-        .map(r => r.split(","))
-        .filter(r => r[2] === phone);
+      const myOrders = rows.map(r => r.split(",")).filter(r => r[2] === phone);
 
       if (myOrders.length === 0) {
         errorMsg.textContent = "❌ لم يتم العثور على أي طلبات.";
@@ -146,7 +171,7 @@ function fetchMyOrders() {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td>
-          <td>${row[12] || "1"}</td><td>${row[6]}</td><td>${row[7]}</td><td>${row[8]}</td>
+          <td>${row[12] || "-"}</td><td>${row[6]}</td><td>${row[7]}</td><td>${row[8]}</td>
           <td>${row[9]}</td><td>${row[10]}</td><td>${row[11]}</td><td>${row[0]}</td><td>${row[13] || "قيد المعالجة"}</td>
         `;
         table.appendChild(tr);
@@ -158,6 +183,7 @@ function fetchMyOrders() {
     });
 }
 
+// تحميل تلقائي من الرابط
 window.onload = function () {
   const url = new URL(window.location.href);
   const phone = url.searchParams.get("phone");
@@ -165,7 +191,6 @@ window.onload = function () {
 
   if (phone) {
     document.getElementById("phoneInput").value = phone;
-
     const countdownEl = document.getElementById("countdown");
     const fetchBtn = document.getElementById("fetchBtn");
     fetchBtn.disabled = true;
