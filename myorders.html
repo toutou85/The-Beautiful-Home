@@ -127,6 +127,16 @@
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?gid=0&single=true&output=csv";
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const phoneFromUrl = urlParams.get("phone");
+    if (phoneFromUrl) {
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("phoneInput").value = phoneFromUrl;
+        localStorage.setItem("userPhone", phoneFromUrl);
+        loadMyOrders();
+      });
+    }
+
     function loadMyOrders() {
       const phone = document.getElementById("phoneInput").value.trim();
       if (!phone) {
