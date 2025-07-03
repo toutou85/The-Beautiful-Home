@@ -199,7 +199,10 @@
 
     e.preventDefault();
     document.getElementById("loadingMessage").style.display = "block";
-
+const phoneInput = document.getElementById("phoneInput");
+if (phoneInput.value.startsWith("0")) {
+  phoneInput.value = "'" + phoneInput.value;
+}
     const formData = new FormData(this);
     const scriptURL = "https://script.google.com/macros/s/AKfycbwNCUQj_F0tF2SCbyHJlz0tw4MwFh6nTpZTEvwVqSMILvhQOaqpQN2hzbxZ9bngY9Xf/exec";
 
