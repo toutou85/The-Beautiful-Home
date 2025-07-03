@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> Beautiful Home </title>
+  <title>Beautiful Home</title>
   <style>
     body {
       font-family: Tahoma, sans-serif;
@@ -139,7 +139,7 @@
   <header>
     <a href="myorders.html" class="orders-btn">📦 طلباتي</a>
     <img src="logo.png" class="logo" alt="Logo">
-    <div class="header-title"> Beautiful Home</div>
+    <div class="header-title">Beautiful Home</div>
   </header>
 
   <div class="search-bar">
@@ -150,12 +150,19 @@
   <section class="products" id="productList">جاري التحميل...</section>
   <div class="pagination" id="pagination"></div>
 
-    
+  <footer>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank">📘</a>
+      <a href="https://www.instagram.com/tgtmhb99?igsh=bm9yMDcwdHYwdmdy" target="_blank">📸</a>
+      <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank">🎵</a>
+    </div>
+    <p>جميع الحقوق محفوظة &copy; 2025</p>
+  </footer>
 
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
 
-    let products = [];
+    let allProducts = [];
     let currentPage = 1;
     const perPage = 12;
 
@@ -163,18 +170,18 @@
       .then(res => res.text())
       .then(text => {
         const rows = text.trim().split("\n").slice(1);
-        products = rows.map(row => {
+        allProducts = rows.map(row => {
           const [name, image, price] = row.split(",");
           return {
-            name: name.trim(),
-            image: image.trim() || "https://via.placeholder.com/250x180",
-            price: price.trim()
+            name: name?.trim() || "",
+            image: image?.trim() || "https://via.placeholder.com/250x180",
+            price: price?.trim() || "0"
           };
         });
         displayProducts();
       })
       .catch(err => {
-        console.error("خطأ في تحميل المنتجات:", err);
+        console.error("⚠️ خطأ في تحميل المنتجات:", err);
         document.getElementById("productList").textContent = "⚠️ لم يتم تحميل المنتجات.";
       });
 
@@ -183,7 +190,7 @@
       productList.innerHTML = '';
       const start = (currentPage - 1) * perPage;
       const end = start + perPage;
-      const paginated = products.slice(start, end);
+      const paginated = allProducts.slice(start, end);
 
       paginated.forEach(p => {
         const div = document.createElement("div");
@@ -192,7 +199,7 @@
           <img src="${p.image}" alt="${p.name}">
           <h3>${p.name}</h3>
           <p>${p.price} دج</p>
-         <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
+          <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
         `;
         productList.appendChild(div);
       });
@@ -202,7 +209,7 @@
 
     function updatePagination() {
       const pagination = document.getElementById("pagination");
-      const totalPages = Math.ceil(products.length / perPage);
+      const totalPages = Math.ceil(allProducts.length / perPage);
       pagination.innerHTML = '';
 
       for (let i = 1; i <= totalPages; i++) {
@@ -219,27 +226,20 @@
 
     function filterProducts() {
       const input = document.getElementById("searchInput").value.toLowerCase();
-      const filtered = products.filter(p =>
+      const filtered = allProducts.filter(p =>
         p.name.toLowerCase().includes(input)
       );
+
       if (filtered.length === 0) {
         document.getElementById("productList").innerHTML = "<p style='text-align:center;color:red;'>⚠️ لا توجد نتائج.</p>";
         document.getElementById("pagination").innerHTML = "";
         return;
       }
-      products = filtered;
+
+      allProducts = filtered;
       currentPage = 1;
       displayProducts();
     }
   </script>
-
-  <footer>
-    <div class="social-icons">
-      <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><i class="fab fa-facebook"></i></a>
-      <a href="https://www.instagram.com/tgtmhb99?igsh=bm9yMDcwdHYwdmdy" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><i class="fab fa-tiktok"></i></a>
-    </div>
-    <p>جميع الحقوق محفوظة &copy; 2025</p>
-  </footer>
 </body>
 </html>
