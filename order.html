@@ -11,12 +11,10 @@
       margin: 0;
       padding: 1rem;
     }
-
     h2 {
       text-align: center;
       color: #005f73;
     }
-
     form {
       background: white;
       max-width: 500px;
@@ -25,7 +23,6 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
     input, select, textarea {
       width: 100%;
       padding: 0.6rem;
@@ -34,7 +31,6 @@
       border-radius: 5px;
       font-size: 1rem;
     }
-
     button {
       background-color: #0a9396;
       color: white;
@@ -44,21 +40,18 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
     #deliveryInfo {
       font-weight: bold;
       margin-top: -10px;
       margin-bottom: 1rem;
       color: #005f73;
     }
-
     #loadingMessage {
       text-align: center;
       font-size: 1.2rem;
       color: #0077aa;
       animation: pulse 1s infinite;
     }
-
     @keyframes pulse {
       0% { opacity: 1; }
       50% { opacity: 0.5; }
@@ -72,7 +65,7 @@
 
 <form id="orderForm">
   <input type="text" name="name" placeholder="الاسم واللقب" required>
-  <input type="tel" name="phone" id="phoneInput" placeholder="رقم الهاتف (يبدأ بـ 05 أو 06 أو 07)" required maxlength="10">
+  <input type="tel" name="phone" id="phoneInput" placeholder="رقم الهاتف (يبدأ بـ 05 أو 06 أو 07)" required maxlength="10" pattern="^0(5|6|7)[0-9]{8}$" title="رقم الهاتف يجب أن يبدأ بـ 05 أو 06 أو 07 ويحتوي على 10 أرقام.">
 
   <select name="wilaya" id="wilaya" required onchange="updateDelivery()">
     <option value="">اختر ولايتك</option>
@@ -99,8 +92,9 @@
 </form>
 
 <script>
-   const deliveryData = {
-    "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
+  const deliveryData = {
+    
+"أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
     "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
     "الأغواط": { home: 750, office: 500, time: "1-3 أيام" },
     "أم البواقي": { home: 700, office: 400, time: "1-3 أيام" },
@@ -150,7 +144,6 @@
       "تقرت": { home: 850, office: 850, time: "2-4 أيام" },
       "المغير": { home: 900, office: 900, time: "2-4 أيام" },
       "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
-   
   };
 
   const wilayaSelect = document.getElementById("wilaya");
@@ -194,10 +187,9 @@
   document.getElementById("productInput").value = product;
   document.getElementById("priceInput").value = price;
 
-  // التحقق من رقم الهاتف
   document.getElementById("orderForm").addEventListener("submit", function(e) {
     const phone = document.getElementById("phoneInput").value.trim();
-    const phonePattern = /^(05|06|07)[0-9]{8}$/;
+    const phonePattern = /^0(5|6|7)[0-9]{8}$/;
 
     if (!phonePattern.test(phone)) {
       alert("⚠️ رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.");
