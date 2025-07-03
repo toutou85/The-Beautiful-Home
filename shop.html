@@ -200,7 +200,7 @@
           <img src="${p.image}" alt="${p.name}">
           <h3>${p.name}</h3>
           <p>${p.price} دج</p>
-          <a href="order.html?product=${encodeURIComponent(p.name)}" class="order-btn">اطلب الآن</a>
+         <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
         `;
         productList.appendChild(div);
       });
