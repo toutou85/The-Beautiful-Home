@@ -208,7 +208,7 @@
     })
     .then(res => res.text())
     .then(() => {
-      window.location.href = `orders.html?phone=${formData.get("phone")}`;
+      window.location.href = `myorders.html?phone=${formData.get("phone")}`;
     })
     .catch(() => {
       alert("❌ حدث خطأ أثناء الإرسال.");
