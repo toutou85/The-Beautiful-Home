@@ -115,13 +115,12 @@
           <th>📍 الولاية</th>
           <th>🚚 نوع التوصيل</th>
           <th>🏠 العنوان</th>
-          <th>🔢 رقم</th>
-          <th>🛒سعر التوصيل </th>
+          <th>📝 ملاحظة </th>
           <th>🛒 اسم المنتج</th>
           <th>💵 سعر االمنتج </th>
           <th>📦 الكمية</th>
           <th>💰 المجموع</th>
-          <th>📝 ملاحظة</th>
+          <th></th>
           <th>📅 التاريخ</th>
           <th>🔄 الحالة</th>
         </tr>
@@ -170,9 +169,20 @@ function fetchMyOrders() {
       myOrders.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td>
-          <td>${row[12] || "-"}</td><td>${row[6]}</td><td>${row[7]}</td><td>${row[8]}</td>
-          <td>${row[9]}</td><td>${row[10]}</td><td>${row[11]}</td><td>${row[0]}</td><td>${row[13] || "قيد المعالجة"}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
+          <td>${row[4]}</td>
+          <td>${row[5]}</td>
+          <td>${row[12] || "-"}</td>
+          <td>${row[6]}</td>
+          <td>${row[7]}</td>
+          <td>${row[8]}</td>
+          <td>${row[9]}</td>
+          <td>${row[10]}</td>
+          <td>${row[11]}</td>
+          <td>${row[0]}</td>
+          <td>${row[13] || "قيد المعالجة"}</td>
         `;
         table.appendChild(tr);
       });
