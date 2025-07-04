@@ -2,141 +2,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Beautiful Home</title>
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>🛍️ المتجر</title>
+  <link rel="icon" href="favicon.png">
   <style>
     body {
       font-family: Tahoma, sans-serif;
-      background: #f4f4f4;
       margin: 0;
-      padding: 0;
+      background: #f4f4f4;
     }
     header {
-      background-color: #005f73;
+      background: #005f73;
       color: white;
       padding: 1rem;
       display: flex;
-      justify-content: center;
       align-items: center;
-      position: relative;
+      justify-content: space-between;
     }
-    .logo {
-      position: absolute;
-      left: 1rem;
-      top: 0.8rem;
-      height: 40px;
-    }
-    .orders-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      background-color: #0a9396;
+    .logo { height: 40px; }
+    .header-buttons a {
       color: white;
-      padding: 8px 14px;
-      border-radius: 6px;
+      background: #0a9396;
+      padding: 8px 12px;
+      border-radius: 5px;
+      margin-left: 8px;
       text-decoration: none;
-      font-size: 0.9rem;
     }
-    .header-title {
-      font-size: 1.6rem;
-    }
-    .toolbar {
+    .search-bar, .category-bar {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      padding: 1rem;
+      gap: 8px;
+      margin: 1rem;
       flex-wrap: wrap;
     }
-    .toolbar button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 5px;
-      background-color: #94d2bd;
-      cursor: pointer;
-    }
-    .search-bar {
-      margin: 1rem auto;
-      max-width: 400px;
-      display: flex;
-      gap: 0.5rem;
-      justify-content: center;
-    }
     .search-bar input {
-      width: 70%;
+      width: 250px;
       padding: 0.5rem;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
     .products {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
       padding: 1rem;
     }
     .product {
       background: white;
-      padding: 1rem;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 1rem;
       text-align: center;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
       position: relative;
     }
     .product img {
-      width: 100%;
-      height: 180px;
+      width: 100%; height: 150px;
       object-fit: cover;
-      border-radius: 10px;
+      border-radius: 8px;
     }
-    .favorite-btn {
+    .product .fav {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      color: red;
+      top: 8px; left: 8px;
       cursor: pointer;
+      font-size: 1.2rem;
     }
-    .order-btn {
+    .order-btn, .cart-btn {
       display: inline-block;
       margin-top: 10px;
-      padding: 0.5rem 1rem;
-      background: #0a9396;
-      color: white;
+      padding: 5px 10px;
+      border: none;
       border-radius: 5px;
-      text-decoration: none;
+      cursor: pointer;
     }
-    footer {
-      background: #003344;
-      padding: 1rem;
+    .order-btn { background: #0a9396; color: white; text-decoration: none; }
+    .cart-btn { background: orange; color: white; }
+    .pagination {
       text-align: center;
+      margin: 1rem;
+    }
+    .pagination button {
+      margin: 0 4px;
+      padding: 6px 12px;
+      border: none;
+      background: #ccc;
+      border-radius: 5px;
+    }
+    .pagination .active {
+      background: #005f73;
       color: white;
     }
   </style>
 </head>
 <body><header>
-  <a href="myorders.html" class="orders-btn">📦 طلباتي</a>
-  <img src="logo.png" class="logo" alt="Logo">
-  <div class="header-title">Beautiful Home</div>
-</header><div class="toolbar">
-  <button onclick="filterCategory('الكل')">📋 كل الفئات</button>
-  <button onclick="filterCategory('المطبخ')">🍽 المطبخ</button>
-  <button onclick="filterCategory('البيت')">🏠 البيت</button>
-  <button onclick="filterCategory('أدوات')">🛠 أدوات</button>
-  <button onclick="filterCategory('صيف')">🌞 صيف</button>
-  <button onclick="filterCategory('عناية بالجمال')">💄 الجمال</button>
-  <button onclick="filterCategory('إلكترونية')">📱 إلكترونيات</button>
-  <button onclick="filterCategory('ملحقات السيارات والدراجات')">🚗 ملحقات</button>
-  <button onclick="showFavorites()">❤️ المفضلة</button>
-  <button onclick="goToCart()">🛒 السلة</button>
-</div><div class="search-bar">
-  <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+  <img src="logo.png" class="logo" alt="logo">
+  <div class="header-buttons">
+    <a href="myorders.html">📦 طلباتي</a>
+    <a href="cart.html">🛒 السلة</a>
+    <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
+  </div>
+</header><div class="search-bar">
+  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج...">
   <button onclick="filterProducts()">بحث</button>
-</div><section class="products" id="productList">جاري التحميل...</section><footer>
-  <p style="text-align:center; color:white;">جميع الحقوق محفوظة &copy; 2025</p>
-</footer><script>
+</div><div class="category-bar" id="categoryBar"></div><section class="products" id="productList">جاري التحميل...</section>
+<div class="pagination" id="pagination"></div><script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-let allProducts = [], currentProducts = [];
+
+let allProducts = [], filteredProducts = [], currentPage = 1, perPage = 12;
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+let categories = new Set();
 
 fetch(sheetURL)
   .then(res => res.text())
@@ -144,76 +117,83 @@ fetch(sheetURL)
     const rows = text.trim().split("\n").slice(1);
     allProducts = rows.map(row => {
       const [name, image, price, quantity, category] = row.split(",");
-      return {
-        name: name?.trim(),
-        image: image?.trim() || "https://via.placeholder.com/250x180",
-        price: price?.trim(),
-        quantity: parseInt(quantity) || 0,
-        category: category?.trim() || "غير مصنف"
-      };
+      categories.add(category?.trim());
+      return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() };
     });
-    currentProducts = allProducts;
+    createCategoryButtons();
     displayProducts(allProducts);
-  });
+  })
+  .catch(() => document.getElementById("productList").innerText = "⚠️ خطأ في تحميل المنتجات");
 
-function displayProducts(products) {
-  const productList = document.getElementById("productList");
-  productList.innerHTML = '';
-  products.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "product";
-    const isFav = isFavorite(p.name);
-    div.innerHTML = `
-      <button class="favorite-btn" onclick="toggleFavorite('${p.name}')">${isFav ? '❤️' : '🤍'}</button>
+function displayProducts(data) {
+  const list = document.getElementById("productList");
+  const paginated = data.slice((currentPage-1)*perPage, currentPage*perPage);
+  list.innerHTML = paginated.map(p => `
+    <div class="product">
+      <span class="fav" onclick="toggleFavorite('${p.name}')">${favorites.includes(p.name) ? '❤️' : '🤍'}</span>
       <img src="${p.image}" alt="${p.name}">
       <h3>${p.name}</h3>
       <p>${p.price} دج</p>
       <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
-    `;
-    productList.appendChild(div);
-  });
+      <button class="cart-btn" onclick="addToCart('${p.name}', '${p.price}')">+ أضف للسلة</button>
+    </div>`).join("");
+  updatePagination(data);
+}
+
+function updatePagination(data) {
+  const total = Math.ceil(data.length / perPage);
+  const container = document.getElementById("pagination");
+  container.innerHTML = "";
+  for (let i = 1; i <= total; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if (i === currentPage) btn.className = "active";
+    btn.onclick = () => { currentPage = i; displayProducts(data); };
+    container.appendChild(btn);
+  }
 }
 
 function filterProducts() {
   const q = document.getElementById("searchInput").value.toLowerCase();
-  const filtered = currentProducts.filter(p => p.name.toLowerCase().includes(q));
-  displayProducts(filtered);
+  filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(q));
+  currentPage = 1;
+  displayProducts(filteredProducts);
 }
 
-function filterCategory(cat) {
-  if (cat === "الكل") {
-    currentProducts = allProducts;
-  } else {
-    currentProducts = allProducts.filter(p => p.category === cat);
-  }
-  displayProducts(currentProducts);
+function createCategoryButtons() {
+  const bar = document.getElementById("categoryBar");
+  bar.innerHTML = `<button onclick="displayProducts(allProducts)">الكل</button>`;
+  [...categories].forEach(cat => {
+    const btn = document.createElement("button");
+    btn.textContent = cat;
+    btn.onclick = () => {
+      const filtered = allProducts.filter(p => p.category === cat);
+      currentPage = 1;
+      displayProducts(filtered);
+    };
+    bar.appendChild(btn);
+  });
 }
 
 function toggleFavorite(name) {
-  let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-  if (favs.includes(name)) {
-    favs = favs.filter(f => f !== name);
-  } else {
-    favs.push(name);
-  }
-  localStorage.setItem("favorites", JSON.stringify(favs));
-  displayProducts(currentProducts);
-}
-
-function isFavorite(name) {
-  const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-  return favs.includes(name);
+  if (favorites.includes(name)) favorites = favorites.filter(f => f !== name);
+  else favorites.push(name);
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  displayProducts(filteredProducts.length ? filteredProducts : allProducts);
 }
 
 function showFavorites() {
-  const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-  const favProducts = allProducts.filter(p => favs.includes(p.name));
-  currentProducts = favProducts;
-  displayProducts(favProducts);
+  const favs = allProducts.filter(p => favorites.includes(p.name));
+  currentPage = 1;
+  displayProducts(favs);
 }
 
-function goToCart() {
-  window.location.href = "cart.html";
+function addToCart(name, price) {
+  const item = cart.find(i => i.name === name);
+  if (item) item.qty++;
+  else cart.push({ name, price, qty: 1 });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("✅ تمت إضافة المنتج للسلة");
 }
 </script></body>
 </html>
