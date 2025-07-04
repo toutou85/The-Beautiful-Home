@@ -195,38 +195,36 @@
   document.getElementById("productInput").value = product;
   document.getElementById("priceInput").value = price;
 
-  document.getElementById("orderForm").addEventListener("submit", function(e) {
-    const phone = document.getElementById("phoneInput").value.trim();
-    const phonePattern = /^0(5|6|7)[0-9]{8}$/;
+ document.getElementById("orderForm").addEventListener("submit", function(e) {
+  const phone = document.getElementById("phoneInput").value.trim();
+  const phonePattern = /^0(5|6|7)[0-9]{8}$/;
 
-    if (!phonePattern.test(phone)) {
-      alert("⚠️ رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.");
-      e.preventDefault();
-      return;
-    }
-
+  if (!phonePattern.test(phone)) {
+    alert("⚠️ رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.");
     e.preventDefault();
-    document.getElementById("loadingMessage").style.display = "block";
+    return;
+  }
 
- const formData = new FormData(this); // ✅ هذا يكفي
-'
+  e.preventDefault();
+  document.getElementById("loadingMessage").style.display = "block";
 
+  const formData = new FormData(this); // ✅ بدون تعديل يدوي
 
-    const formData = new FormData(this);
-    const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec";
+  const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec";
 
-    fetch(scriptURL, {
-      method: "POST",
-      body: formData
-    })
-    .then(() => {
-      window.location.href = `myorders.html?phone=${phone}`;
-    })
-    .catch(() => {
-      alert("❌ حدث خطأ أثناء الإرسال.");
-      document.getElementById("loadingMessage").style.display = "none";
-    });
+  fetch(scriptURL, {
+    method: "POST",
+    body: formData
+  })
+  .then(() => {
+    window.location.href = `myorders.html?phone=${phone}`;
+  })
+  .catch(() => {
+    alert("❌ حدث خطأ أثناء الإرسال.");
+    document.getElementById("loadingMessage").style.display = "none";
   });
+});
+
 </script>
 
 </body>
