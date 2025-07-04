@@ -20,20 +20,22 @@
     button { margin: 5px; padding: 10px 15px; background-color: #005f73; color: white; border: none; border-radius: 5px; cursor: pointer; }
     button:hover { background-color: #0a9396; }
     .pagination { text-align: center; margin-top: 1rem; }
-    .pagination button { margin: 3px; background: #ccc; color: #000; }
+    .pagination button { margin: 3px; background: #ccc; color: #000; border: none; padding: 6px 10px; border-radius: 4px; }
     .pagination button.active { background: #005f73; color: white; }
+    .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
     header {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="logo.png" style="height: 40px;">
+  <img src="logo.png" style="height: 40px;" alt="Logo">
   <h1 style="margin: 0; font-size: 1.6rem;">طلبات الزبائن</h1>
 </header>
 
@@ -42,7 +44,7 @@
 </div>
 
 <div class="controls">
-  <button onclick="print()">🖨️ طباعة</button>
+  <button onclick="window.print()">🖨️ طباعة</button>
   <button onclick="downloadCSV()">⬇️ تحميل كـ Excel</button>
 </div>
 
@@ -70,7 +72,7 @@
 
 <div class="pagination">
   <button onclick="prevPage()" id="prevBtn">السابق</button>
-  <span id="pageInfo"></span>
+  <span id="pageInfo">...</span>
   <button onclick="nextPage()" id="nextBtn">التالي</button>
 </div>
 
@@ -116,40 +118,48 @@
     const pageOrders = orders.slice(start, end);
 
     if (pageOrders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="12">لا توجد طلبات</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="12">لا توجد طلبات.</td></tr>';
     } else {
       pageOrders.forEach(row => {
         const tr = document.createElement("tr");
-        row.forEach((cell, i) => {
+        for (let i = 0; i < 12; i++) {
           const td = document.createElement("td");
-          td.innerHTML = (i === 5) ? cell.replace(/\n/g, "<br>") : cell;
+          td.innerHTML = (i === 5) ? (row[i] || "").replace(/\n/g, "<br>") : (row[i] || "");
           tr.appendChild(td);
-        });
+        }
         tbody.appendChild(tr);
       });
     }
 
-    document.getElementById("pageInfo").textContent = `الصفحة ${page} من ${Math.ceil(orders.length / rowsPerPage)}`;
+    const totalPages = Math.ceil(orders.length / rowsPerPage);
+    document.getElementById("pageInfo").textContent = `الصفحة ${page} من ${totalPages}`;
     document.getElementById("prevBtn").disabled = page === 1;
-    document.getElementById("nextBtn").disabled = end >= orders.length;
+    document.getElementById("nextBtn").disabled = page >= totalPages;
   }
 
   function prevPage() {
-    if (currentPage > 1) { currentPage--; renderTable(currentPage); }
+    if (currentPage > 1) {
+      currentPage--;
+      renderTable(currentPage);
+    }
   }
 
   function nextPage() {
-    if (currentPage * rowsPerPage < orders.length) { currentPage++; renderTable(currentPage); }
+    if (currentPage * rowsPerPage < orders.length) {
+      currentPage++;
+      renderTable(currentPage);
+    }
   }
 
   function downloadCSV() {
-    const csv = orders.map(e => e.join(",")).join("\n");
+    const csv = orders.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
-    link.download = `orders_${new Date().toLocaleDateString('ar-DZ')}.csv`;
-    document.body.appendChild(link);
+    link.href = url;
+    link.download = `orders_${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
-    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
   fetch(sheetURL)
@@ -159,7 +169,7 @@
     })
     .then(text => {
       const rows = parseCSV(text.trim());
-      orders = rows.slice(1).reverse(); // تخطي العنوان
+      orders = rows.slice(1).reverse(); // تخطي عنوان الجدول
       renderTable(currentPage);
     })
     .catch(err => {
