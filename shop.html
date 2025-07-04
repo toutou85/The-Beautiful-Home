@@ -173,5 +173,88 @@ updateClock();
   </div>
   <p style="text-align:center; color:white;">جميع الحقوق محفوظة &copy; 2025</p>
 </footer>
+<script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+let allProducts = [];
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1);
+    allProducts = rows.map(row => {
+      const [name, image, price, category] = row.split(",");
+      return {
+        name: name.trim(),
+        image: image.trim(),
+        price: price.trim(),
+        category: category?.trim().toLowerCase() || ""
+      };
+    });
+    renderProducts(allProducts);
+  });
+
+function renderProducts(list) {
+  const productList = document.getElementById("productList");
+  productList.innerHTML = "";
+  list.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <img src="${p.image}" alt="${p.name}" />
+      <h3>${p.name}</h3>
+      <p>${p.price} دج</p>
+      <div class="actions">
+        <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
+        <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
+      </div>
+    `;
+    productList.appendChild(div);
+  });
+  updateCartCount();
+}
+
+function addToCart(product) {
+  cart.push(product);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("✔️ تم إضافة المنتج إلى السلة");
+}
+
+function updateCartCount() {
+  document.getElementById("cartCount").textContent = cart.length;
+}
+
+function isFavorite(p) {
+  return favorites.some(f => f.name === p.name);
+}
+
+function toggleFavorite(product) {
+  if (isFavorite(product)) {
+    favorites = favorites.filter(f => f.name !== product.name);
+  } else {
+    favorites.push(product);
+  }
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  renderProducts(allProducts);
+}
+
+function showFavorites() {
+  renderProducts(favorites);
+}
+
+function showCart() {
+  renderProducts(cart);
+}
+
+function filterCategory(cat) {
+  if (cat === 'all') {
+    renderProducts(allProducts);
+  } else {
+    renderProducts(allProducts.filter(p => p.category.includes(cat.toLowerCase())));
+  }
+}
+</script>
 </body>
 </html>
