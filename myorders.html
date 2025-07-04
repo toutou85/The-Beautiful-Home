@@ -152,8 +152,8 @@ function fetchMyOrders() {
   fetch(sheetURL)
     .then(res => res.text())
     .then(text => {
-      const rows = text.trim().split('\n').slice(1).reverse();
-      const myOrders = rows.map(r => r.split(",")).filter(r => r[2].replace(/^'/, "") === phone);
+      const rows = parseCSV(text.trim()).slice(1).reverse();
+      const myOrders = rows.filter(r => r[2].replace(/^'/, "") === phone);
 
       if (myOrders.length === 0) {
         errorMsg.textContent = "❌ لم يتم العثور على أي طلبات.";
@@ -165,25 +165,24 @@ function fetchMyOrders() {
       section.style.display = "block";
       table.innerHTML = "";
 
-    myOrders.forEach(row => {
-  const tr = document.createElement("tr");
-  tr.innerHTML = `
-    <td>${row[0]}</td>
-    <td>${row[1]}</td>
-    <td>${row[2]}</td>
-    <td>${row[3]}</td>
-    <td>${row[4]}</td>
-    <td>${(row[5] || "").replace(/\n/g, "<br>")}</td>
-    <td>${row[6] || "-"}</td>
-    <td>${row[7] || "-"}</td>
-    <td>${row[8] || "-"}</td>
-    <td>${row[9] || "-"}</td>
-    <td>${row[10] || "-"}</td>
-    <td>${row[11] || "-"}</td>
-  `;
-  table.appendChild(tr);
-});
-
+      myOrders.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
+          <td>${row[4]}</td>
+          <td>${(row[5] || "").replace(/\n/g, "<br>")}</td>
+          <td>${row[6] || "-"}</td>
+          <td>${row[7]}</td>
+          <td>${row[8]}</td>
+          <td>${row[9]}</td>
+          <td>${row[10]}</td>
+          <td>${row[11]}</td>
+        `;
+        table.appendChild(tr);
+      });
     })
     .catch(err => {
       errorMsg.textContent = "❌ حدث خطأ أثناء تحميل الطلبات.";
@@ -191,31 +190,44 @@ function fetchMyOrders() {
     });
 }
 
-window.onload = function () {
-  const url = new URL(window.location.href);
-  const phone = url.searchParams.get("phone");
-  const wait = parseInt(url.searchParams.get("wait")) || 10;
+// دالة لتحليل CSV مع دعم النصوص المحاطة بعلامات اقتباس
+function parseCSV(str) {
+  const rows = [];
+  let currentRow = [], currentCell = '', insideQuotes = false;
 
-  if (phone) {
-    document.getElementById("phoneInput").value = phone;
-    const countdownEl = document.getElementById("countdown");
-    const fetchBtn = document.getElementById("fetchBtn");
-    fetchBtn.disabled = true;
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    const nextChar = str[i + 1];
 
-    let counter = wait;
-    const interval = setInterval(() => {
-      countdownEl.textContent = `⌛ الرجاء الانتظار ${counter} ثانية لتحميل الطلبيات...`;
-      counter--;
-      if (counter < 0) {
-        clearInterval(interval);
-        countdownEl.textContent = "";
-        fetchBtn.disabled = false;
-        fetchMyOrders();
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      currentCell += '"';
+      i++; // تخطي الاقتباس المكرر
+    } else if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === ',' && !insideQuotes) {
+      currentRow.push(currentCell);
+      currentCell = '';
+    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+      if (currentCell !== '' || currentRow.length > 0) {
+        currentRow.push(currentCell);
+        rows.push(currentRow);
+        currentRow = [];
+        currentCell = '';
       }
-    }, 1000);
+    } else {
+      currentCell += char;
+    }
   }
-};
+
+  if (currentCell !== '' || currentRow.length > 0) {
+    currentRow.push(currentCell);
+    rows.push(currentRow);
+  }
+
+  return rows;
+}
 </script>
+
 
 </body>
 </html>
