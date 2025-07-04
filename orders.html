@@ -72,7 +72,7 @@
   <span id="pageInfo"></span>
   <button onclick="nextPage()" id="nextBtn">التالي</button>
 </div>
-
+<!-- فقط أبدّل الجزء الخاص بـ fetch -->
 <script>
   const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?gid=0&single=true&output=csv";
   let currentPage = 1;
@@ -88,7 +88,7 @@
     const pageOrders = orders.slice(start, end);
 
     if (pageOrders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="11">لا توجد طلبات</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="12">لا توجد طلبات</td></tr>';
     } else {
       pageOrders.forEach(row => {
         const tr = document.createElement("tr");
@@ -135,23 +135,24 @@
     .then(text => {
       const rows = text.trim().split("\n").map(row => row.split(","));
       orders = rows.slice(1).reverse().map(r => [
-        r[11], // التاريخ
-        r[10],  // الاسم
-        r[9],  // الهاتف
-        r[8],  // الولاية
-        r[7],  // نوع التوصيل
-        r[6],  // العنوان
-        r[5] || "-", // الملاحظة
-        r[4],  // اسم المنتج
-        r[3],  // السعر
-        r[2],  // الكمية
-        r[1]   // المجموع
+        r[0],  // التاريخ
+        r[1],  // الاسم
+        r[2],  // الهاتف
+        r[3],  // الولاية
+        r[4],  // نوع التوصيل
+        r[5],  // العنوان الكامل
+        r[6] || "-", // الملاحظات
+        r[7],  // اسم المنتج
+        r[8],  // السعر
+        r[9],  // الكمية
+        r[10], // سعر التوصيل
+        r[11]  // المجموع الكلي
       ]);
       renderTable(currentPage);
     })
     .catch(err => {
       console.error("⚠️ فشل في تحميل البيانات:", err);
-      document.getElementById("orderTable").innerHTML = '<tr><td colspan="11">⚠️ فشل في تحميل البيانات.</td></tr>';
+      document.getElementById("orderTable").innerHTML = '<tr><td colspan="12">⚠️ فشل في تحميل البيانات.</td></tr>';
     });
 </script>
 
