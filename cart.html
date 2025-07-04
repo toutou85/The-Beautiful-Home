@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سلة المشتريات</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 1rem;
+    }
+    h1 {
+      text-align: center;
+      color: #005f73;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #0a9396;
+      color: white;
+    }
+    .btn {
+      padding: 5px 10px;
+      margin: 0 3px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-danger { background: red; color: white; }
+    .btn-success { background: green; color: white; }
+    .btn-warning { background: orange; color: white; }
+    .total {
+      text-align: right;
+      margin-top: 10px;
+      font-size: 1.2rem;
+      color: #333;
+    }
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      background: #005f73;
+      color: white;
+      padding: 10px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>  <h1>🛒 سلة المشتريات</h1>  <table id="cartTable">
+    <thead>
+      <tr>
+        <th>المنتج</th>
+        <th>السعر</th>
+        <th>الكمية</th>
+        <th>الإجمالي</th>
+        <th>التحكم</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>  <div class="total" id="totalAmount">💰 المجموع: 0 دج</div><button class="checkout-btn" onclick="checkout()">📦 إرسال الطلب</button>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    function renderCart() {
+      const tbody = document.querySelector("#cartTable tbody");
+      const totalAmount = document.getElementById("totalAmount");
+      tbody.innerHTML = "";
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        const row = `
+          <tr>
+            <td>${item.name}</td>
+            <td>${item.price} دج</td>
+            <td>
+              <button class="btn btn-warning" onclick="decrease(${index})">➖</button>
+              ${item.quantity}
+              <button class="btn btn-success" onclick="increase(${index})">➕</button>
+            </td>
+            <td>${subtotal} دج</td>
+            <td><button class="btn btn-danger" onclick="removeItem(${index})">🗑️ حذف</button></td>
+          </tr>`;
+        tbody.innerHTML += row;
+      });
+
+      totalAmount.textContent = `💰 المجموع: ${total} دج`;
+    }
+
+    function increase(i) {
+      cart[i].quantity++;
+      saveCart();
+    }
+
+    function decrease(i) {
+      if (cart[i].quantity > 1) {
+        cart[i].quantity--;
+        saveCart();
+      }
+    }
+
+    function removeItem(i) {
+      if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+        cart.splice(i, 1);
+        saveCart();
+      }
+    }
+
+    function saveCart() {
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert("السلة فارغة!");
+        return;
+      }
+      // هنا يمكن تحويل المستخدم لصفحة تأكيد الطلب مع إرسال البيانات
+      alert("✅ تم إرسال الطلب! سيتم التواصل معك قريبًا.");
+      localStorage.removeItem("cart");
+      window.location.href = "index.html";
+    }
+
+    renderCart();
+  </script></body>
+</html>
