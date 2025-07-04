@@ -49,21 +49,21 @@
 <table>
   <thead>
     <tr>
-      <th>التاريخ</th>
-      <th>الاسم</th>
-      <th>الهاتف</th>
-      <th>الولاية</th>
-      <th>نوع التوصيل</th>
-      <th>العنوان</th>
-      <th>الملاحظة</th>
-       <th>اسم المنتج</th>
-      <th>سعر المنتج</th>
-      <th>الكمية</th>
-      <th>المجموع</th>
+      <th>📅 التاريخ</th>
+      <th>👤 الاسم</th>
+      <th>📞 الهاتف</th>
+      <th>📍 الولاية</th>
+      <th>🚚 نوع التوصيل</th>
+      <th>🏠 العنوان</th>
+      <th>📝 ملاحظة</th>
+      <th>🛒 اسم المنتج</th>
+      <th>💵 السعر</th>
+      <th>📦 الكمية</th>
+      <th>💰 المجموع</th>
     </tr>
   </thead>
   <tbody id="orderTable">
-    <tr><td colspan="7">⏳ جاري التحميل...</td></tr>
+    <tr><td colspan="11">⏳ جاري التحميل...</td></tr>
   </tbody>
 </table>
 
@@ -88,7 +88,7 @@
     const pageOrders = orders.slice(start, end);
 
     if (pageOrders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7">لا توجد طلبات</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="11">لا توجد طلبات</td></tr>';
     } else {
       pageOrders.forEach(row => {
         const tr = document.createElement("tr");
@@ -124,7 +124,7 @@
     let csvContent = "data:text/csv;charset=utf-8," + orders.map(e => e.join(",")).join("\n");
     let link = document.createElement("a");
     link.setAttribute("href", encodeURI(csvContent));
-    link.setAttribute("download", "orders.csv");
+    link.setAttribute("download", `orders_${new Date().toLocaleDateString('ar-DZ')}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -134,15 +134,27 @@
     .then(res => res.text())
     .then(text => {
       const rows = text.trim().split("\n").map(row => row.split(","));
-      orders = rows.slice(1); // skip header
+      orders = rows.slice(1).reverse().map(r => [
+        r[11], // التاريخ
+        r[0],  // الاسم
+        r[1],  // الهاتف
+        r[2],  // الولاية
+        r[3],  // نوع التوصيل
+        r[4],  // العنوان
+        r[12] || "-", // الملاحظة
+        r[5],  // اسم المنتج
+        r[6],  // السعر
+        r[7],  // الكمية
+        r[8]   // المجموع
+      ]);
       renderTable(currentPage);
     })
     .catch(err => {
-      console.error("فشل في تحميل البيانات:", err);
-      const tbody = document.getElementById("orderTable");
-      tbody.innerHTML = '<tr><td colspan="7">⚠️ فشل في تحميل البيانات.</td></tr>';
+      console.error("⚠️ فشل في تحميل البيانات:", err);
+      document.getElementById("orderTable").innerHTML = '<tr><td colspan="11">⚠️ فشل في تحميل البيانات.</td></tr>';
     });
 </script>
 
 </body>
 </html>
+
