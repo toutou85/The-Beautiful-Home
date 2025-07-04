@@ -16,47 +16,60 @@
       color: white;
       padding: 1rem;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       position: relative;
     }
     .logo {
+      position: absolute;
+      left: 1rem;
+      top: 0.8rem;
       height: 40px;
     }
-    .header-title {
-      font-size: 1.4rem;
-    }
-    .top-buttons {
-      display: flex;
-      gap: 10px;
-    }
-    .top-buttons a {
+    .orders-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
       background-color: #0a9396;
       color: white;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
       text-decoration: none;
       font-size: 0.9rem;
     }
-    .category-bar {
+    .header-title {
+      font-size: 1.6rem;
+    }
+    .toolbar {
       display: flex;
-      overflow-x: auto;
-      padding: 10px;
+      justify-content: center;
       gap: 10px;
-      background: #e0f7fa;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    .toolbar button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #94d2bd;
+      cursor: pointer;
+    }
+    .search-bar {
+      margin: 1rem auto;
+      max-width: 400px;
+      display: flex;
+      gap: 0.5rem;
       justify-content: center;
     }
-    .category-bar button {
-      background: #0a9396;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 5px 12px;
-      cursor: pointer;
+    .search-bar input {
+      width: 70%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
     }
     .products {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1rem;
       padding: 1rem;
     }
@@ -64,31 +77,34 @@
       background: white;
       padding: 1rem;
       border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
       position: relative;
     }
     .product img {
       width: 100%;
-      height: 150px;
+      height: 180px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 10px;
     }
-    .actions {
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-around;
-    }
-    .actions button {
-      padding: 6px 10px;
+    .favorite-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
       border: none;
-      border-radius: 4px;
-      background-color: #0a9396;
-      color: white;
+      font-size: 20px;
+      color: red;
       cursor: pointer;
     }
-    .favorites-btn.active {
-      background: crimson !important;
+    .order-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 0.5rem 1rem;
+      background: #0a9396;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
     }
     footer {
       background: #003344;
@@ -99,105 +115,105 @@
   </style>
 </head>
 <body><header>
+  <a href="myorders.html" class="orders-btn">📦 طلباتي</a>
   <img src="logo.png" class="logo" alt="Logo">
   <div class="header-title">Beautiful Home</div>
-  <div class="top-buttons">
-    <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
-    <a href="#" onclick="showCart()">🛒 السلة (<span id="cartCount">0</span>)</a>
-    <a href="myorders.html">📦 طلباتي</a>
-  </div>
-</header><div class="category-bar" id="categoryBar">
-  <button onclick="filterCategory('all')">الكل</button>
-  <button onclick="filterCategory('المطبخ')">المطبخ</button>
-  <button onclick="filterCategory('عناية')">عناية بالجمال</button>
-  <button onclick="filterCategory('البيت')">البيت</button>
-  <button onclick="filterCategory('ادوات')">ادوات</button>
-  <button onclick="filterCategory('صيف')">صيف</button>
-  <button onclick="filterCategory('الكترونية')">إلكترونية</button>
-  <button onclick="filterCategory('ملحقات')">ملحقات سيارات</button>
+</header><div class="toolbar">
+  <button onclick="filterCategory('الكل')">📋 كل الفئات</button>
+  <button onclick="filterCategory('المطبخ')">🍽 المطبخ</button>
+  <button onclick="filterCategory('البيت')">🏠 البيت</button>
+  <button onclick="filterCategory('أدوات')">🛠 أدوات</button>
+  <button onclick="filterCategory('صيف')">🌞 صيف</button>
+  <button onclick="filterCategory('عناية بالجمال')">💄 الجمال</button>
+  <button onclick="filterCategory('إلكترونية')">📱 إلكترونيات</button>
+  <button onclick="filterCategory('ملحقات السيارات والدراجات')">🚗 ملحقات</button>
+  <button onclick="showFavorites()">❤️ المفضلة</button>
+  <button onclick="goToCart()">🛒 السلة</button>
+</div><div class="search-bar">
+  <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+  <button onclick="filterProducts()">بحث</button>
 </div><section class="products" id="productList">جاري التحميل...</section><footer>
-  <p>جميع الحقوق محفوظة &copy; 2025</p>
+  <p style="text-align:center; color:white;">جميع الحقوق محفوظة &copy; 2025</p>
 </footer><script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-let allProducts = [];
-let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+let allProducts = [], currentProducts = [];
 
 fetch(sheetURL)
   .then(res => res.text())
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
     allProducts = rows.map(row => {
-      const [name, image, price, category] = row.split(",");
+      const [name, image, price, quantity, category] = row.split(",");
       return {
-        name: name.trim(),
-        image: image.trim(),
-        price: price.trim(),
-        category: category?.trim().toLowerCase() || ""
+        name: name?.trim(),
+        image: image?.trim() || "https://via.placeholder.com/250x180",
+        price: price?.trim(),
+        quantity: parseInt(quantity) || 0,
+        category: category?.trim() || "غير مصنف"
       };
     });
-    renderProducts(allProducts);
+    currentProducts = allProducts;
+    displayProducts(allProducts);
   });
 
-function renderProducts(list) {
+function displayProducts(products) {
   const productList = document.getElementById("productList");
-  productList.innerHTML = "";
-  list.forEach(p => {
+  productList.innerHTML = '';
+  products.forEach(p => {
     const div = document.createElement("div");
     div.className = "product";
+    const isFav = isFavorite(p.name);
     div.innerHTML = `
-      <img src="${p.image}" alt="${p.name}" />
+      <button class="favorite-btn" onclick="toggleFavorite('${p.name}')">${isFav ? '❤️' : '🤍'}</button>
+      <img src="${p.image}" alt="${p.name}">
       <h3>${p.name}</h3>
       <p>${p.price} دج</p>
-      <div class="actions">
-        <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
-        <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
-      </div>
+      <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
     `;
     productList.appendChild(div);
   });
-  updateCartCount();
 }
 
-function addToCart(product) {
-  cart.push(product);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  updateCartCount();
-  alert("✔️ تم إضافة المنتج إلى السلة");
-}
-
-function updateCartCount() {
-  document.getElementById("cartCount").textContent = cart.length;
-}
-
-function isFavorite(p) {
-  return favorites.some(f => f.name === p.name);
-}
-
-function toggleFavorite(product) {
-  if (isFavorite(product)) {
-    favorites = favorites.filter(f => f.name !== product.name);
-  } else {
-    favorites.push(product);
-  }
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-  renderProducts(allProducts);
-}
-
-function showFavorites() {
-  renderProducts(favorites);
-}
-
-function showCart() {
-  renderProducts(cart);
+function filterProducts() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = currentProducts.filter(p => p.name.toLowerCase().includes(q));
+  displayProducts(filtered);
 }
 
 function filterCategory(cat) {
-  if (cat === 'all') {
-    renderProducts(allProducts);
+  if (cat === "الكل") {
+    currentProducts = allProducts;
   } else {
-    renderProducts(allProducts.filter(p => p.category.includes(cat.toLowerCase())));
+    currentProducts = allProducts.filter(p => p.category === cat);
   }
+  displayProducts(currentProducts);
+}
+
+function toggleFavorite(name) {
+  let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+  if (favs.includes(name)) {
+    favs = favs.filter(f => f !== name);
+  } else {
+    favs.push(name);
+  }
+  localStorage.setItem("favorites", JSON.stringify(favs));
+  displayProducts(currentProducts);
+}
+
+function isFavorite(name) {
+  const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+  return favs.includes(name);
+}
+
+function showFavorites() {
+  const favs = JSON.parse(localStorage.getItem("favorites") || "[]");
+  const favProducts = allProducts.filter(p => favs.includes(p.name));
+  currentProducts = favProducts;
+  displayProducts(favProducts);
+}
+
+function goToCart() {
+  window.location.href = "cart.html";
 }
 </script></body>
 </html>
