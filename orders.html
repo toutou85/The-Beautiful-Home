@@ -1,182 +1,162 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>طلبات الزبائن</title>
-  <script>
-    if (!sessionStorage.getItem("loggedIn")) {
-      window.location.href = "login.html";
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>السلة - Beautiful Home</title>
+  <link rel="icon" href="favicon.png">
   <style>
-    body { font-family: Tahoma, sans-serif; background: #f4f4f4; padding: 2rem; }
-    h1 { text-align: center; color: #005f73; margin-bottom: 1.5rem; }
-    table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; font-size: 0.9rem; }
-    th { background-color: #0a9396; color: white; }
-    tr:nth-child(even) { background-color: #f9f9f9; }
-    .controls { text-align: center; margin: 20px 0; }
-    button { margin: 5px; padding: 10px 15px; background-color: #005f73; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background-color: #0a9396; }
-    .pagination { text-align: center; margin-top: 1rem; }
-    .pagination button { margin: 3px; background: #ccc; color: #000; border: none; padding: 6px 10px; border-radius: 4px; }
-    .pagination button.active { background: #005f73; color: white; }
-    .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+    body {
+      font-family: Tahoma, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
     header {
+      background-color: #005f73;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.4rem;
+    }
+    .cart-container {
+      padding: 1rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .cart-item {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
+      justify-content: space-between;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
       margin-bottom: 1rem;
+    }
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .cart-details {
+      flex: 1;
+      margin: 0 1rem;
+    }
+    .cart-details h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .cart-details p {
+      color: #555;
+      margin: 5px 0;
+    }
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .quantity-control button {
+      background: #005f73;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .remove-btn {
+      color: red;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .total {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 1rem 0;
+    }
+    .buy-btn {
+      display: block;
+      width: 100%;
+      background: #0a9396;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <header>🛒 سلة المشتريات</header>
+  <div class="cart-container" id="cartList">جاري التحميل...</div>
+  <div class="total" id="totalPrice"></div>
+  <button class="buy-btn" onclick="goToOrder()">شراء</button>
 
-<header>
-  <img src="logo.png" style="height: 40px;" alt="Logo">
-  <h1 style="margin: 0; font-size: 1.6rem;">طلبات الزبائن</h1>
-</header>
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const deliveryFee = 500; // التوصيل ثابت مثلًا 500 دج
 
-<div style="padding: 1rem;">
-  <a href="admin.php" style="text-decoration: none; background: #005f73; color: white; padding: 0.5rem 1rem; border-radius: 5px;">🔙 الرجوع</a>
-</div>
+    function updateCartDisplay() {
+      const container = document.getElementById("cartList");
+      const totalDiv = document.getElementById("totalPrice");
+      container.innerHTML = "";
 
-<div class="controls">
-  <button onclick="window.print()">🖨️ طباعة</button>
-  <button onclick="downloadCSV()">⬇️ تحميل كـ Excel</button>
-</div>
-
-<table>
-  <thead>
-    <tr>
-      <th>📅 التاريخ</th>
-      <th>👤 الاسم</th>
-      <th>📞 الهاتف</th>
-      <th>📍 الولاية</th>
-      <th>🚚 نوع التوصيل</th>
-      <th>🏠 العنوان</th>
-      <th>📝 ملاحظات</th>
-      <th>🛒 اسم المنتج</th>
-      <th>💵 السعر</th>
-      <th>📦 الكمية</th>
-      <th>🚚 سعر التوصيل</th>
-      <th>💰 المجموع</th>
-    </tr>
-  </thead>
-  <tbody id="orderTable">
-    <tr><td colspan="12">⏳ جاري التحميل...</td></tr>
-  </tbody>
-</table>
-
-<div class="pagination">
-  <button onclick="prevPage()" id="prevBtn">السابق</button>
-  <span id="pageInfo">...</span>
-  <button onclick="nextPage()" id="nextBtn">التالي</button>
-</div>
-
-<script>
-  const rawCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?gid=0&single=true&output=csv";
-const sheetURL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rawCSV);
-
-  let currentPage = 1;
-  const rowsPerPage = 20;
-  let orders = [];
-
-  function parseCSV(str) {
-    const rows = [];
-    let row = [], cell = '', inQuotes = false;
-
-    for (let i = 0; i < str.length; i++) {
-      const char = str[i], next = str[i + 1];
-      if (char === '"' && inQuotes && next === '"') {
-        cell += '"'; i++;
-      } else if (char === '"') {
-        inQuotes = !inQuotes;
-      } else if (char === ',' && !inQuotes) {
-        row.push(cell); cell = '';
-      } else if ((char === '\n' || char === '\r') && !inQuotes) {
-        if (cell !== '' || row.length) {
-          row.push(cell); rows.push(row);
-          row = []; cell = '';
-        }
-      } else {
-        cell += char;
+      if (cart.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>🛒 السلة فارغة</p>";
+        totalDiv.textContent = "";
+        return;
       }
-    }
-    if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
-    return rows;
-  }
 
-  function renderTable(page) {
-    const tbody = document.getElementById("orderTable");
-    tbody.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, index) => {
+        const quantity = item.quantity || 1;
+        const itemTotal = quantity * parseInt(item.price);
+        total += itemTotal;
 
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const pageOrders = orders.slice(start, end);
-
-    if (pageOrders.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="12">لا توجد طلبات.</td></tr>';
-    } else {
-      pageOrders.forEach(row => {
-        const tr = document.createElement("tr");
-        for (let i = 0; i < 12; i++) {
-          const td = document.createElement("td");
-          td.innerHTML = (i === 5) ? (row[i] || "").replace(/\n/g, "<br>") : (row[i] || "");
-          tr.appendChild(td);
-        }
-        tbody.appendChild(tr);
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cart-details">
+            <h3>${item.name}</h3>
+            <p>${item.price} دج × ${quantity}</p>
+          </div>
+          <div class="quantity-control">
+            <button onclick="changeQuantity(${index}, -1)">➖</button>
+            <span>${quantity}</span>
+            <button onclick="changeQuantity(${index}, 1)">➕</button>
+          </div>
+          <div class="remove-btn" onclick="removeItem(${index})">🗑</div>
+        `;
+        container.appendChild(div);
       });
+
+      totalDiv.textContent = `📦 المجموع: ${total + deliveryFee} دج (شامل التوصيل)`;
     }
 
-    const totalPages = Math.ceil(orders.length / rowsPerPage);
-    document.getElementById("pageInfo").textContent = `الصفحة ${page} من ${totalPages}`;
-    document.getElementById("prevBtn").disabled = page === 1;
-    document.getElementById("nextBtn").disabled = page >= totalPages;
-  }
-
-  function prevPage() {
-    if (currentPage > 1) {
-      currentPage--;
-      renderTable(currentPage);
+    function changeQuantity(index, delta) {
+      if (!cart[index].quantity) cart[index].quantity = 1;
+      cart[index].quantity += delta;
+      if (cart[index].quantity < 1) cart[index].quantity = 1;
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartDisplay();
     }
-  }
 
-  function nextPage() {
-    if (currentPage * rowsPerPage < orders.length) {
-      currentPage++;
-      renderTable(currentPage);
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartDisplay();
     }
-  }
 
-  function downloadCSV() {
-    const csv = orders.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `orders_${new Date().toISOString().slice(0, 10)}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
+    function goToOrder() {
+      window.location.href = "order.html";
+    }
 
-  fetch(sheetURL)
-    .then(res => {
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.text();
-    })
-    .then(text => {
-      const rows = parseCSV(text.trim());
-      orders = rows.slice(1).reverse(); // تخطي عنوان الجدول
-      renderTable(currentPage);
-    })
-    .catch(err => {
-      console.error("⚠️ فشل في تحميل البيانات:", err);
-      document.getElementById("orderTable").innerHTML = '<tr><td colspan="12">⚠️ فشل في تحميل البيانات.</td></tr>';
-    });
-</script>
-
+    updateCartDisplay();
+  </script>
 </body>
 </html>
