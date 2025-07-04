@@ -4,11 +4,19 @@
   <meta charset="UTF-8">
   <title>إضافة وتعديل المنتجات</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script>
+    if (!sessionStorage.getItem("loggedIn")) {
+      window.location.href = "login.html";
+    }
+  </script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #f4f4f4;
       padding: 20px;
+      margin: 0;
     }
     h1, h2 {
       text-align: center;
@@ -43,9 +51,43 @@
       display: block;
       margin: 5px 0 2px;
     }
+
+    #notifButton {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: #007bff;
+      color: white;
+      font-size: 26px;
+      border: none;
+      border-radius: 50%;
+      width: 55px;
+      height: 55px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    #orderNotif {
+      display: none;
+      position: fixed;
+      top: 85px;
+      left: 15px;
+      background: #007bff;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      font-size: 15px;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
+
+  <button id="notifButton" onclick="openOrders()" title="عرض الطلبات الجديدة">🔔</button>
+  <div id="orderNotif">📦 تم استلام طلب جديد!</div>
+  <audio id="notifSound" src="https://dn720304.ca.archive.org/0/items/sumsung_galaxy_s4/avast.mp3" preload="auto"></audio>
 
   <h1>➕ إضافة منتج جديد</h1>
   <form id="addProductForm">
@@ -64,8 +106,8 @@
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
     const scriptURL = "https://script.google.com/macros/s/AKfycbxq6r1VosF_v4RLVsRX1gFZYunYYClC4yV7k76xPCZvg4Q0keYmwlf9vHv7PpXaIk8B/exec";
+    const ordersSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?gid=0&single=true&output=csv";
 
-    // إضافة منتج جديد
     document.getElementById("addProductForm").addEventListener("submit", e => {
       e.preventDefault();
       const formData = new FormData(e.target);
@@ -81,7 +123,6 @@
       .catch(() => alert("❌ فشل في الإرسال"));
     });
 
-    // تحميل جميع المنتجات
     let allProducts = [];
     fetch(sheetURL)
       .then(res => res.text())
@@ -93,7 +134,6 @@
         });
       });
 
-    // البحث والتعديل
     document.getElementById("searchBox").addEventListener("input", function () {
       const term = this.value.trim().toLowerCase();
       const results = allProducts.filter(p => p.nom.toLowerCase().includes(term)).slice(0, 3);
@@ -117,7 +157,6 @@
       });
     });
 
-    // إرسال التعديلات
     function saveChange(row) {
       const prix = document.getElementById(`prix-${row}`).value;
       const image = document.getElementById(`image-${row}`).value;
@@ -135,8 +174,43 @@
       .then(msg => alert("✅ " + msg))
       .catch(err => alert("❌ فشل التحديث"));
     }
-  </script>
 
+    function openOrders() {
+      window.open("orders.html", "_blank");
+    }
+
+    function showNotifPopup() {
+      const popup = document.getElementById("orderNotif");
+      popup.style.display = "block";
+      playNotifSound();
+      setTimeout(() => popup.style.display = "none", 8000);
+    }
+
+    function playNotifSound() {
+      const sound = document.getElementById("notifSound");
+      sound.play().catch(() => {});
+    }
+
+    function checkNewOrders() {
+      fetch(ordersSheetURL)
+        .then(res => res.text())
+        .then(csv => {
+          const rows = csv.trim().split("\n");
+          const current = rows.length - 1;
+          const last = parseInt(localStorage.getItem("lastOrderCount")) || 0;
+
+          if (current > last) {
+            showNotifPopup();
+          }
+
+          localStorage.setItem("lastOrderCount", current);
+        });
+    }
+
+    window.addEventListener("load", () => {
+      checkNewOrders();
+      setInterval(checkNewOrders, 60000);
+    });
+  </script>
 </body>
 </html>
-
