@@ -84,6 +84,7 @@
   <input type="text" name="product" id="productInput" readonly>
   <input type="number" name="price" id="priceInput" readonly>
   <input type="number" name="quantity" id="quantityInput" placeholder="الكمية" required min="1">
+  <input type="hidden" name="deliveryCost" id="deliveryCostInput">
   <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
 
   <div id="loadingMessage" style="display:none">⏳ فضلاً انتظر... استغفر الله العظيم</div>
@@ -167,15 +168,18 @@
     }
   }
 
-  function calculateTotal() {
-    const price = parseInt(document.getElementById("priceInput").value || 0);
-    const quantity = parseInt(document.getElementById("quantityInput").value || 1);
-    const wilaya = wilayaSelect.value;
-    const deliveryType = document.getElementById("deliveryType").value;
-    const deliveryCost = deliveryData[wilaya]?.[deliveryType] || 0;
-    const total = (price * quantity) + deliveryCost;
-    document.getElementById("totalPrice").value = total + " دج";
-  }
+function calculateTotal() {
+  const price = parseInt(document.getElementById("priceInput").value || 0);
+  const quantity = parseInt(document.getElementById("quantityInput").value || 1);
+  const wilaya = wilayaSelect.value;
+  const deliveryType = document.getElementById("deliveryType").value;
+  const deliveryCost = deliveryData[wilaya]?.[deliveryType] || 0;
+  const total = (price * quantity) + deliveryCost;
+
+ document.getElementById("deliveryCostInput").value = deliveryCost; 
+  document.getElementById("totalPrice").value = total + " دج";
+}
+
 
   document.getElementById("quantityInput").addEventListener("input", calculateTotal);
   document.getElementById("wilaya").addEventListener("change", calculateTotal);
