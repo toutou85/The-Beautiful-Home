@@ -208,10 +208,8 @@
     e.preventDefault();
     document.getElementById("loadingMessage").style.display = "block";
 
-    const phoneInput = document.getElementById("phoneInput");
-    if (phoneInput.value.startsWith("0")) {
-      phoneInput.value = "'" + phoneInput.value;
-    }
+  formData.set("phone", "'" + phone); // يحفظ الرقم كما هو مع علامة '
+
 
     const formData = new FormData(this);
     const scriptURL = "https://script.google.com/macros/s/AKfycbyTsSfMdFTeLq3OveworeTNv9H_r0amHT6aozp6heyxbwgfc4WSixOEIKBgpVM4KXpW/exec";
