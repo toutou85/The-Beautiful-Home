@@ -10,7 +10,7 @@
       window.location.href = "login.html";
     }
   </script>
-
+  <p>👥 عدد الزوار: <strong id="visitorsCount">...</strong></p>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -212,5 +212,20 @@
       setInterval(checkNewOrders, 60000);
     });
   </script>
+<script>
+function fetchVisitorsCount() {
+  fetch("https://script.google.com/macros/s/AKfycbwwBf8Q__aNBMCtS-XxeK4qp0hMWDJhD63IU4OlkjAyWIXgSM7OVlGQwI8ob2TbH9ao/exec")
+    .then(res => res.text())
+    .then(count => {
+      document.getElementById("visitorsCount").textContent = count;
+    })
+    .catch(() => {
+      document.getElementById("visitorsCount").textContent = "❌ خطأ";
+    });
+}
+
+window.onload = fetchVisitorsCount;
+</script>
+
 </body>
 </html>
