@@ -65,7 +65,12 @@
 
 <form id="orderForm">
   <input type="text" name="name" placeholder="الاسم واللقب" required>
-  <input type="tel" name="phone" id="phoneInput" placeholder="رقم الهاتف (يبدأ بـ 05 أو 06 أو 07)" required maxlength="10" pattern="^0(5|6|7)[0-9]{8}$" title="رقم الهاتف يجب أن يبدأ بـ 05 أو 06 أو 07 ويحتوي على 10 أرقام.">
+
+  <input type="tel" name="phone" id="phoneInput"
+         placeholder="رقم الهاتف (يبدأ بـ 05 أو 06 أو 07)"
+         required maxlength="10"
+         pattern="^0(5|6|7)[0-9]{8}$"
+         title="رقم الهاتف يجب أن يبدأ بـ 05 أو 06 أو 07 ويحتوي على 10 أرقام.">
 
   <select name="wilaya" id="wilaya" required onchange="updateDelivery()">
     <option value="">اختر ولايتك</option>
@@ -81,17 +86,21 @@
   <textarea name="address" placeholder="العنوان الكامل بالتفصيل" required></textarea>
   <textarea name="notes" placeholder="ملاحظات إضافية (اختياري)"></textarea>
 
-   <input type="text" name="product" id="productInput" readonly>
-  <input type="number" name="price" id="priceInput" readonly>
-  <input type="text" name="deliveryCost" id="deliveryCostInput" placeholder="سعر التوصيل" readonly>
-  <input type="number" name="quantity" id="quantityInput" placeholder="الكمية" required min="1">
-  <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
+  <input type="text" name="product" id="productInput" readonly placeholder="نوع المنتج">
+  <input type="number" name="price" id="priceInput" readonly placeholder="سعر المنتج">
 
+  <!-- ترتيب الحقول المطلوب -->
+  <input type="text" name="deliveryCost" id="deliveryCostInput" placeholder="سعر التوصيل" readonly>
+
+  <input type="number" name="quantity" id="quantityInput" placeholder="الكمية" required min="1">
+
+  <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
 
   <div id="loadingMessage" style="display:none">⏳ فضلاً انتظر... استغفر الله العظيم</div>
 
   <button type="submit">تأكيد الطلب</button>
 </form>
+
 
 <script>
   const deliveryData = {
