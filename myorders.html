@@ -111,17 +111,17 @@
       <thead>
         <tr>
           <th>📅 التاريخ</th>
-        <th>👤 الاسم واللقب</th>
-        <th>📞 رقم الهاتف</th>
-        <th>📍 الولاية</th>
-        <th>🚚 نوع التوصيل</th>
-        <th>🏠 العنوان الكامل</th>
-        <th>📝 ملاحظات</th>
-        <th>🛒 اسم المنتج</th>
-        <th>💵 السعر</th>
-        <th>📦 الكمية</th>
-        <th>🚚 سعر التوصيل</th>
-        <th>💰 المجموع الكلي</th>
+          <th>👤 الاسم واللقب</th>
+          <th>📞 رقم الهاتف</th>
+          <th>📍 الولاية</th>
+          <th>🚚 نوع التوصيل</th>
+          <th>🏠 العنوان الكامل</th>
+          <th>📝 ملاحظات</th>
+          <th>🛒 اسم المنتج</th>
+          <th>💵 السعر</th>
+          <th>📦 الكمية</th>
+          <th>🚚 سعر التوصيل</th>
+          <th>💰 المجموع الكلي</th>
         </tr>
       </thead>
       <tbody id="ordersTable"></tbody>
@@ -168,18 +168,18 @@ function fetchMyOrders() {
       myOrders.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-         <td>${order.date}</td>
-        <td>${order.name}</td>
-        <td>${order.phone}</td>
-        <td>${order.wilaya}</td>
-        <td>${order.deliveryType}</td>
-        <td>${order.address.replace(/\n/g, "<br>")}</td>
-        <td>${order.notes || "-"}</td>
-        <td>${order.product}</td>
-        <td>${order.price}</td>
-        <td>${order.quantity}</td>
-        <td>${order.delivery}</td>
-        <td>${order.total}</td>
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+          <td>${row[3]}</td>
+          <td>${row[4]}</td>
+          <td>${row[5].replace(/\n/g, "<br>")}</td>
+          <td>${row[6] || "-"}</td>
+          <td>${row[7]}</td>
+          <td>${row[8]}</td>
+          <td>${row[9]}</td>
+          <td>${row[10]}</td>
+          <td>${row[11]}</td>
         `;
         table.appendChild(tr);
       });
@@ -218,3 +218,4 @@ window.onload = function () {
 
 </body>
 </html>
+
