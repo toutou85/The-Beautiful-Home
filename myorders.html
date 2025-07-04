@@ -117,10 +117,10 @@
           <th>🏠 العنوان</th>
           <th>📝 ملاحظة </th>
           <th>🛒 اسم المنتج</th>
-          <th>💵 سعر االمنتج </th>
+          <th>💵 سعر المنتج</th>
           <th>📦 الكمية</th>
           <th>💰 المجموع</th>
-          <th></th>
+          <th>🚚 التوصيل</th>
           <th>📅 التاريخ</th>
           <th>🔄 الحالة</th>
         </tr>
@@ -154,7 +154,7 @@ function fetchMyOrders() {
     .then(res => res.text())
     .then(text => {
       const rows = text.trim().split('\n').slice(1).reverse();
-      const myOrders = rows.map(r => r.split(",")).filter(r => r[2] === phone);
+      const myOrders = rows.map(r => r.split(",")).filter(r => r[2].replace(/^'/, "") === phone);
 
       if (myOrders.length === 0) {
         errorMsg.textContent = "❌ لم يتم العثور على أي طلبات.";
@@ -174,15 +174,14 @@ function fetchMyOrders() {
           <td>${row[3]}</td>
           <td>${row[4]}</td>
           <td>${row[5]}</td>
-          <td>${row[12] || "-"}</td>
-          <td>${row[6]}</td>
+          <td>${row[6] || "-"}</td>
           <td>${row[7]}</td>
           <td>${row[8]}</td>
           <td>${row[9]}</td>
-          <td>${row[10]}</td>
           <td>${row[11]}</td>
+          <td>${row[10]}</td>
           <td>${row[0]}</td>
-          <td>${row[13] || "قيد المعالجة"}</td>
+          <td>${row[12] || "قيد المعالجة"}</td>
         `;
         table.appendChild(tr);
       });
@@ -193,7 +192,6 @@ function fetchMyOrders() {
     });
 }
 
-// تحميل تلقائي من الرابط
 window.onload = function () {
   const url = new URL(window.location.href);
   const phone = url.searchParams.get("phone");
