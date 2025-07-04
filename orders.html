@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>طلبيات الزبائن</title>
-    <script>
-  if (!sessionStorage.getItem("loggedIn")) {
-    window.location.href = "login.html";
-  }
-</script>
+  <script>
+    if (!sessionStorage.getItem("loggedIn")) {
+      window.location.href = "login.html";
+    }
+  </script>
   <style>
     body { font-family: Tahoma, sans-serif; background: #f4f4f4; padding: 2rem; }
     h1 { text-align: center; color: #005f73; margin-bottom: 1.5rem; }
@@ -35,7 +34,7 @@
 
 <header>
   <img src="logo.png" style="height: 40px;">
-  <h1 style="margin: 0; font-size: 1.6rem;">طلبات الزبائن - <?= htmlspecialchars($_SESSION['user']) ?></h1>
+  <h1 style="margin: 0; font-size: 1.6rem;">طلبات الزبائن</h1>
 </header>
 
 <div style="padding: 1rem;">
@@ -118,7 +117,7 @@
   }
 
   function downloadCSV() {
-    let csvContent = "data:text/csv;charset=utf-8," + orders.map(e => e.join(",")).join("\\n");
+    let csvContent = "data:text/csv;charset=utf-8," + orders.map(e => e.join(",")).join("\n");
     let link = document.createElement("a");
     link.setAttribute("href", encodeURI(csvContent));
     link.setAttribute("download", "orders.csv");
@@ -130,8 +129,8 @@
   fetch(sheetURL)
     .then(res => res.text())
     .then(text => {
-      const rows = text.trim().split("\\n").map(row => row.split(","));
-      orders = rows.slice(1);
+      const rows = text.trim().split("\n").map(row => row.split(","));
+      orders = rows.slice(1); // skip header
       renderTable(currentPage);
     })
     .catch(err => {
