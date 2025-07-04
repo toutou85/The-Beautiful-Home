@@ -81,11 +81,15 @@
   <textarea name="address" placeholder="العنوان الكامل بالتفصيل" required></textarea>
   <textarea name="notes" placeholder="ملاحظات إضافية (اختياري)"></textarea>
 
-  <input type="text" name="product" id="productInput" readonly>
+   <input type="text" name="product" id="productInput" readonly>
   <input type="number" name="price" id="priceInput" readonly>
+
   <input type="number" name="quantity" id="quantityInput" placeholder="الكمية" required min="1">
-  <input type="hidden" name="deliveryCost" id="deliveryCostInput">
+
+  <input type="text" name="deliveryCost" id="deliveryCostInput" placeholder="سعر التوصيل" readonly>
+
   <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
+
 
   <div id="loadingMessage" style="display:none">⏳ فضلاً انتظر... استغفر الله العظيم</div>
 
