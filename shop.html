@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -12,121 +11,85 @@
       margin: 0;
       padding: 0;
     }
-
     header {
       background-color: #005f73;
       color: white;
       padding: 1rem;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       position: relative;
     }
-
     .logo {
-      position: absolute;
-      left: 1rem;
-      top: 0.8rem;
       height: 40px;
     }
-
-    .orders-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
+    .header-title {
+      font-size: 1.4rem;
+    }
+    .top-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .top-buttons a {
       background-color: #0a9396;
       color: white;
-      padding: 8px 14px;
+      padding: 6px 12px;
       border-radius: 6px;
       text-decoration: none;
       font-size: 0.9rem;
-      transition: background 0.3s;
     }
-
-    .orders-btn:hover {
-      background-color: #0c7a7b;
-    }
-
-    .header-title {
-      font-size: 1.6rem;
-      text-align: center;
-    }
-
-    .search-bar {
-      margin: 1rem auto;
-      max-width: 400px;
+    .category-bar {
       display: flex;
-      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 10px;
+      gap: 10px;
+      background: #e0f7fa;
       justify-content: center;
     }
-
-    .search-bar input {
-      width: 70%;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    .search-bar button {
-      padding: 0.5rem 1rem;
-      background-color: #0a9396;
+    .category-bar button {
+      background: #0a9396;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 20px;
+      padding: 5px 12px;
       cursor: pointer;
     }
-
     .products {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
       padding: 1rem;
     }
-
     .product {
       background: white;
       padding: 1rem;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
       text-align: center;
+      position: relative;
     }
-
     .product img {
       width: 100%;
-      height: 180px;
+      height: 150px;
       object-fit: cover;
-      border-radius: 10px;
+      border-radius: 8px;
     }
-
-    .order-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 0.5rem 1rem;
-      background: #0a9396;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
+    .actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-around;
     }
-
-    .pagination {
-      text-align: center;
-      margin: 1rem;
-    }
-
-    .pagination button {
-      margin: 0 5px;
-      padding: 0.5rem 1rem;
+    .actions button {
+      padding: 6px 10px;
       border: none;
-      background: #ccc;
-      border-radius: 5px;
+      border-radius: 4px;
+      background-color: #0a9396;
+      color: white;
       cursor: pointer;
     }
-
-    .pagination button.active {
-      background: #005f73;
-      color: white;
+    .favorites-btn.active {
+      background: crimson !important;
     }
-
     footer {
       background: #003344;
       padding: 1rem;
@@ -135,124 +98,106 @@
     }
   </style>
 </head>
-<body>
-
-  <header>
-    <a href="myorders.html" class="orders-btn">📦 طلباتي</a>
-    <img src="logo.png" class="logo" alt="Logo">
-    <div class="header-title">Beautiful Home</div>
-  </header>
-
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
-    <button onclick="filterProducts()">بحث</button>
+<body><header>
+  <img src="logo.png" class="logo" alt="Logo">
+  <div class="header-title">Beautiful Home</div>
+  <div class="top-buttons">
+    <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
+    <a href="#" onclick="showCart()">🛒 السلة (<span id="cartCount">0</span>)</a>
+    <a href="myorders.html">📦 طلباتي</a>
   </div>
+</header><div class="category-bar" id="categoryBar">
+  <button onclick="filterCategory('all')">الكل</button>
+  <button onclick="filterCategory('المطبخ')">المطبخ</button>
+  <button onclick="filterCategory('عناية')">عناية بالجمال</button>
+  <button onclick="filterCategory('البيت')">البيت</button>
+  <button onclick="filterCategory('ادوات')">ادوات</button>
+  <button onclick="filterCategory('صيف')">صيف</button>
+  <button onclick="filterCategory('الكترونية')">إلكترونية</button>
+  <button onclick="filterCategory('ملحقات')">ملحقات سيارات</button>
+</div><section class="products" id="productList">جاري التحميل...</section><footer>
+  <p>جميع الحقوق محفوظة &copy; 2025</p>
+</footer><script>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+let allProducts = [];
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-  <section class="products" id="productList">جاري التحميل...</section>
-  <div class="pagination" id="pagination"></div>
-
-   <footer>
-  <div class="social-icons" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 10px;">
-    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank" title="Facebook">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="30" height="30" style="filter: invert(26%) sepia(78%) saturate(2471%) hue-rotate(199deg) brightness(98%) contrast(101%);">
-    </a>
-    <a href="https://www.instagram.com/tgtmhb99" target="_blank" title="Instagram">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="30" height="30" style="filter: invert(41%) sepia(93%) saturate(5234%) hue-rotate(313deg) brightness(91%) contrast(99%);">
-    </a>
-    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank" title="TikTok">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" width="30" height="30" style="filter: invert(0%) sepia(10%) saturate(0%) hue-rotate(156deg) brightness(93%) contrast(100%);">
-    </a>
-  </div>
-  <p style="text-align:center; color:white;">جميع الحقوق محفوظة &copy; 2025</p>
-</footer>
-  <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-
-    let allProducts = [];
-    let currentPage = 1;
-    const perPage = 12;
-
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(text => {
-        const rows = text.trim().split("\n").slice(1);
-        allProducts = rows.map(row => {
-          const [name, image, price] = row.split(",");
-          return {
-            name: name?.trim() || "",
-            image: image?.trim() || "https://via.placeholder.com/250x180",
-            price: price?.trim() || "0"
-          };
-        });
-        displayProducts();
-      })
-      .catch(err => {
-        console.error("⚠️ خطأ في تحميل المنتجات:", err);
-        document.getElementById("productList").textContent = "⚠️ لم يتم تحميل المنتجات.";
-      });
-
-    function displayProducts() {
-      const productList = document.getElementById("productList");
-      productList.innerHTML = '';
-      const start = (currentPage - 1) * perPage;
-      const end = start + perPage;
-      const paginated = allProducts.slice(start, end);
-
-      paginated.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "product";
-        div.innerHTML = `
-          <img src="${p.image}" alt="${p.name}">
-          <h3>${p.name}</h3>
-          <p>${p.price} دج</p>
-          <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
-        `;
-        productList.appendChild(div);
-      });
-
-      updatePagination();
-    }
-
-    function updatePagination() {
-      const pagination = document.getElementById("pagination");
-      const totalPages = Math.ceil(allProducts.length / perPage);
-      pagination.innerHTML = '';
-
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = (i === currentPage) ? "active" : "";
-        btn.onclick = () => {
-          currentPage = i;
-          displayProducts();
-        };
-        pagination.appendChild(btn);
-      }
-    }
-
-    function filterProducts() {
-      const input = document.getElementById("searchInput").value.toLowerCase();
-      const filtered = allProducts.filter(p =>
-        p.name.toLowerCase().includes(input)
-      );
-
-      if (filtered.length === 0) {
-        document.getElementById("productList").innerHTML = "<p style='text-align:center;color:red;'>⚠️ لا توجد نتائج.</p>";
-        document.getElementById("pagination").innerHTML = "";
-        return;
-      }
-
-      allProducts = filtered;
-      currentPage = 1;
-      displayProducts();
-    }
-  </script>
-  <script>
-  // عند دخول الزبون للصفحة يتم تسجيل زيارة
-  fetch("https://script.google.com/macros/s/AKfycbz7j8S0Em5HE3uZocjqOPwA3nQ2zoyXr41e_rC2fJCcY70QDuBe_-GlqE4X1CYD6ANg/exec", {
-    method: "POST"
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1);
+    allProducts = rows.map(row => {
+      const [name, image, price, category] = row.split(",");
+      return {
+        name: name.trim(),
+        image: image.trim(),
+        price: price.trim(),
+        category: category?.trim().toLowerCase() || ""
+      };
+    });
+    renderProducts(allProducts);
   });
-</script>
 
-</body>
+function renderProducts(list) {
+  const productList = document.getElementById("productList");
+  productList.innerHTML = "";
+  list.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <img src="${p.image}" alt="${p.name}" />
+      <h3>${p.name}</h3>
+      <p>${p.price} دج</p>
+      <div class="actions">
+        <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
+        <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
+      </div>
+    `;
+    productList.appendChild(div);
+  });
+  updateCartCount();
+}
+
+function addToCart(product) {
+  cart.push(product);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("✔️ تم إضافة المنتج إلى السلة");
+}
+
+function updateCartCount() {
+  document.getElementById("cartCount").textContent = cart.length;
+}
+
+function isFavorite(p) {
+  return favorites.some(f => f.name === p.name);
+}
+
+function toggleFavorite(product) {
+  if (isFavorite(product)) {
+    favorites = favorites.filter(f => f.name !== product.name);
+  } else {
+    favorites.push(product);
+  }
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  renderProducts(allProducts);
+}
+
+function showFavorites() {
+  renderProducts(favorites);
+}
+
+function showCart() {
+  renderProducts(cart);
+}
+
+function filterCategory(cat) {
+  if (cat === 'all') {
+    renderProducts(allProducts);
+  } else {
+    renderProducts(allProducts.filter(p => p.category.includes(cat.toLowerCase())));
+  }
+}
+</script></body>
 </html>
