@@ -1,142 +1,162 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سلة المشتريات</title>
+  <title>السلة - Beautiful Home</title>
+  <link rel="icon" href="favicon.png">
   <style>
     body {
       font-family: Tahoma, sans-serif;
-      background-color: #f4f4f4;
+      background-color: #f9f9f9;
       margin: 0;
-      padding: 1rem;
+      padding: 0;
     }
-    h1 {
-      text-align: center;
-      color: #005f73;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #0a9396;
+    header {
+      background-color: #005f73;
       color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.4rem;
     }
-    .btn {
-      padding: 5px 10px;
-      margin: 0 3px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    .cart-container {
+      padding: 1rem;
+      max-width: 800px;
+      margin: auto;
     }
-    .btn-danger { background: red; color: white; }
-    .btn-success { background: green; color: white; }
-    .btn-warning { background: orange; color: white; }
-    .total {
-      text-align: right;
-      margin-top: 10px;
-      font-size: 1.2rem;
-      color: #333;
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
     }
-    .checkout-btn {
-      display: block;
-      width: 100%;
-      margin-top: 20px;
+    .cart-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .cart-details {
+      flex: 1;
+      margin: 0 1rem;
+    }
+    .cart-details h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .cart-details p {
+      color: #555;
+      margin: 5px 0;
+    }
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .quantity-control button {
       background: #005f73;
       color: white;
-      padding: 10px;
+      border: none;
+      padding: 4px 8px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .remove-btn {
+      color: red;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .total {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 1rem 0;
+    }
+    .buy-btn {
+      display: block;
+      width: 100%;
+      background: #0a9396;
+      color: white;
+      padding: 1rem;
+      text-align: center;
       font-size: 1.1rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
       cursor: pointer;
     }
   </style>
 </head>
-<body>  <h1>🛒 سلة المشتريات</h1>  <table id="cartTable">
-    <thead>
-      <tr>
-        <th>المنتج</th>
-        <th>السعر</th>
-        <th>الكمية</th>
-        <th>الإجمالي</th>
-        <th>التحكم</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>  <div class="total" id="totalAmount">💰 المجموع: 0 دج</div><button class="checkout-btn" onclick="checkout()">📦 إرسال الطلب</button>
+<body>
+  <header>🛒 سلة المشتريات</header>
+  <div class="cart-container" id="cartList">جاري التحميل...</div>
+  <div class="total" id="totalPrice"></div>
+  <button class="buy-btn" onclick="goToOrder()">شراء</button>
 
   <script>
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const deliveryFee = 500; // التوصيل ثابت مثلًا 500 دج
 
-    function renderCart() {
-      const tbody = document.querySelector("#cartTable tbody");
-      const totalAmount = document.getElementById("totalAmount");
-      tbody.innerHTML = "";
+    function updateCartDisplay() {
+      const container = document.getElementById("cartList");
+      const totalDiv = document.getElementById("totalPrice");
+      container.innerHTML = "";
+
+      if (cart.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>🛒 السلة فارغة</p>";
+        totalDiv.textContent = "";
+        return;
+      }
 
       let total = 0;
       cart.forEach((item, index) => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-        const row = `
-          <tr>
-            <td>${item.name}</td>
-            <td>${item.price} دج</td>
-            <td>
-              <button class="btn btn-warning" onclick="decrease(${index})">➖</button>
-              ${item.quantity}
-              <button class="btn btn-success" onclick="increase(${index})">➕</button>
-            </td>
-            <td>${subtotal} دج</td>
-            <td><button class="btn btn-danger" onclick="removeItem(${index})">🗑️ حذف</button></td>
-          </tr>`;
-        tbody.innerHTML += row;
+        const quantity = item.quantity || 1;
+        const itemTotal = quantity * parseInt(item.price);
+        total += itemTotal;
+
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cart-details">
+            <h3>${item.name}</h3>
+            <p>${item.price} دج × ${quantity}</p>
+          </div>
+          <div class="quantity-control">
+            <button onclick="changeQuantity(${index}, -1)">➖</button>
+            <span>${quantity}</span>
+            <button onclick="changeQuantity(${index}, 1)">➕</button>
+          </div>
+          <div class="remove-btn" onclick="removeItem(${index})">🗑</div>
+        `;
+        container.appendChild(div);
       });
 
-      totalAmount.textContent = `💰 المجموع: ${total} دج`;
+      totalDiv.textContent = `📦 المجموع: ${total + deliveryFee} دج (شامل التوصيل)`;
     }
 
-    function increase(i) {
-      cart[i].quantity++;
-      saveCart();
-    }
-
-    function decrease(i) {
-      if (cart[i].quantity > 1) {
-        cart[i].quantity--;
-        saveCart();
-      }
-    }
-
-    function removeItem(i) {
-      if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
-        cart.splice(i, 1);
-        saveCart();
-      }
-    }
-
-    function saveCart() {
+    function changeQuantity(index, delta) {
+      if (!cart[index].quantity) cart[index].quantity = 1;
+      cart[index].quantity += delta;
+      if (cart[index].quantity < 1) cart[index].quantity = 1;
       localStorage.setItem("cart", JSON.stringify(cart));
-      renderCart();
+      updateCartDisplay();
     }
 
-    function checkout() {
-      if (cart.length === 0) {
-        alert("السلة فارغة!");
-        return;
-      }
-      // هنا يمكن تحويل المستخدم لصفحة تأكيد الطلب مع إرسال البيانات
-      alert("✅ تم إرسال الطلب! سيتم التواصل معك قريبًا.");
-      localStorage.removeItem("cart");
-      window.location.href = "index.html";
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartDisplay();
     }
 
-    renderCart();
-  </script></body>
+    function goToOrder() {
+      window.location.href = "order.html";
+    }
+
+    updateCartDisplay();
+  </script>
+</body>
 </html>
