@@ -1,214 +1,162 @@
 <!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🛍️ المتجر</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beautiful Home</title>
   <link rel="icon" href="favicon.png">
   <style>
     body {
-      font-family: Tahoma, sans-serif;
       margin: 0;
-      background: #f4f4f4;
-    }
-    header {
-      background: #005f73;
-      color: white;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .logo { height: 40px; }
-    .header-buttons a {
-      color: white;
-      background: #0a9396;
-      padding: 8px 12px;
-      border-radius: 5px;
-      margin-left: 8px;
-      text-decoration: none;
-    }
-    .search-bar, .category-bar {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin: 1rem;
-      flex-wrap: wrap;
-    }
-    .search-bar input {
-      width: 250px;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
-    }
-    .product {
-      background: white;
-      border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .product img {
-      width: 100%; height: 150px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-    .product .fav {
-      position: absolute;
-      top: 8px; left: 8px;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .order-btn, .cart-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .order-btn { background: #0a9396; color: white; text-decoration: none; }
-    .cart-btn { background: orange; color: white; }
-    .pagination {
-      text-align: center;
-      margin: 1rem;
-    }
-    .pagination button {
-      margin: 0 4px;
-      padding: 6px 12px;
-      border: none;
-      background: #ccc;
-      border-radius: 5px;
-    }
-    .pagination .active {
-      background: #005f73;
-      color: white;
-    }
+      font-family: 'Tahoma', sans-serif;
+      background: #f9f9f9;
+    }header {
+  background-color: #005f73;
+  color: white;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar img {
+  height: 35px;
+}
+
+.top-bar h1 {
+  font-size: 1.2rem;
+  margin: 0 10px;
+}
+
+.mid-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mid-bar a, .mid-bar button {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.clock-bar {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #dff;
+}
+
+#menuBtn {
+  font-size: 1.2rem;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 75%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 999;
+  padding: 1rem;
+}
+
+.sidebar.active {
+  right: 0;
+}
+
+.sidebar h3 {
+  margin-top: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  z-index: 998;
+}
+
+.overlay.active {
+  display: block;
+}
+
   </style>
 </head>
 <body><header>
-  <img src="logo.png" class="logo" alt="logo">
-  <div class="header-buttons">
+  <div class="top-bar">
+    <img src="logo.png" alt="Logo">
+    <h1>Beautiful Home</h1>
+    <span style="font-size: 0.8rem; color: #eee;">فرع: الجزائر</span>
+  </div>
+  <div class="mid-bar">
+    <a href="#">❤️ المفضلة</a>
     <a href="myorders.html">📦 طلباتي</a>
     <a href="cart.html">🛒 السلة</a>
-    <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
+    <button id="menuBtn">☰</button>
   </div>
-</header><div class="search-bar">
-  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج...">
-  <button onclick="filterProducts()">بحث</button>
-</div><div class="category-bar" id="categoryBar"></div><section class="products" id="productList">جاري التحميل...</section>
-<div class="pagination" id="pagination"></div><script>
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-
-let allProducts = [], filteredProducts = [], currentPage = 1, perPage = 12;
-let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-let categories = new Set();
-
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(text => {
-    const rows = text.trim().split("\n").slice(1);
-    allProducts = rows.map(row => {
-      const [name, image, price, quantity, category] = row.split(",");
-      categories.add(category?.trim());
-      return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() };
-    });
-    createCategoryButtons();
-    displayProducts(allProducts);
-  })
-  .catch(() => document.getElementById("productList").innerText = "⚠️ خطأ في تحميل المنتجات");
-
-function displayProducts(data) {
-  const list = document.getElementById("productList");
-  const paginated = data.slice((currentPage-1)*perPage, currentPage*perPage);
-  list.innerHTML = paginated.map(p => `
-    <div class="product">
-      <span class="fav" onclick="toggleFavorite('${p.name}')">${favorites.includes(p.name) ? '❤️' : '🤍'}</span>
-      <img src="${p.image}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p>${p.price} دج</p>
-      <a href="order.html?product=${encodeURIComponent(p.name)}&price=${encodeURIComponent(p.price)}" class="order-btn">اطلب الآن</a>
-      <button class="cart-btn" onclick="addToCart('${p.name}', '${p.price}')">+ أضف للسلة</button>
-    </div>`).join("");
-  updatePagination(data);
-}
-
-function updatePagination(data) {
-  const total = Math.ceil(data.length / perPage);
-  const container = document.getElementById("pagination");
-  container.innerHTML = "";
-  for (let i = 1; i <= total; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    if (i === currentPage) btn.className = "active";
-    btn.onclick = () => { currentPage = i; displayProducts(data); };
-    container.appendChild(btn);
-  }
-}
-
-function filterProducts() {
-  const q = document.getElementById("searchInput").value.toLowerCase();
-  filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(q));
-  currentPage = 1;
-  displayProducts(filteredProducts);
-}
-
-function createCategoryButtons() {
-  const bar = document.getElementById("categoryBar");
-  bar.innerHTML = `<button onclick="displayProducts(allProducts)">الكل</button>`;
-  [...categories].forEach(cat => {
-    const btn = document.createElement("button");
-    btn.textContent = cat;
-    btn.onclick = () => {
-      const filtered = allProducts.filter(p => p.category === cat);
-      currentPage = 1;
-      displayProducts(filtered);
-    };
-    bar.appendChild(btn);
-  });
-}
-
-function toggleFavorite(name) {
-  if (favorites.includes(name)) favorites = favorites.filter(f => f !== name);
-  else favorites.push(name);
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-  displayProducts(filteredProducts.length ? filteredProducts : allProducts);
-}
-
-function showFavorites() {
-  const favs = allProducts.filter(p => favorites.includes(p.name));
-  currentPage = 1;
-  displayProducts(favs);
-}
-
-function addToCart(name, price) {
-  const item = cart.find(i => i.name === name);
-  if (item) item.qty++;
-  else cart.push({ name, price, qty: 1 });
-  localStorage.setItem("cart", JSON.stringify(cart));
-  alert("✅ تمت إضافة المنتج للسلة");
-}
-</script>
-<footer>
-  <div class="social-icons" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 10px;">
-    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank" title="Facebook">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="30" height="30" style="filter: invert(26%) sepia(78%) saturate(2471%) hue-rotate(199deg) brightness(98%) contrast(101%);">
-    </a>
-    <a href="https://www.instagram.com/tgtmhb99" target="_blank" title="Instagram">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="30" height="30" style="filter: invert(41%) sepia(93%) saturate(5234%) hue-rotate(313deg) brightness(91%) contrast(99%);">
-    </a>
-    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank" title="TikTok">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" width="30" height="30" style="filter: invert(0%) sepia(10%) saturate(0%) hue-rotate(156deg) brightness(93%) contrast(100%);">
-    </a>
+  <div class="clock-bar" id="clockBar">
+    🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
   </div>
-  <p style="text-align:center; color:white;">جميع الحقوق محفوظة &copy; 2025</p>
-</footer>
-</body>
+</header><div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+<div class="sidebar" id="sidebar">
+  <h3>📂 الفئات</h3>
+  <ul>
+    <li>المطبخ</li>
+    <li>عناية بالجمال</li>
+    <li>البيت</li>
+    <li>أدوات</li>
+    <li>صيف</li>
+    <li>إلكترونية</li>
+    <li>ملحقات السيارات والدراجات</li>
+  </ul>
+</div><script>
+function toggleMenu(show) {
+  document.getElementById("sidebar").classList.toggle("active", show);
+  document.getElementById("overlay").classList.toggle("active", show);
+}
+
+document.getElementById("menuBtn").addEventListener("click", () => toggleMenu(true));
+
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('ar-DZ');
+  const dateStr = now.toLocaleDateString('ar-DZ');
+  document.getElementById("time").textContent = timeStr;
+  document.getElementById("gregorian").textContent = dateStr;
+
+  // هجري (تقريبي)
+  const hijriOffset = 622 + Math.floor((now - new Date(622, 6, 16)) / (1000 * 60 * 60 * 24 * 354.367));
+  document.getElementById("hijri").textContent = `سنة ${hijriOffset} هـ`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script></body>
 </html>
