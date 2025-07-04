@@ -130,7 +130,7 @@
 </div>
 
 <script>
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?gid=0&single=true&output=csv";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?output=csv";
 
 function validatePhone(phone) {
   return /^0(5|6|7)\d{8}$/.test(phone);
@@ -152,7 +152,7 @@ function fetchMyOrders() {
   fetch(sheetURL)
     .then(res => res.text())
     .then(text => {
-      const rows = parseCSV(text.trim()).slice(1).reverse();
+      const rows = parseCSV(text.trim()).slice(1).reverse(); // تخطي العنوان
       const myOrders = rows.filter(r => r[2].replace(/^'/, "") === phone);
 
       if (myOrders.length === 0) {
@@ -190,43 +190,68 @@ function fetchMyOrders() {
     });
 }
 
-// دالة لتحليل CSV مع دعم النصوص المحاطة بعلامات اقتباس
+// محلل CSV احترافي (يعالج الفواصل داخل الخلايا والنصوص متعددة الأسطر)
 function parseCSV(str) {
   const rows = [];
-  let currentRow = [], currentCell = '', insideQuotes = false;
+  let row = [], cell = '', inQuotes = false;
 
   for (let i = 0; i < str.length; i++) {
-    const char = str[i];
-    const nextChar = str[i + 1];
+    const char = str[i], next = str[i + 1];
 
-    if (char === '"' && insideQuotes && nextChar === '"') {
-      currentCell += '"';
-      i++; // تخطي الاقتباس المكرر
+    if (char === '"' && inQuotes && next === '"') {
+      cell += '"';
+      i++;
     } else if (char === '"') {
-      insideQuotes = !insideQuotes;
-    } else if (char === ',' && !insideQuotes) {
-      currentRow.push(currentCell);
-      currentCell = '';
-    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
-      if (currentCell !== '' || currentRow.length > 0) {
-        currentRow.push(currentCell);
-        rows.push(currentRow);
-        currentRow = [];
-        currentCell = '';
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (cell !== '' || row.length) {
+        row.push(cell);
+        rows.push(row);
+        row = [];
+        cell = '';
       }
     } else {
-      currentCell += char;
+      cell += char;
     }
   }
 
-  if (currentCell !== '' || currentRow.length > 0) {
-    currentRow.push(currentCell);
-    rows.push(currentRow);
+  if (cell !== '' || row.length) {
+    row.push(cell);
+    rows.push(row);
   }
 
   return rows;
 }
+
+window.onload = function () {
+  const url = new URL(window.location.href);
+  const phone = url.searchParams.get("phone");
+  const wait = parseInt(url.searchParams.get("wait")) || 10;
+
+  if (phone) {
+    document.getElementById("phoneInput").value = phone;
+    const countdownEl = document.getElementById("countdown");
+    const fetchBtn = document.getElementById("fetchBtn");
+    fetchBtn.disabled = true;
+
+    let counter = wait;
+    const interval = setInterval(() => {
+      countdownEl.textContent = `⌛ الرجاء الانتظار ${counter} ثانية لتحميل الطلبيات...`;
+      counter--;
+      if (counter < 0) {
+        clearInterval(interval);
+        countdownEl.textContent = "";
+        fetchBtn.disabled = false;
+        fetchMyOrders();
+      }
+    }, 1000);
+  }
+};
 </script>
+
 
 
 </body>
