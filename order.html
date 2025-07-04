@@ -208,7 +208,8 @@
     e.preventDefault();
     document.getElementById("loadingMessage").style.display = "block";
 
-  formData.set("phone", "'" + phone); // يحفظ الرقم كما هو مع علامة '
+ const formData = new FormData(this); // ✅ هذا يكفي
+'
 
 
     const formData = new FormData(this);
