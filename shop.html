@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -154,7 +155,11 @@ footer {
   text-align: center;
   color: white;
 }
-
+img {
+  pointer-events: none;       /* يمنع النقر أو السحب */
+  user-drag: none;            /* يمنع السحب على بعض المتصفحات */
+  -webkit-user-drag: none;    /* يمنع السحب على كروم وسفاري */
+}
   </style>
 </head>
 <body><header>
@@ -335,5 +340,14 @@ updateClock();
     method: "POST"
   });
 </script>
+  <script>
+// منع زر الفأرة الأيمن على الصور
+document.addEventListener('contextmenu', function(e) {
+  if (e.target.tagName === 'IMG') {
+    e.preventDefault();
+  }
+});
+</script>
+
 </body>
 </html>
