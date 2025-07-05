@@ -295,5 +295,11 @@ updateClock();
     window.location.href = `order.html?product=${encodeURIComponent(name)}&price=${price}`;
   }
 </script>
+<script>
+  // عند دخول الزبون للصفحة يتم تسجيل زيارة
+  fetch("https://script.google.com/macros/s/AKfycbwWc_AU5Xo1o5_oP0ahnlH0ayqY86jVaJozeLHGX32k7yxTtKElAc2YANPHgeicKOYu/exec", {
+    method: "POST"
+  });
+</script>
 </body>
 </html>
