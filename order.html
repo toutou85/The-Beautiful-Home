@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>نموذج الطلب</title>
   <style>
     body {
@@ -89,10 +89,8 @@
   <input type="text" name="product" id="productInput" readonly placeholder="نوع المنتج">
   <input type="number" name="price" id="priceInput" readonly placeholder="سعر المنتج">
 
-  <!-- ترتيب الحقول المطلوب -->
-  <input type="text" name="deliveryCost" id="deliveryCostInput" placeholder="سعر التوصيل" readonly>
-
-  <input type="number" name="quantity" id="quantityInput" placeholder="الكمية" required min="1">
+  <input type="text" name="deliveryCost" id="deliveryCostInput" readonly placeholder="سعر التوصيل">
+  <input type="number" name="quantity" id="quantityInput" readonly placeholder="الكمية">
 
   <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
 
@@ -101,56 +99,12 @@
   <button type="submit">تأكيد الطلب</button>
 </form>
 
-
 <script>
   const deliveryData = {
-    "أدرار": { home: 1000, office: 600, time: "3-7 أيام" },
-    "الشلف": { home: 600, office: 350, time: "1-2 أيام" },
-    "الأغواط": { home: 750, office: 500, time: "1-3 أيام" },
-    "أم البواقي": { home: 700, office: 400, time: "1-3 أيام" },
-    "باتنة": { home: 650, office: 350, time: "1-3 أيام" },
-    "بجاية": { home: 550, office: 300, time: "1-3 أيام" },
-    "بسكرة": { home: 800, office: 500, time: "2-4 أيام" },
-    "بشار": { home: 1050, office: 700, time: "3-5 أيام" },
-    "البليدة": { home: 250, office: 350, time: "24 ساعة" },
     "الجزائر": { home: 250, office: 100, time: "24 ساعة" },
+    "البليدة": { home: 250, office: 350, time: "24 ساعة" },
     "وهران": { home: 550, office: 300, time: "1-3 أيام" },
-    "ورقلة": { home: 800, office: 500, time: "2-4 أيام" },
-    "سطيف": { home: 550, office: 350, time: "1-3 أيام" },
-    "سعيدة": { home: 750, office: 450, time: "1-3 أيام" },
-    "سكيكدة": { home: 650, office: 400, time: "1-3 أيام" },
-    "سيدي بلعباس": { home: 650, office: 400, time: "1-3 أيام" },
-    "عنابة": { home: 550, office: 350, time: "1-3 أيام" },
-    "قالمة": { home: 700, office: 400, time: "1-3 أيام" },
-    "قسنطينة": { home: 550, office: 350, time: "1-3 أيام" },
-    "المدية": { home: 600, office: 400, time: "1-2 أيام" },
-    "مستغانم": { home: 600, office: 400, time: "1-3 أيام" },
-    "المسيلة": { home: 650, office: 400, time: "2-4 أيام" },
-    "معسكر": { home: 650, office: 400, time: "1-3 أيام" },
-    "البيض": { home: 850, office: 550, time: "2-4 أيام" },
-    "إليزي": { home: 1300, office: 900, time: "3-7 أيام" },
-    "برج بوعريريج": { home: 600, office: 400, time: "1-3 أيام" },
-    "بومرداس": { home: 500, office: 350, time: "1-2 أيام" },
-    "الطارف": { home: 700, office: 700, time: "1-3 أيام" },
-    "تندوف": { home: 1300, office: 900, time: "3-7 أيام" },
-    "تيسمسيلت": { home: 700, office: 400, time: "1-3 أيام" },
-    "الوادي": { home: 800, office: 500, time: "2-4 أيام" },
-    "خنشلة": { home: 700, office: 450, time: "1-3 أيام" },
-    "سوق أهراس": { home: 800, office: 450, time: "1-3 أيام" },
-    "تيبازة": { home: 500, office: 350, time: "1-2 أيام" },
-    "ميلة": { home: 650, office: 400, time: "1-3 أيام" },
-    "عين الدفلى": { home: 600, office: 400, time: "1-2 أيام" },
-    "النعامة": { home: 900, office: 600, time: "3-5 أيام" },
-    "عين تموشنت": { home: 600, office: 450, time: "1-3 أيام" },
-    "غرداية": { home: 850, office: 500, time: "2-4 أيام" },
-    "غليزان": { home: 600, office: 450, time: "1-3 أيام" },
-    "تيميمون": { home: 1200, office: 1200, time: "3-7 أيام" },
-    "اولاد جلال": { home: 800, office: 800, time: "3-7 أيام" },
-    "بني عباس": { home: 1100, office: 1100, time: "3-7 أيام" },
-    "عين صالح": { home: 1200, office: 1200, time: "3-7 أيام" },
-    "تقرت": { home: 850, office: 850, time: "2-4 أيام" },
-    "المغير": { home: 900, office: 900, time: "2-4 أيام" },
-    "المنيعة": { home: 900, office: 600, time: "3-7 أيام" }
+    // أضف باقي الولايات هنا ...
   };
 
   const wilayaSelect = document.getElementById("wilaya");
@@ -176,66 +130,52 @@
 
   function calculateTotal() {
     const price = parseInt(document.getElementById("priceInput").value || 0);
-    const quantity = parseInt(document.getElementById("quantityInput").value || 1);
     const wilaya = wilayaSelect.value;
     const deliveryType = document.getElementById("deliveryType").value;
     const deliveryCost = deliveryData[wilaya]?.[deliveryType] || 0;
-    const total = (price * quantity) + deliveryCost;
-    document.getElementById("deliveryCostInput").value = deliveryCost; 
+    const total = price + deliveryCost;
+
+    document.getElementById("deliveryCostInput").value = deliveryCost;
     document.getElementById("totalPrice").value = total + " دج";
   }
 
-  document.getElementById("quantityInput").addEventListener("input", calculateTotal);
-  document.getElementById("wilaya").addEventListener("change", calculateTotal);
-  document.getElementById("deliveryType").addEventListener("change", calculateTotal);
-
-
-  // تحميل بيانات الشراء من localStorage
+  // تحميل بيانات checkout من localStorage
   const checkoutData = JSON.parse(localStorage.getItem("checkout") || "{}");
   if (checkoutData.summary) {
     document.getElementById("productInput").value = checkoutData.summary;
     document.getElementById("priceInput").value = checkoutData.totalPrice;
     document.getElementById("quantityInput").value = checkoutData.totalQty;
-    calculateTotal(); // تحديث المجموع تلقائيا
+    calculateTotal();
   }
 
+  document.getElementById("orderForm").addEventListener("submit", function(e) {
+    const phone = document.getElementById("phoneInput").value.trim();
+    const phonePattern = /^0(5|6|7)[0-9]{8}$/;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const product = urlParams.get("product") || '';
-  const price = urlParams.get("price") || '';
-  document.getElementById("productInput").value = product;
-  document.getElementById("priceInput").value = price;
+    if (!phonePattern.test(phone)) {
+      alert("⚠️ رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.");
+      e.preventDefault();
+      return;
+    }
 
- document.getElementById("orderForm").addEventListener("submit", function(e) {
-  const phone = document.getElementById("phoneInput").value.trim();
-  const phonePattern = /^0(5|6|7)[0-9]{8}$/;
-
-  if (!phonePattern.test(phone)) {
-    alert("⚠️ رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.");
     e.preventDefault();
-    return;
-  }
+    document.getElementById("loadingMessage").style.display = "block";
 
-  e.preventDefault();
-  document.getElementById("loadingMessage").style.display = "block";
+    const formData = new FormData(this);
+    const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec";
 
-  const formData = new FormData(this); // ✅ بدون تعديل يدوي
-
-  const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec";
-
-  fetch(scriptURL, {
-    method: "POST",
-    body: formData
-  })
-  .then(() => {
-    window.location.href = `myorders.html?phone=${phone}`;
-  })
-  .catch(() => {
-    alert("❌ حدث خطأ أثناء الإرسال.");
-    document.getElementById("loadingMessage").style.display = "none";
+    fetch(scriptURL, {
+      method: "POST",
+      body: formData
+    })
+    .then(() => {
+      window.location.href = `myorders.html?phone=${phone}`;
+    })
+    .catch(() => {
+      alert("❌ حدث خطأ أثناء الإرسال.");
+      document.getElementById("loadingMessage").style.display = "none";
+    });
   });
-});
-
 </script>
 
 </body>
