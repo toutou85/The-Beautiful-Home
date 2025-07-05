@@ -5,16 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>نموذج الطلب</title>
   <style>
-    body {
-      font-family: Tahoma, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 1rem;
-    }
-    h2 {
-      text-align: center;
-      color: #005f73;
-    }
+    body { font-family: Tahoma, sans-serif; background: #f2f2f2; margin: 0; padding: 1rem; }
+    h2 { text-align: center; color: #005f73; }
     form {
       background: white;
       max-width: 500px;
@@ -31,24 +23,12 @@
       border-radius: 5px;
       font-size: 1rem;
     }
-    #phoneGroup {
-      display: flex;
-      gap: 10px;
-    }
-    #phoneGroup select {
-      width: 30%;
-    }
-    #phoneGroup input {
-      width: 70%;
-    }
+    #phoneGroup { display: flex; gap: 10px; }
+    #phoneGroup select { width: 30%; }
+    #phoneGroup input { width: 70%; }
     button {
-      background-color: #0a9396;
-      color: white;
-      padding: 0.7rem 1.5rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
+      background-color: #0a9396; color: white; padding: 0.7rem 1.5rem;
+      border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;
     }
     #loadingMessage {
       text-align: center;
@@ -58,9 +38,7 @@
       margin-bottom: 1rem;
     }
     @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
+      0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; }
     }
   </style>
 </head>
@@ -77,71 +55,21 @@
       <option value="06">06</option>
       <option value="07">07</option>
     </select>
-    <input type="tel" id="phoneBody" maxlength="8" pattern="^[0-9]{8}$" placeholder="ادخل رقم الهاتف xxxxxxxx" required>
+    <input type="tel" id="phoneBody" maxlength="8" pattern="^[0-9]{8}$" placeholder="أدخل رقم الهاتف بدون صفر" required>
   </div>
   <input type="hidden" name="phone" id="phoneFull">
 
-  <select name="wilaya" required>
+  <select name="wilaya" id="wilaya" required>
     <option value="">اختر ولايتك</option>
-  <option>أدرار</option>
-  <option>الشلف</option>
-  <option>الأغواط</option>
-  <option>أم البواقي</option>
-  <option>باتنة</option>
-  <option>بجاية</option>
-  <option>بسكرة</option>
-  <option>بشار</option>
-  <option>البليدة</option>
-  <option>البويرة</option>
-  <option>تمنراست</option>
-  <option>تبسة</option>
-  <option>تلمسان</option>
-  <option>تيارت</option>
-  <option>تيزي وزو</option>
-  <option>الجزائر</option>
-  <option>الجلفة</option>
-  <option>جيجل</option>
-  <option>سطيف</option>
-  <option>سعيدة</option>
-  <option>سكيكدة</option>
-  <option>سيدي بلعباس</option>
-  <option>عنابة</option>
-  <option>قالمة</option>
-  <option>قسنطينة</option>
-  <option>المدية</option>
-  <option>مستغانم</option>
-  <option>المسيلة</option>
-  <option>معسكر</option>
-  <option>ورقلة</option>
-  <option>وهران</option>
-  <option>البيض</option>
-  <option>إليزي</option>
-  <option>برج بوعريريج</option>
-  <option>بومرداس</option>
-  <option>الطارف</option>
-  <option>تندوف</option>
-  <option>تيسمسيلت</option>
-  <option>الوادي</option>
-  <option>خنشلة</option>
-  <option>سوق أهراس</option>
-  <option>تيبازة</option>
-  <option>ميلة</option>
-  <option>عين الدفلى</option>
-  <option>النعامة</option>
-  <option>عين تموشنت</option>
-  <option>غرداية</option>
-  <option>غليزان</option>
-  <option>تميمون</option>
-  <option>برج باجي مختار</option>
-  <option>أولاد جلال</option>
-  <option>بني عباس</option>
-  <option>عين صالح</option>
-  <option>عين قزام</option>
-  <option>تقرت</option>
-  <option>جانت</option>
-  <option>المغير</option>
-  <option>المنيعة</option>
-</select>
+  </select>
+
+  <select name="delivery_type" id="deliveryType" required>
+    <option value="">نوع التوصيل</option>
+    <option value="home">🚚 إلى المنزل</option>
+    <option value="office">🏤 إلى المكتب</option>
+  </select>
+
+  <input type="text" name="delivery_price" id="deliveryPrice" placeholder="سعر التوصيل" readonly>
 
   <textarea name="address" placeholder="العنوان الكامل بالتفصيل" required></textarea>
   <textarea name="notes" placeholder="ملاحظات إضافية (اختياري)"></textarea>
@@ -149,67 +77,134 @@
   <input type="text" name="product" id="productInput" readonly placeholder="نوع المنتج">
   <input type="number" name="price" id="priceInput" readonly placeholder="سعر المنتج">
   <input type="number" name="quantity" id="quantityInput" placeholder="الكمية" min="1" value="1" required>
+
   <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
 
   <div id="loadingMessage" style="display:none">⏳ فضلاً انتظر... استغفر الله العظيم</div>
-
   <button type="submit">تأكيد الطلب</button>
 </form>
 
 <script>
-  // استقبال بيانات المنتج من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const product = urlParams.get("product");
-  const price = urlParams.get("price");
+const deliveryData = {
+  "أدرار": {"home": 602, "office": 308},
+  "الشلف": {"home": 1061, "office": 810},
+  "الأغواط": {"home": 811, "office": 573},
+  "أم البواقي": {"home": 454, "office": 224},
+  "باتنة": {"home": 519, "office": 297},
+  "بجاية": {"home": 857, "office": 687},
+  "بسكرة": {"home": 1512, "office": 1282},
+  "بشار": {"home": 554, "office": 370},
+  "البليدة": {"home": 972, "office": 685},
+  "البويرة": {"home": 1335, "office": 1077},
+  "تمنراست": {"home": 1075, "office": 911},
+  "تبسة": {"home": 601, "office": 308},
+  "تلمسان": {"home": 985, "office": 739},
+  "تيارت": {"home": 969, "office": 796},
+  "تيزي وزو": {"home": 1390, "office": 1159},
+  "الجزائر": {"home": 1184, "office": 928},
+  "الجلفة": {"home": 707, "office": 555},
+  "جيجل": {"home": 1168, "office": 949},
+  "سطيف": {"home": 539, "office": 239},
+  "سعيدة": {"home": 610, "office": 429},
+  "سكيكدة": {"home": 1123, "office": 951},
+  "سيدي بلعباس": {"home": 573, "office": 279},
+  "عنابة": {"home": 1005, "office": 821},
+  "قالمة": {"home": 1151, "office": 902},
+  "قسنطينة": {"home": 1183, "office": 939},
+  "المدية": {"home": 1181, "office": 886},
+  "مستغانم": {"home": 546, "office": 332},
+  "المسيلة": {"home": 1546, "office": 1347},
+  "معسكر": {"home": 607, "office": 384},
+  "ورقلة": {"home": 1210, "office": 1019},
+  "وهران": {"home": 626, "office": 412},
+  "البيض": {"home": 1543, "office": 1360},
+  "إليزي": {"home": 533, "office": 254},
+  "برج بوعريريج": {"home": 1307, "office": 1072},
+  "بومرداس": {"home": 1589, "office": 1320},
+  "الطارف": {"home": 1088, "office": 882},
+  "تندوف": {"home": 1387, "office": 1144},
+  "تيسمسيلت": {"home": 846, "office": 602},
+  "الوادي": {"home": 727, "office": 565},
+  "خنشلة": {"home": 748, "office": 534},
+  "سوق أهراس": {"home": 943, "office": 693},
+  "تيبازة": {"home": 414, "office": 186},
+  "ميلة": {"home": 632, "office": 332},
+  "عين الدفلى": {"home": 709, "office": 517},
+  "النعامة": {"home": 1079, "office": 918},
+  "عين تموشنت": {"home": 937, "office": 783},
+  "غرداية": {"home": 730, "office": 476},
+  "غليزان": {"home": 823, "office": 625}
+};
 
-  if (product && price) {
-    document.getElementById("productInput").value = product;
-    document.getElementById("priceInput").value = price;
-    document.getElementById("quantityInput").value = 1;
-    calculateTotal();
+// ملء قائمة الولايات
+const wilayaSelect = document.getElementById("wilaya");
+for (let wilaya in deliveryData) {
+  const option = document.createElement("option");
+  option.value = wilaya;
+  option.textContent = wilaya;
+  wilayaSelect.appendChild(option);
+}
+
+document.getElementById("quantityInput").addEventListener("input", calculateTotal);
+document.getElementById("wilaya").addEventListener("change", calculateTotal);
+document.getElementById("deliveryType").addEventListener("change", calculateTotal);
+
+function calculateTotal() {
+  const price = parseInt(document.getElementById("priceInput").value || 0);
+  const qty = parseInt(document.getElementById("quantityInput").value || 1);
+  const wilaya = document.getElementById("wilaya").value;
+  const type = document.getElementById("deliveryType").value;
+
+  let delivery = 0;
+  if (wilaya && type && deliveryData[wilaya]) {
+    delivery = deliveryData[wilaya][type] || 0;
   }
 
-  document.getElementById("quantityInput").addEventListener("input", calculateTotal);
+  document.getElementById("deliveryPrice").value = delivery + " دج";
+  document.getElementById("totalPrice").value = (price * qty + delivery) + " دج";
+}
 
-  function calculateTotal() {
-    const price = parseInt(document.getElementById("priceInput").value || 0);
-    const qty = parseInt(document.getElementById("quantityInput").value || 1);
-    const total = price * qty;
-    document.getElementById("totalPrice").value = total + " دج";
+// استقبال بيانات المنتج من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const product = urlParams.get("product");
+const price = urlParams.get("price");
+
+if (product && price) {
+  document.getElementById("productInput").value = product;
+  document.getElementById("priceInput").value = price;
+  calculateTotal();
+}
+
+// إرسال الطلب
+document.getElementById("orderForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const prefix = document.getElementById("prefix").value;
+  const phoneBody = document.getElementById("phoneBody").value.trim();
+  if (!/^[0-9]{8}$/.test(phoneBody)) {
+    alert("⚠️ يرجى إدخال 8 أرقام صحيحة بعد البادئة.");
+    return;
   }
 
-  // إرسال النموذج
-  document.getElementById("orderForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+  const fullPhone = prefix + phoneBody;
+  document.getElementById("phoneFull").value = fullPhone;
+  document.getElementById("loadingMessage").style.display = "block";
 
-    const prefix = document.getElementById("prefix").value;
-    const phoneBody = document.getElementById("phoneBody").value.trim();
+  const formData = new FormData(this);
+  const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec"; // عدله إن لزم
 
-    if (!/^[0-9]{8}$/.test(phoneBody)) {
-      alert("⚠️ يرجى إدخال 8 أرقام صحيحة بعد البادئة.");
-      return;
-    }
-
-    const fullPhone = prefix + phoneBody;
-    document.getElementById("phoneFull").value = fullPhone;
-
-    document.getElementById("loadingMessage").style.display = "block";
-
-    const formData = new FormData(this);
-    const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec"; // <-- غيّر الرابط حسب سكربتك
-
-    fetch(scriptURL, {
-      method: "POST",
-      body: formData
-    })
-    .then(() => {
-      window.location.href = `myorders.html?phone=${fullPhone}`;
-    })
-    .catch(() => {
-      alert("❌ حدث خطأ أثناء الإرسال.");
-      document.getElementById("loadingMessage").style.display = "none";
-    });
+  fetch(scriptURL, {
+    method: "POST",
+    body: formData
+  })
+  .then(() => {
+    window.location.href = `myorders.html?phone=${fullPhone}`;
+  })
+  .catch(() => {
+    alert("❌ حدث خطأ أثناء الإرسال.");
+    document.getElementById("loadingMessage").style.display = "none";
   });
+});
 </script>
 
 </body>
