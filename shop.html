@@ -1,8 +1,9 @@
+<!-- بداية الملف: index.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Beautiful Home</title>
   <link rel="icon" href="favicon.png">
   <style>
@@ -22,18 +23,13 @@
       top: 0;
       z-index: 1000;
     }
-    .top-bar {
+    .top-bar, .mid-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .top-bar img { height: 35px; }
     .top-bar h1 { font-size: 1.2rem; margin: 0 10px; }
-    .mid-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
     .mid-bar a, .mid-bar button {
       background: none;
       color: white;
@@ -51,18 +47,15 @@
 
     .sidebar {
       position: fixed;
-      top: 0;
-      right: -100%;
-      width: 75%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+      top: 0; right: -100%;
+      width: 75%; height: 100%;
+      background: rgba(255,255,255,0.95);
+      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
       transition: right 0.3s ease-in-out;
       z-index: 999;
       padding: 1rem;
     }
     .sidebar.active { right: 0; }
-    .sidebar h3 { margin-top: 0; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li {
       padding: 10px 0;
@@ -175,22 +168,16 @@
 </div>
 
 <section class="products" id="productList">جاري تحميل المنتجات...</section>
-<section id="pagination" style="text-align:center; margin: 20px;"></section>
+<section id="pagination" class="pagination"></section>
+
 <footer>
   <div class="social-icons" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 10px;">
-    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank" title="Facebook">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="30" height="30">
-    </a>
-    <a href="https://www.instagram.com/tgtmhb99" target="_blank" title="Instagram">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="30" height="30">
-    </a>
-    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank" title="TikTok">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" width="30" height="30">
-    </a>
+    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" width="30"></a>
+    <a href="https://www.instagram.com/tgtmhb99" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" width="30"></a>
+    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" width="30"></a>
   </div>
   <p>جميع الحقوق محفوظة; 2025</p>
 </footer>
-
 
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
@@ -201,7 +188,6 @@ let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 let currentPage = 1;
 const productsPerPage = 20;
 
-// جلب البيانات وترتيبها عشوائيًا
 fetch(sheetURL)
   .then(res => res.text())
   .then(text => {
@@ -210,12 +196,10 @@ fetch(sheetURL)
       const [name, image, price, category] = row.split(",");
       return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
     });
-
-    shuffleArray(allProducts); // ← ترتيب عشوائي
+    shuffleArray(allProducts); // ترتيب عشوائي
     renderProducts(allProducts);
   });
 
-// ترتيب عشوائي للمصفوفة
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -226,7 +210,6 @@ function shuffleArray(arr) {
 function renderProducts(list) {
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
-
   const start = (currentPage - 1) * productsPerPage;
   const end = start + productsPerPage;
   const paginatedItems = list.slice(start, end);
@@ -320,22 +303,18 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
-</script>
 
 // عداد الزوار
 fetch("https://script.google.com/macros/s/AKfycbxJEZofDIEtAgFjAmYQNDAzk95GX1KAHbY4f3IiQMHVI5a0OIcc7hjfZya9WNUioHxX/exec", {
   method: "POST"
 });
-</script>
 
-<script>
-// منع حفظ الصور بزر الفأرة الأيمن
+// منع زر الفأرة الأيمن على الصور
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'IMG') {
     e.preventDefault();
   }
 });
 </script>
-
 </body>
 </html>
