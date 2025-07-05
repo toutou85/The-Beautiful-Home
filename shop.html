@@ -215,11 +215,18 @@ fetch(sheetURL)
     });
     renderProducts(allProducts);
   });
-
+let currentPage = 1;
+const productsPerPage = 20;
+    
 function renderProducts(list) {
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
-  list.forEach(p => {
+
+  const start = (currentPage - 1) * productsPerPage;
+  const end = start + productsPerPage;
+  const paginatedItems = list.slice(start, end);
+
+  paginatedItems.forEach(p => {
     const div = document.createElement("div");
     div.className = "product";
     div.innerHTML = `
@@ -234,7 +241,34 @@ function renderProducts(list) {
     `;
     productList.appendChild(div);
   });
+
+  renderPagination(list.length);
   updateCartCount();
+}
+function renderPagination(totalItems) {
+  const totalPages = Math.ceil(totalItems / productsPerPage);
+  const pagination = document.createElement("div");
+  pagination.style.textAlign = "center";
+  pagination.style.margin = "20px 0";
+
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.style.margin = "0 5px";
+    btn.style.padding = "5px 10px";
+    btn.style.background = i === currentPage ? "#0a9396" : "#eee";
+    btn.style.color = i === currentPage ? "#fff" : "#000";
+    btn.style.border = "none";
+    btn.style.borderRadius = "5px";
+    btn.style.cursor = "pointer";
+    btn.onclick = () => {
+      currentPage = i;
+      renderProducts(allProducts);
+    };
+    pagination.appendChild(btn);
+  }
+
+  document.getElementById("productList").appendChild(pagination);
 }
 
 function toggleMenu(show) {
