@@ -289,5 +289,11 @@ function updateClock() {
 }
 setInterval(updateClock, 1000);
 updateClock();
-</script></body>
+</script>
+<script>
+  function orderNow(name, price) {
+    window.location.href = `order.html?product=${encodeURIComponent(name)}&price=${price}`;
+  }
+</script>
+</body>
 </html>
