@@ -2,161 +2,48 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>السلة - Beautiful Home</title>
-  <link rel="icon" href="favicon.png">
-  <style>
-    body {
-      font-family: Tahoma, sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #005f73;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.4rem;
-    }
-    .cart-container {
-      padding: 1rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    .cart-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-      margin-bottom: 1rem;
-    }
-    .cart-item img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-    .cart-details {
-      flex: 1;
-      margin: 0 1rem;
-    }
-    .cart-details h3 {
-      margin: 0;
-      font-size: 1rem;
-    }
-    .cart-details p {
-      color: #555;
-      margin: 5px 0;
-    }
-    .quantity-control {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .quantity-control button {
-      background: #005f73;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .remove-btn {
-      color: red;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-    .total {
-      text-align: center;
-      font-size: 1.2rem;
-      margin: 1rem 0;
-    }
-    .buy-btn {
-      display: block;
-      width: 100%;
-      background: #0a9396;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-  </style>
+  <title>سلة المشتريات</title>
 </head>
 <body>
-  <header>🛒 سلة المشتريات</header>
-  <div class="cart-container" id="cartList">جاري التحميل...</div>
-  <div class="total" id="totalPrice"></div>
-  <button class="buy-btn" onclick="goToOrder()">شراء</button>
+  <h2>🛒 سلة المشتريات</h2>
+  <div id="cartItems"></div>
+  <button onclick="checkout()">✅ شراء</button>
 
   <script>
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const deliveryFee = 500; // التوصيل ثابت مثلًا 500 دج
 
-    function updateCartDisplay() {
-      const container = document.getElementById("cartList");
-      const totalDiv = document.getElementById("totalPrice");
-      container.innerHTML = "";
-
+    // عرض المنتجات في الصفحة (اختياري للمعاينة)
+    function renderCart() {
+      const container = document.getElementById("cartItems");
       if (cart.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>🛒 السلة فارغة</p>";
-        totalDiv.textContent = "";
+        container.innerHTML = "<p>لا توجد منتجات في السلة.</p>";
         return;
       }
 
-      let total = 0;
-      cart.forEach((item, index) => {
-        const quantity = item.quantity || 1;
-        const itemTotal = quantity * parseInt(item.price);
-        total += itemTotal;
+      container.innerHTML = "<ul>" + cart.map(p => `
+        <li>${p.name} × ${p.quantity} = ${p.price * p.quantity} دج</li>
+      `).join("") + "</ul>";
+    }
 
-        const div = document.createElement("div");
-        div.className = "cart-item";
-        div.innerHTML = `
-          <img src="${item.image}" alt="${item.name}">
-          <div class="cart-details">
-            <h3>${item.name}</h3>
-            <p>${item.price} دج × ${quantity}</p>
-          </div>
-          <div class="quantity-control">
-            <button onclick="changeQuantity(${index}, -1)">➖</button>
-            <span>${quantity}</span>
-            <button onclick="changeQuantity(${index}, 1)">➕</button>
-          </div>
-          <div class="remove-btn" onclick="removeItem(${index})">🗑</div>
-        `;
-        container.appendChild(div);
+    renderCart();
+
+    function checkout() {
+      let summary = "";
+      let totalPrice = 0;
+      let totalQty = 0;
+
+      cart.forEach((item, index) => {
+        summary += (index > 0 ? " + " : "") + `${item.name} × ${item.quantity}`;
+        totalPrice += item.price * item.quantity;
+        totalQty += item.quantity;
       });
 
-      totalDiv.textContent = `📦 المجموع: ${total + deliveryFee} دج (شامل التوصيل)`;
-    }
+      localStorage.setItem("checkout", JSON.stringify({
+        summary, totalPrice, totalQty
+      }));
 
-    function changeQuantity(index, delta) {
-      if (!cart[index].quantity) cart[index].quantity = 1;
-      cart[index].quantity += delta;
-      if (cart[index].quantity < 1) cart[index].quantity = 1;
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCartDisplay();
-    }
-
-    function removeItem(index) {
-      cart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCartDisplay();
-    }
-
-    function goToOrder() {
       window.location.href = "order.html";
     }
-
-    updateCartDisplay();
   </script>
 </body>
 </html>
