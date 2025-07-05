@@ -189,7 +189,7 @@
   document.getElementById("wilaya").addEventListener("change", calculateTotal);
   document.getElementById("deliveryType").addEventListener("change", calculateTotal);
 
-<script>
+
   // تحميل بيانات الشراء من localStorage
   const checkoutData = JSON.parse(localStorage.getItem("checkout") || "{}");
   if (checkoutData.summary) {
@@ -198,7 +198,7 @@
     document.getElementById("quantityInput").value = checkoutData.totalQty;
     calculateTotal(); // تحديث المجموع تلقائيا
   }
-</script>
+
 
   const urlParams = new URLSearchParams(window.location.search);
   const product = urlParams.get("product") || '';
