@@ -138,12 +138,27 @@
     document.getElementById("deliveryCostInput").value = deliveryCost;
     document.getElementById("totalPrice").value = total + " دج";
   }
+const urlParams = new URLSearchParams(window.location.search);
+const product = urlParams.get("product");
+const price = urlParams.get("price");
 
-  // تحميل بيانات checkout من localStorage
+if (product && price) {
+  // إذا وُجدت بيانات في الرابط، استعملها وامسح بيانات السلة القديمة
+  document.getElementById("productInput").value = product;
+  document.getElementById("priceInput").value = price;
+  document.getElementById("quantityInput").value = 1;
+  localStorage.removeItem("checkout");
+  calculateTotal();
+} else {
+  // إذا لم توجد بيانات في الرابط، استخدم checkout من localStorage
   const checkoutData = JSON.parse(localStorage.getItem("checkout") || "{}");
   if (checkoutData.summary) {
     document.getElementById("productInput").value = checkoutData.summary;
     document.getElementById("priceInput").value = checkoutData.totalPrice;
+    document.getElementById("quantityInput").value = checkoutData.totalQty;
+    calculateTotal();
+  }
+}
     document.getElementById("quantityInput").value = checkoutData.totalQty;
     calculateTotal();
   }
