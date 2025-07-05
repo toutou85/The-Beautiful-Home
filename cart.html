@@ -1,99 +1,181 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>سلة المشتريات</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>نموذج الطلب</title>
   <style>
-    body { font-family: Tahoma; padding: 1rem; background: #f2f2f2; }
-    h2 { text-align: center; color: #005f73; }
-    .item { background: #fff; border-radius: 8px; padding: 10px; margin-bottom: 10px; box-shadow: 0 0 5px #ccc; display: flex; gap: 10px; align-items: center; }
-    .item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-    .item-details { flex: 1; }
-    .quantity-control { display: flex; gap: 5px; align-items: center; }
-    button { cursor: pointer; background: #0a9396; color: white; border: none; padding: 6px 10px; border-radius: 5px; font-size: 1rem; }
-    .delete-btn { background: #c1121f; }
+    body {
+      font-family: Tahoma, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 1rem;
+    }
+    h2 {
+      text-align: center;
+      color: #005f73;
+    }
+    form {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #0a9396;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #deliveryInfo {
+      font-weight: bold;
+      margin-top: -10px;
+      margin-bottom: 1rem;
+      color: #005f73;
+    }
+    #loadingMessage {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #0077aa;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
 
-<h2>🛒 سلة المشتريات</h2>
-<div id="cartItems"></div>
+<h2>نموذج الطلب</h2>
 
-<button onclick="checkout()">✅ شراء</button>
+<form id="orderForm">
+  <input type="text" name="name" placeholder="الاسم واللقب" required>
+
+  <input type="tel" name="phone" id="phoneInput"
+         placeholder="رقم الهاتف (يبدأ بـ 05 أو 06 أو 07)"
+         required maxlength="10"
+         pattern="^0(5|6|7)[0-9]{8}$"
+         title="رقم الهاتف يجب أن يبدأ بـ 05 أو 06 أو 07 ويحتوي على 10 أرقام.">
+
+  <select name="wilaya" id="wilaya" required onchange="updateDelivery()">
+    <option value="">اختر ولايتك</option>
+  </select>
+
+  <select name="deliveryType" id="deliveryType" onchange="updateDelivery()">
+    <option value="home">توصيل للمنزل</option>
+    <option value="office">استلام من مكتب التوصيل</option>
+  </select>
+
+  <div id="deliveryInfo"></div>
+
+  <textarea name="address" placeholder="العنوان الكامل بالتفصيل" required></textarea>
+  <textarea name="notes" placeholder="ملاحظات إضافية (اختياري)"></textarea>
+
+  <input type="text" name="product" id="productInput" readonly placeholder="نوع المنتج">
+  <input type="number" name="price" id="priceInput" readonly placeholder="سعر المنتج">
+
+  <input type="text" name="deliveryCost" id="deliveryCostInput" readonly placeholder="سعر التوصيل">
+  <input type="number" name="quantity" id="quantityInput" readonly placeholder="الكمية">
+
+  <input type="text" name="total" id="totalPrice" placeholder="المجموع الكلي" readonly>
+
+  <div id="loadingMessage" style="display:none">⏳ فضلاً انتظر... استغفر الله العظيم</div>
+
+  <button type="submit">تأكيد الطلب</button>
+</form>
 
 <script>
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const deliveryData = {
+    "الجزائر": { home: 250, office: 100, time: "24 ساعة" },
+    "البليدة": { home: 250, office: 350, time: "24 ساعة" },
+    "وهران": { home: 550, office: 300, time: "1-3 أيام" },
+    // أضف باقي الولايات هنا ...
+  };
 
-function renderCart() {
-  const container = document.getElementById("cartItems");
-  if (cart.length === 0) {
-    container.innerHTML = "<p>❌ السلة فارغة</p>";
-    return;
+  const wilayaSelect = document.getElementById("wilaya");
+  for (const wilaya in deliveryData) {
+    const option = document.createElement("option");
+    option.value = wilaya;
+    option.textContent = wilaya;
+    wilayaSelect.appendChild(option);
   }
 
-  container.innerHTML = "";
-  cart.forEach((item, index) => {
-    if (!item.quantity) item.quantity = 1;
-
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <img src="${item.image}" alt="${item.name}">
-      <div class="item-details">
-        <strong>${item.name}</strong><br>
-        السعر: ${item.price} دج<br>
-        <div class="quantity-control">
-          <button onclick="changeQty(${index}, -1)">➖</button>
-          <span>${item.quantity}</span>
-          <button onclick="changeQty(${index}, 1)">➕</button>
-        </div>
-        <button class="delete-btn" onclick="removeItem(${index})">🗑 حذف</button>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function changeQty(index, delta) {
-  cart[index].quantity += delta;
-  if (cart[index].quantity < 1) cart[index].quantity = 1;
-  localStorage.setItem("cart", JSON.stringify(cart));
-  renderCart();
-}
-
-function removeItem(index) {
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  renderCart();
-}
-
-function checkout() {
-  if (cart.length === 0) {
-    alert("⚠️ لا يوجد منتجات!");
-    return;
+  function updateDelivery() {
+    const wilaya = wilayaSelect.value;
+    const type = document.getElementById("deliveryType").value;
+    const info = deliveryData[wilaya];
+    if (info) {
+      document.getElementById("deliveryInfo").textContent =
+        `⏱️ المدة: ${info.time} | 💰 التكلفة: ${info[type]} دج`;
+      calculateTotal();
+    } else {
+      document.getElementById("deliveryInfo").textContent = '';
+    }
   }
 
-  let productSummary = "";
-  let totalPrice = 0;
-  let totalQty = 0;
+  function calculateTotal() {
+    const price = parseInt(document.getElementById("priceInput").value || 0);
+    const wilaya = wilayaSelect.value;
+    const deliveryType = document.getElementById("deliveryType").value;
+    const deliveryCost = deliveryData[wilaya]?.[deliveryType] || 0;
+    const total = price + deliveryCost;
 
-  cart.forEach((item, i) => {
-    productSummary += (i > 0 ? " + " : "") + `${item.name} × ${item.quantity}`;
-    totalPrice += item.price * item.quantity;
-    totalQty += item.quantity;
+    document.getElementById("deliveryCostInput").value = deliveryCost;
+    document.getElementById("totalPrice").value = total + " دج";
+  }
+
+  // تحميل بيانات checkout من localStorage
+  const checkoutData = JSON.parse(localStorage.getItem("checkout") || "{}");
+  if (checkoutData.summary) {
+    document.getElementById("productInput").value = checkoutData.summary;
+    document.getElementById("priceInput").value = checkoutData.totalPrice;
+    document.getElementById("quantityInput").value = checkoutData.totalQty;
+    calculateTotal();
+  }
+
+  document.getElementById("orderForm").addEventListener("submit", function(e) {
+    const phone = document.getElementById("phoneInput").value.trim();
+    const phonePattern = /^0(5|6|7)[0-9]{8}$/;
+
+    if (!phonePattern.test(phone)) {
+      alert("⚠️ رقم الهاتف غير صالح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويتكون من 10 أرقام.");
+      e.preventDefault();
+      return;
+    }
+
+    e.preventDefault();
+    document.getElementById("loadingMessage").style.display = "block";
+
+    const formData = new FormData(this);
+    const scriptURL = "https://script.google.com/macros/s/AKfycby8j70Q8Ybnvgt7F14RKwrn3ngd6cg2Ksaz4aE1NY_bmfe-Abq9ZinizHWKesyU5xDb/exec";
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: formData
+    })
+    .then(() => {
+      window.location.href = `myorders.html?phone=${phone}`;
+    })
+    .catch(() => {
+      alert("❌ حدث خطأ أثناء الإرسال.");
+      document.getElementById("loadingMessage").style.display = "none";
+    });
   });
-
-  // حفظ المعلومات مؤقتًا في localStorage
-  localStorage.setItem("checkout", JSON.stringify({
-    summary: productSummary,
-    totalPrice: totalPrice,
-    totalQty: totalQty
-  }));
-
-  window.location.href = "order.html";
-}
-
-renderCart();
 </script>
 
 </body>
