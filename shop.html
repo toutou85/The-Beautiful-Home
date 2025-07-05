@@ -175,7 +175,7 @@
 </div>
 
 <section class="products" id="productList">جاري تحميل المنتجات...</section>
-
+<section id="pagination" style="text-align:center; margin: 20px;"></section>
 <footer>
   <div class="social-icons" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 10px;">
     <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank" title="Facebook">
@@ -191,6 +191,7 @@
   <p>جميع الحقوق محفوظة; 2025</p>
 </footer>
 
+
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
 let allProducts = [];
@@ -200,6 +201,7 @@ let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 let currentPage = 1;
 const productsPerPage = 20;
 
+// جلب البيانات وترتيبها عشوائيًا
 fetch(sheetURL)
   .then(res => res.text())
   .then(text => {
@@ -208,8 +210,18 @@ fetch(sheetURL)
       const [name, image, price, category] = row.split(",");
       return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
     });
+
+    shuffleArray(allProducts); // ← ترتيب عشوائي
     renderProducts(allProducts);
   });
+
+// ترتيب عشوائي للمصفوفة
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
 
 function renderProducts(list) {
   const productList = document.getElementById("productList");
@@ -241,8 +253,8 @@ function renderProducts(list) {
 
 function renderPagination(totalItems) {
   const totalPages = Math.ceil(totalItems / productsPerPage);
-  const pagination = document.createElement("div");
-  pagination.className = "pagination";
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
 
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
@@ -254,8 +266,6 @@ function renderPagination(totalItems) {
     };
     pagination.appendChild(btn);
   }
-
-  document.getElementById("productList").appendChild(pagination);
 }
 
 function toggleMenu(show) {
@@ -312,7 +322,6 @@ setInterval(updateClock, 1000);
 updateClock();
 </script>
 
-<script>
 // عداد الزوار
 fetch("https://script.google.com/macros/s/AKfycbxJEZofDIEtAgFjAmYQNDAzk95GX1KAHbY4f3IiQMHVI5a0OIcc7hjfZya9WNUioHxX/exec", {
   method: "POST"
