@@ -1,9 +1,8 @@
-<!-- بداية الملف: index.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Beautiful Home</title>
   <link rel="icon" href="favicon.png">
   <style>
@@ -12,6 +11,7 @@
       font-family: 'Tahoma', sans-serif;
       background: #f9f9f9;
     }
+
     header {
       background-color: #005f73;
       color: white;
@@ -23,13 +23,16 @@
       top: 0;
       z-index: 1000;
     }
+
     .top-bar, .mid-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .top-bar img { height: 35px; }
     .top-bar h1 { font-size: 1.2rem; margin: 0 10px; }
+
     .mid-bar a, .mid-bar button {
       background: none;
       color: white;
@@ -38,35 +41,40 @@
       padding: 5px 10px;
       cursor: pointer;
     }
+
     .clock-bar {
       text-align: center;
       font-size: 0.85rem;
       color: #dff;
     }
-    #menuBtn { font-size: 1.2rem; }
 
     .sidebar {
       position: fixed;
-      top: 0; right: -100%;
-      width: 75%; height: 100%;
+      top: 0;
+      right: -100%;
+      width: 75%;
+      height: 100%;
       background: rgba(255,255,255,0.95);
       box-shadow: -2px 0 5px rgba(0,0,0,0.2);
       transition: right 0.3s ease-in-out;
       z-index: 999;
       padding: 1rem;
     }
+
     .sidebar.active { right: 0; }
+    .sidebar h3 { margin-top: 0; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li {
       padding: 10px 0;
       border-bottom: 1px solid #ccc;
       font-size: 1rem;
+      cursor: pointer;
     }
 
     .overlay {
       position: fixed;
       top: 0; right: 0; bottom: 0; left: 0;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0,0,0,0.4);
       display: none;
       z-index: 998;
     }
@@ -78,6 +86,7 @@
       gap: 1rem;
       padding: 1rem;
     }
+
     .product {
       background: white;
       padding: 1rem;
@@ -85,6 +94,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: center;
     }
+
     .product img {
       width: 100%;
       height: 180px;
@@ -94,12 +104,14 @@
       user-drag: none;
       -webkit-user-drag: none;
     }
+
     .product .actions {
       display: flex;
       justify-content: center;
       gap: 10px;
       margin-top: 10px;
     }
+
     .product a {
       display: block;
       margin-top: 8px;
@@ -110,16 +122,19 @@
       border-radius: 6px;
       font-size: 0.9rem;
     }
+
     footer {
       background: #003344;
       padding: 1rem;
       text-align: center;
       color: white;
     }
+
     .pagination {
       text-align: center;
       margin: 20px 0;
     }
+
     .pagination button {
       margin: 0 5px;
       padding: 5px 10px;
@@ -129,9 +144,14 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     .pagination button.active-page {
       background: #0a9396;
       color: #fff;
+    }
+
+    @media (max-width: 400px) {
+      .product img { height: 150px; }
     }
   </style>
 </head>
@@ -148,7 +168,7 @@
     <a href="cart.html">🛒 السلة <span id="cartCount"></span></a>
     <button id="menuBtn">☰</button>
   </div>
-  <div class="clock-bar" id="clockBar">
+  <div class="clock-bar">
     🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
   </div>
 </header>
@@ -168,13 +188,13 @@
 </div>
 
 <section class="products" id="productList">جاري تحميل المنتجات...</section>
-<section id="pagination" class="pagination"></section>
+<section class="pagination" id="pagination"></section>
 
 <footer>
-  <div class="social-icons" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 10px;">
-    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" width="30"></a>
-    <a href="https://www.instagram.com/tgtmhb99" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" width="30"></a>
-    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" width="30"></a>
+  <div class="social-icons" style="display: flex; justify-content: center; gap: 15px;">
+    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="30"></a>
+    <a href="https://www.instagram.com/tgtmhb99" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="30"></a>
+    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" width="30"></a>
   </div>
   <p>جميع الحقوق محفوظة; 2025</p>
 </footer>
@@ -184,7 +204,6 @@ const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8
 let allProducts = [];
 let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
 let currentPage = 1;
 const productsPerPage = 20;
 
@@ -196,7 +215,7 @@ fetch(sheetURL)
       const [name, image, price, category] = row.split(",");
       return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
     });
-    shuffleArray(allProducts); // ترتيب عشوائي
+    shuffleArray(allProducts);
     renderProducts(allProducts);
   });
 
@@ -210,6 +229,7 @@ function shuffleArray(arr) {
 function renderProducts(list) {
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
+
   const start = (currentPage - 1) * productsPerPage;
   const end = start + productsPerPage;
   const paginatedItems = list.slice(start, end);
@@ -225,8 +245,7 @@ function renderProducts(list) {
       <div class="actions">
         <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
         <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
-      </div>
-    `;
+      </div>`;
     productList.appendChild(div);
   });
 
@@ -246,6 +265,7 @@ function renderPagination(totalItems) {
     btn.onclick = () => {
       currentPage = i;
       renderProducts(allProducts);
+      window.scrollTo(0, 0); // ✅ إرجاع الصفحة للأعلى
     };
     pagination.appendChild(btn);
   }
@@ -294,27 +314,23 @@ function filterCategory(cat) {
 function updateClock() {
   const now = new Date();
   const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  const timeStr = now.toLocaleTimeString('ar-DZ', options);
-  const dateStr = now.toLocaleDateString('ar-DZ');
-  const hijri = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now);
-  document.getElementById("time").textContent = timeStr;
-  document.getElementById("gregorian").textContent = dateStr;
-  document.getElementById("hijri").textContent = hijri;
+  document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options);
+  document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ');
+  document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now);
 }
 setInterval(updateClock, 1000);
 updateClock();
 
 // عداد الزوار
-fetch("https://script.google.com/macros/s/AKfycbxJEZofDIEtAgFjAmYQNDAzk95GX1KAHbY4f3IiQMHVI5a0OIcc7hjfZya9WNUioHxX/exec", {
-  method: "POST"
-});
+fetch("https://script.google.com/macros/s/AKfycbxJEZofDIEtAgFjAmYQNDAzk95GX1KAHbY4f3IiQMHVI5a0OIcc7hjfZya9WNUioHxX/exec", { method: "POST" });
 
-// منع زر الفأرة الأيمن على الصور
+// منع حفظ الصور بزر الفأرة الأيمن
 document.addEventListener('contextmenu', function(e) {
   if (e.target.tagName === 'IMG') {
     e.preventDefault();
   }
 });
 </script>
+
 </body>
 </html>
