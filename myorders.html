@@ -30,7 +30,7 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    input, button {
+    select, input, button {
       width: 100%;
       padding: 12px;
       margin-top: 10px;
@@ -98,7 +98,12 @@
 
 <div class="box">
   <h2>🔍 عرض طلبياتك</h2>
-  <input type="tel" id="phoneInput" placeholder="📞 أدخل رقم هاتفك (مثال: 065...)" />
+  <select id="prefix">
+    <option value="05">05</option>
+    <option value="06">06</option>
+    <option value="07">07</option>
+  </select>
+  <input type="tel" id="phoneSuffix" maxlength="8" placeholder="📞 أدخل 8 أرقام بعد المقدمة (مثال: 12345678)" />
   <button id="fetchBtn" onclick="fetchMyOrders()">📥 عرض الطلبات</button>
   <p class="error" id="errorMsg"></p>
   <div id="countdown"></div>
@@ -132,18 +137,16 @@
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRYCb9P6-QwBUwBA6ijpq2LoH3ErA1sXmCxJFDZC5ayx0tO8deHuvo8vorNTokkXGtbr7_1QFXQ2Lb3/pub?output=csv";
 
-function validatePhone(phone) {
-  return /^0(5|6|7)\d{8}$/.test(phone);
-}
-
 function fetchMyOrders() {
-  const phone = document.getElementById("phoneInput").value.trim();
+  const prefix = document.getElementById("prefix").value;
+  const suffix = document.getElementById("phoneSuffix").value.trim();
+  const phone = prefix.slice(1) + suffix;
   const errorMsg = document.getElementById("errorMsg");
   const table = document.getElementById("ordersTable");
   const section = document.getElementById("ordersSection");
 
-  if (!validatePhone(phone)) {
-    errorMsg.textContent = "⚠️ رقم الهاتف غير صحيح. يجب أن يبدأ بـ 05 أو 06 أو 07 ويحتوي على 10 أرقام.";
+  if (!/^[0-9]{8}$/.test(suffix)) {
+    errorMsg.textContent = "⚠️ أدخل 8 أرقام بعد المقدمة.";
     section.style.display = "none";
     return;
   }
@@ -152,8 +155,8 @@ function fetchMyOrders() {
   fetch(sheetURL)
     .then(res => res.text())
     .then(text => {
-      const rows = parseCSV(text.trim()).slice(1).reverse(); // تخطي العنوان
-      const myOrders = rows.filter(r => r[2].replace(/^'/, "") === phone);
+      const rows = parseCSV(text.trim()).slice(1).reverse();
+      const myOrders = rows.filter(r => r[2].replace(/^'/, "").replace(/^0/, "") === phone);
 
       if (myOrders.length === 0) {
         errorMsg.textContent = "❌ لم يتم العثور على أي طلبات.";
@@ -190,7 +193,6 @@ function fetchMyOrders() {
     });
 }
 
-// محلل CSV احترافي (يعالج الفواصل داخل الخلايا والنصوص متعددة الأسطر)
 function parseCSV(str) {
   const rows = [];
   let row = [], cell = '', inQuotes = false;
@@ -228,16 +230,18 @@ function parseCSV(str) {
 
 window.onload = function () {
   const url = new URL(window.location.href);
-  const phone = url.searchParams.get("phone");
-  const wait = parseInt(url.searchParams.get("wait")) || 10;
+  const prefix = url.searchParams.get("prefix");
+  const suffix = url.searchParams.get("number");
 
-  if (phone) {
-    document.getElementById("phoneInput").value = phone;
+  if (prefix && suffix) {
+    document.getElementById("prefix").value = prefix;
+    document.getElementById("phoneSuffix").value = suffix;
+
     const countdownEl = document.getElementById("countdown");
     const fetchBtn = document.getElementById("fetchBtn");
     fetchBtn.disabled = true;
 
-    let counter = wait;
+    let counter = 5;
     const interval = setInterval(() => {
       countdownEl.textContent = `⌛ الرجاء الانتظار ${counter} ثانية لتحميل الطلبيات...`;
       counter--;
@@ -252,8 +256,5 @@ window.onload = function () {
 };
 </script>
 
-
-
 </body>
 </html>
-
