@@ -5,9 +5,6 @@
   <title>Beautiful Home</title>
   <link rel="icon" href="favicon.png">
   <style>
-    header a {
-      text-decoration: none !important;
-    }
     body {
       margin: 0;
       font-family: 'Tahoma', sans-serif;
@@ -94,13 +91,31 @@
       height: 180px;
       object-fit: cover;
       border-radius: 10px;
-      pointer-events: none;
     }
-    .product .actions {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
+    .product .details-btn {
+      background-color: #3d5a80;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      display: block;
+      margin: 10px auto 5px;
+    }
+    .product .order-btn {
+      background: #0a9396;
+      color: white;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      display: block;
+      text-decoration: none;
+    }
+    footer {
+      background: #003344;
+      padding: 1rem;
+      text-align: center;
+      color: white;
     }
     .pagination {
       text-align: center;
@@ -110,6 +125,8 @@
       margin: 0 5px;
       padding: 5px 10px;
       background: #eee;
+      color: #000;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
@@ -133,79 +150,116 @@
       border: 2px solid #0a9396;
       border-radius: 10px;
     }
-    .details-btn {
-      background-color: #3d5a80;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      text-decoration: none;
-      display: inline-block;
-      margin: 6px auto;
-    }
-    .order-btn {
-      margin-top: 10px;
-      background-color: #0a9396;
-      color: white;
-      display: block;
-      padding: 8px 10px;
-      border-radius: 6px;
-      text-align: center;
-      text-decoration: none;
-    }
   </style>
 </head>
 <body>
-<header>
-  <div class="top-bar">
-    <img src="logo.png" alt="Logo">
-    <h1>Beautiful Home</h1>
-  </div>
-  <div class="clock-bar">
-    🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
-  </div>
-  <div class="mid-bar">
-    <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
-    <a href="myorders.html">📦 طلباتي</a>
-    <a href="cart.html">🛒 السلة <span id="cartCount"></span></a>
-    <button id="menuBtn">☰</button>
-  </div>
-</header>
-<div id="searchBar">
-  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" />
-</div>
-<div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
-<div class="sidebar" id="sidebar">
-  <h3>📂 الفئات</h3>
-  <ul>
-    <li onclick="showAllProducts()">📦 جميع المنتجات</li>
-    <li onclick="filterCategory('المطبخ')">المطبخ</li>
-    <li onclick="filterCategory('عناية')">عناية بالجمال</li>
-    <li onclick="filterCategory('البيت')">البيت</li>
-    <li onclick="filterCategory('أدوات')">أدوات</li>
-    <li onclick="filterCategory('صيف')">صيف</li>
-    <li onclick="filterCategory('إلكترونية')">إلكترونية</li>
-    <li onclick="filterCategory('ملحقات')">ملحقات السيارات والدراجات</li>
-  </ul>
-</div>
-<section class="products" id="productList">جاري تحميل المنتجات...</section>
-<section class="pagination" id="pagination"></section>
-<footer>
-  <p>جميع الحقوق محفوظة © 2025</p>
-</footer>
-<script>
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-let allProducts = [];
-let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-let currentPage = 1;
-const productsPerPage = 20;fetch(sheetURL) .then(res => res.text()) .then(text => { const rows = text.trim().split("\n").slice(1); allProducts = rows.map(row => { const [name, image, price, category] = row.split(","); return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" }; }); shuffleArray(allProducts); renderProducts(allProducts); });
+  <header>
+    <div class="top-bar">
+      <img src="logo.png" alt="Logo">
+      <h1>Beautiful Home</h1>
+    </div>
+    <div class="clock-bar">
+      🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
+    </div>
+    <div class="mid-bar">
+      <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
+      <a href="myorders.html">📦 طلباتي</a>
+      <a href="cart.html">🛒 السلة <span id="cartCount"></span></a>
+      <button id="menuBtn">☰</button>
+    </div>
+  </header>  <div id="searchBar">
+    <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" />
+  </div>  <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+  <div class="sidebar" id="sidebar">
+    <h3>📂 الفئات</h3>
+    <ul>
+      <li onclick="showAllProducts()">📦 جميع المنتجات</li>
+      <li onclick="filterCategory('المطبخ')">المطبخ</li>
+      <li onclick="filterCategory('عناية')">عناية بالجمال</li>
+      <li onclick="filterCategory('البيت')">البيت</li>
+      <li onclick="filterCategory('أدوات')">أدوات</li>
+      <li onclick="filterCategory('صيف')">صيف</li>
+      <li onclick="filterCategory('إلكترونية')">إلكترونية</li>
+      <li onclick="filterCategory('ملحقات')">ملحقات السيارات والدراجات</li>
+    </ul>
+  </div>  <section class="products" id="productList">جاري تحميل المنتجات...</section>
+  <section class="pagination" id="pagination"></section>  <footer>
+    <div class="social-icons" style="display: flex; justify-content: center; gap: 15px;">
+      <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="30"></a>
+      <a href="https://www.instagram.com/tgtmhb99" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="30"></a>
+      <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" width="30"></a>
+    </div>
+    <p>جميع الحقوق محفوظة © 2025</p>
+  </footer>  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+    let allProducts = [];
+    let currentPage = 1;
+    const productsPerPage = 20;
 
-function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(text => {
+        const rows = text.trim().split("\n").slice(1);
+        allProducts = rows.map(row => {
+          const [name, image, price, category] = row.split(",");
+          return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
+        });
+        renderProducts(allProducts);
+      });
 
-function renderProducts(list) { const productList = document.getElementById("productList"); productList.innerHTML = ""; const start = (currentPage - 1) * productsPerPage; const end = start + productsPerPage; const paginatedItems = list.slice(start, end); paginatedItems.forEach(p => { const div = document.createElement("div"); div.className = "product"; div.innerHTML = <img src="${p.image}" alt="${p.name}" /> <h3>${p.name}</h3> <p style="font-weight: bold; font-size: 1.1rem;">${p.price} دج</p> <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد من التفاصيل</a> <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a> <div class="actions"> <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button> </div>; productList.appendChild(div); }); renderPagination(list.length); updateCartCount(); }
+    function renderProducts(list) {
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
+      const start = (currentPage - 1) * productsPerPage;
+      const end = start + productsPerPage;
+      list.slice(start, end).forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <img src="${p.image}" alt="${p.name}" />
+          <h3>${p.name}</h3>
+          <p style="font-weight: bold; font-size: 1.1rem;">${p.price} دج</p>
+          <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد من التفاصيل</a>
+          <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a>
+        `;
+        productList.appendChild(div);
+      });
+      renderPagination(list.length);
+    }
 
-function renderPagination(totalItems) { const totalPages = Math.ceil(totalItems / productsPerPage); const pagination = document.getElementById("pagination"); pagination.innerHTML = ""; for (let i = 1; i <= totalPages; i++) { const btn = document.createElement("button"); btn.textContent = i; btn.className = i === currentPage ? "active-page" : ""; btn.onclick = () => { currentPage = i; renderProducts(allProducts); window.scrollTo(0, 0); }; pagination.appendChild(btn); } } function toggleMenu(show) { document.getElementById("sidebar").classList.toggle("active", show); document.getElementById("overlay").classList.toggle("active", show); } document.getElementById("menuBtn").addEventListener("click", () => toggleMenu(true)); function updateCartCount() { document.getElementById("cartCount").textContent = cart.length; } function isFavorite(p) { return favorites.some(f => f.name === p.name); } function toggleFavorite(product) { if (isFavorite(product)) { favorites = favorites.filter(f => f.name !== product.name); } else { favorites.push(product); } localStorage.setItem("favorites", JSON.stringify(favorites)); renderProducts(allProducts); } function showFavorites() { renderProducts(favorites); } function filterCategory(cat) { renderProducts(allProducts.filter(p => p.category.includes(cat))); toggleMenu(false); } function searchProducts() { const query = document.getElementById("searchInput").value.toLowerCase().trim(); const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query)); currentPage = 1; renderProducts(filtered); } function updateClock() { const now = new Date(); const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' }; document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options); document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ'); document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now); } setInterval(updateClock, 1000); updateClock(); </script>
+    function renderPagination(totalItems) {
+      const totalPages = Math.ceil(totalItems / productsPerPage);
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = i === currentPage ? "active-page" : "";
+        btn.onclick = () => { currentPage = i; renderProducts(allProducts); window.scrollTo(0, 0); };
+        pagination.appendChild(btn);
+      }
+    }
 
-</body>
+    function toggleMenu(show) {
+      document.getElementById("sidebar").classList.toggle("active", show);
+      document.getElementById("overlay").classList.toggle("active", show);
+    }
+    document.getElementById("menuBtn").addEventListener("click", () => toggleMenu(true));
+
+    function searchProducts() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
+      currentPage = 1;
+      renderProducts(filtered);
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ');
+      document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ');
+      document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script></body>
 </html>
