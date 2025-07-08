@@ -277,6 +277,7 @@ function renderProducts(list) {
     div.innerHTML = `
       <img src="${p.image}" alt="${p.name}" />
       <h3>${p.name}</h3>
+      <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد من التفاصيل</a>
       <p>${p.price} دج</p>
       <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}">اطلب الآن</a>
       <div class="actions">
