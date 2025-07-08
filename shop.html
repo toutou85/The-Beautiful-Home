@@ -163,6 +163,9 @@
     <h1>Beautiful Home</h1>
   </div>
   <div class="mid-bar">
+<div style="padding: 10px; text-align: center;">
+  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" style="width: 90%; max-width: 400px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
+</div>
     <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
     <a href="myorders.html">📦 طلباتي</a>
     <a href="cart.html">🛒 السلة <span id="cartCount"></span></a>
@@ -309,6 +312,12 @@ function showFavorites() {
 
 function filterCategory(cat) {
   renderProducts(allProducts.filter(p => p.category.includes(cat)));
+}
+function searchProducts() {
+  const query = document.getElementById("searchInput").value.toLowerCase().trim();
+  const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
+  currentPage = 1;
+  renderProducts(filtered);
 }
 
 function updateClock() {
