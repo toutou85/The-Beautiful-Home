@@ -153,6 +153,23 @@
     @media (max-width: 400px) {
       .product img { height: 150px; }
     }
+    #searchBar {
+  position: sticky;
+  top: 90px; /* أسفل الهيدر */
+  background: #e0f7fa;
+  padding: 12px;
+  z-index: 999;
+  border-bottom: 1px solid #ccc;
+}
+
+#searchBar input {
+  width: 95%;
+  max-width: 800px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #0a9396;
+  border-radius: 10px;
+}
   </style>
 </head>
 <body>
@@ -173,14 +190,10 @@
   <div class="clock-bar">
     🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
   </div>
-
 </header>
-
-<div id="searchBar" style="background: #e0f7fa; padding: 15px; text-align: center;">
-  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" 
-         style="width: 95%; max-width: 800px; padding: 14px; font-size: 1.1rem; border: 2px solid #0a9396; border-radius: 10px;">
+<div id="searchBar">
+  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" />
 </div>
-
 <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
 <div class="sidebar" id="sidebar">
   <h3>📂 الفئات</h3>
