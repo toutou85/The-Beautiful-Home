@@ -179,6 +179,17 @@
   border: 2px solid #0a9396;
   border-radius: 10px;
 }
+.details-btn {
+  background-color: #3d5a80;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+.details-btn:hover {
+  background-color: #2b3c5c;
+}
   </style>
 </head>
 <body>
@@ -263,33 +274,18 @@ function shuffleArray(arr) {
   }
 }
 
-function renderProducts(list) {
-  const productList = document.getElementById("productList");
-  productList.innerHTML = "";
-
-  const start = (currentPage - 1) * productsPerPage;
-  const end = start + productsPerPage;
-  const paginatedItems = list.slice(start, end);
-
-  paginatedItems.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "product";
-    div.innerHTML = `
-      <img src="${p.image}" alt="${p.name}" />
-      <h3>${p.name}</h3>
-      <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد من التفاصيل</a>
-      <p>${p.price} دج</p>
-      <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}">اطلب الآن</a>
-      <div class="actions">
-        <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
-        <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
-      </div>`;
-    productList.appendChild(div);
-  });
-
-  renderPagination(list.length);
-  updateCartCount();
-}
+div.innerHTML = `
+  <img src="${p.image}" alt="${p.name}" />
+  <h3>${p.name}</h3>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0;">
+    <p style="margin: 0;">${p.price} دج</p>
+    <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد</a>
+  </div>
+  <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}">🛒 اطلب الآن</a>
+  <div class="actions">
+    <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
+    <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
+  </div>`;
 
 function renderPagination(totalItems) {
   const totalPages = Math.ceil(totalItems / productsPerPage);
