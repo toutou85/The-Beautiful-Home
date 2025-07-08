@@ -248,32 +248,6 @@
 </footer>
 
 <script>
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
-let allProducts = [];
-let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-let currentPage = 1;
-const productsPerPage = 20;
-
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(text => {
-    const rows = text.trim().split("\n").slice(1);
-    allProducts = rows.map(row => {
-      const [name, image, price, category] = row.split(",");
-      return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
-    });
-    shuffleArray(allProducts);
-    renderProducts(allProducts);
-  });
-
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-
 function renderProducts(list) {
   const productList = document.getElementById("productList");
   productList.innerHTML = "";
@@ -288,31 +262,27 @@ function renderProducts(list) {
     div.innerHTML = `
       <img src="${p.image}" alt="${p.name}" />
       <h3>${p.name}</h3>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0;">
-        <p style="margin: 0; font-weight: bold;">${p.price} دج</p>
-        <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد</a>
-      </div>
-      <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a>
+
+      <!-- السعر -->
+      <p style="margin: 10px 0; font-weight: bold; font-size: 1.1rem;">${p.price} دج</p>
+
+      <!-- زر التفاصيل -->
+      <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد من التفاصيل</a>
+
+      <!-- زر الطلب -->
+      <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn" style="margin-top: 10px; background-color: #0a9396; color: white; display: block; padding: 8px 10px; border-radius: 6px; text-align: center; text-decoration: none;">🛒 اطلب الآن</a>
+
+      <!-- أزرار المفضلة -->
       <div class="actions">
-        <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
         <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
-      </div>`;
+      </div>
+    `;
     productList.appendChild(div);
   });
 
   renderPagination(list.length);
   updateCartCount();
 }
-  <h3>${p.name}</h3>
-  <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0;">
-    <p style="margin: 0;">${p.price} دج</p>
-    <a href="details.html?id=${encodeURIComponent(p.name)}" class="details-btn">📄 المزيد</a>
-  </div>
-  <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}">🛒 اطلب الآن</a>
-  <div class="actions">
-    <button onclick='addToCart(${JSON.stringify(p)})'>🛒</button>
-    <button class="favorites-btn ${isFavorite(p) ? "active" : ""}" onclick='toggleFavorite(${JSON.stringify(p)})'>❤️</button>
-  </div>`;
 
 function renderPagination(totalItems) {
   const totalPages = Math.ceil(totalItems / productsPerPage);
