@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل المنتج</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <style>
+    body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
+    h1 { color: #005f73; }
+    .swiper { width: 100%; height: 300px; margin-bottom: 20px; }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+    .description { background: #fff; padding: 15px; border-radius: 10px; line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+<h1 id="productName">تفاصيل المنتج</h1>
+
+<!-- ✅ السلايدر -->
+<div class="swiper">
+  <div class="swiper-wrapper" id="imageSlides">
+    <!-- الصور هنا -->
+  </div>
+  <!-- أزرار تنقل -->
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+  <!-- نقاط -->
+  <div class="swiper-pagination"></div>
+</div>
+
+<!-- ✅ وصف المنتج -->
+<div class="description" id="productDesc">جاري التحميل...</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script>
+// رابط جدول التفاصيل
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vXXXXXXX/pub?output=csv";
+
+// جلب اسم المنتج من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const productName = decodeURIComponent(urlParams.get("name") || "");
+document.getElementById("productName").textContent = productName;
+
+// جلب البيانات من Google Sheets
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(csv => {
+    const rows = csv.trim().split("\n").slice(1);
+    const data = rows.map(row => {
+      const [name, images, desc] = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // يفصل بشكل آمن
+      return {
+        name: name.trim(),
+        images: images.split(",").map(img => img.trim()),
+        desc: desc.trim()
+      };
+    });
+
+    const found = data.find(item => item.name === productName);
+    if (found) {
+      // عرض الصور
+      const slides = found.images.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`).join("");
+      document.getElementById("imageSlides").innerHTML = slides;
+
+      // عرض الوصف
+      document.getElementById("productDesc").textContent = found.desc;
+
+      // تفعيل السلايدر
+      new Swiper(".swiper", {
+        loop: true,
+        pagination: { el: ".swiper-pagination" },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+      });
+    } else {
+      document.getElementById("productDesc").textContent = "❌ لم يتم العثور على هذا المنتج.";
+    }
+  });
+</script>
+</body>
+</html>
