@@ -179,25 +179,31 @@
 <body>
 
 <header>
+  <!-- ✅ السطر الأول: الشعار والاسم -->
   <div class="top-bar">
     <img src="logo.png" alt="Logo">
     <h1>Beautiful Home</h1>
   </div>
+
+  <!-- ✅ السطر الثاني: الساعة والتاريخ -->
+  <div class="clock-bar">
+    🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
+  </div>
+
+  <!-- ✅ السطر الثالث: أزرار التنقل -->
   <div class="mid-bar">
-<div style="padding: 10px; text-align: center;">
-  
     <a href="#" onclick="showFavorites()">❤️ المفضلة</a>
     <a href="myorders.html">📦 طلباتي</a>
     <a href="cart.html">🛒 السلة <span id="cartCount"></span></a>
     <button id="menuBtn">☰</button>
   </div>
-  <div class="clock-bar">
-    🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
-  </div>
 </header>
+
+<!-- ✅ السطر الرابع: خانة البحث -->
 <div id="searchBar">
   <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" />
 </div>
+
 <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
 <div class="sidebar" id="sidebar">
   <h3>📂 الفئات</h3>
