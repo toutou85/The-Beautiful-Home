@@ -173,9 +173,13 @@
   <div class="clock-bar">
     🕒 <span id="time"></span> | 📅 <span id="gregorian"></span> | 🕌 <span id="hijri"></span>
   </div>
-<input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" style="width: 90%; max-width: 400px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
-</div>
+
 </header>
+
+<div id="searchBar" style="background: #e0f7fa; padding: 15px; text-align: center;">
+  <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" 
+         style="width: 95%; max-width: 800px; padding: 14px; font-size: 1.1rem; border: 2px solid #0a9396; border-radius: 10px;">
+</div>
 
 <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
 <div class="sidebar" id="sidebar">
