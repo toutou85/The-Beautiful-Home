@@ -246,7 +246,30 @@
   </div>
   <p>جميع الحقوق محفوظة © 2025</p>
 </footer>
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+let allProducts = [];
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+let currentPage = 1;
+const productsPerPage = 20;
 
+// ✅ تحميل المنتجات من Google Sheets
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1);
+    allProducts = rows.map(row => {
+      const [name, image, price, category] = row.split(",");
+      return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
+    });
+    shuffleArray(allProducts);
+    renderProducts(allProducts);
+  });function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
 <script>
 function renderProducts(list) {
   const productList = document.getElementById("productList");
