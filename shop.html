@@ -208,6 +208,7 @@
 <div class="sidebar" id="sidebar">
   <h3>📂 الفئات</h3>
   <ul>
+    <li onclick="showAllProducts()">📦 جميع المنتجات</li>
     <li onclick="filterCategory('المطبخ')">المطبخ</li>
     <li onclick="filterCategory('عناية')">عناية بالجمال</li>
     <li onclick="filterCategory('البيت')">البيت</li>
@@ -340,7 +341,9 @@ function showFavorites() {
 
 function filterCategory(cat) {
   renderProducts(allProducts.filter(p => p.category.includes(cat)));
+  toggleMenu(false); // إغلاق القائمة تلقائيًا
 }
+
 function searchProducts() {
   const query = document.getElementById("searchInput").value.toLowerCase().trim();
   const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
@@ -367,6 +370,10 @@ document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
   }
 });
+  function showAllProducts() {
+  renderProducts(allProducts);
+  toggleMenu(false); // إغلاق القائمة تلقائيًا
+}
 </script>
 
 </body>
