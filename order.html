@@ -197,9 +197,30 @@ document.getElementById("orderForm").addEventListener("submit", function(e) {
     method: "POST",
     body: formData
   })
-  .then(() => {
-    window.location.href = `myorders.html?phone=${fullPhone}`;
-  })
+ .then(() => {
+  document.body.innerHTML = `
+    <div style="text-align: center; padding: 2rem; font-family: Tahoma;">
+      <h2 style="color: green;">💚 شكرًا جزيلاً لك!</h2>
+      <p>تم تسجيل طلبك بنجاح وسنتصل بك قريبًا لتأكيده.</p>
+      <p>يمكنك متابعة حالة الطلب من خلال زر <strong>طلباتي</strong> بالأسفل.</p>
+      <br>
+      <a href="myorders.html?phone=${fullPhone}" style="
+        display: inline-block;
+        background-color: #0a9396;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 1rem;">📦 طلباتي</a>
+      <br><br>
+      <p style="color: gray;">سيتم تحويلك إلى صفحة المنتجات خلال لحظات...</p>
+    </div>
+  `;
+  
+  setTimeout(() => {
+    window.location.href = "shop.html";
+  }, 5000);
+})
   .catch(() => {
     alert("❌ حدث خطأ أثناء الإرسال.");
     document.getElementById("loadingMessage").style.display = "none";
