@@ -190,14 +190,24 @@ footer {
     <li onclick="filterCategory('ملحقات')">ملحقات السيارات والدراجات</li>
   </ul>
 </div><section class="products" id="productList">جاري تحميل المنتجات...</section>
-<section class="pagination" id="pagination"></section><footer>
-  <div style="display: flex; justify-content: center; gap: 15px;">
-    <a href="#"><img src="facebook.svg" width="30"></a>
-    <a href="#"><img src="instagram.svg" width="30"></a>
-    <a href="#"><img src="tiktok.svg" width="30"></a>
+<section class="pagination" id="pagination">
+</section>
+<footer style="background: linear-gradient(to right, #005f73, #0a9396); padding: 1.5rem 1rem; text-align: center; color: #fff;">
+  <div class="social-icons" style="display: flex; justify-content: center; gap: 20px; margin-bottom: 10px;">
+    <a href="https://www.facebook.com/share/1XtjMMUMRw/" target="_blank" style="transition: transform 0.3s;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" width="30" style="filter: brightness(0) invert(1);">
+    </a>
+    <a href="https://www.instagram.com/tgtmhb99" target="_blank" style="transition: transform 0.3s;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" width="30" style="filter: brightness(0) invert(1);">
+    </a>
+    <a href="https://vm.tiktok.com/ZMSxkRM6N/" target="_blank" style="transition: transform 0.3s;">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tiktok.svg" alt="TikTok" width="30" style="filter: brightness(0) invert(1);">
+    </a>
   </div>
-  <p>جميع الحقوق محفوظة © 2025</p>
-</footer><script>
+  <p style="margin: 0; font-size: 0.95rem;">جميع الحقوق محفوظة © 2025 - Beautiful Home</p>
+</footer>
+
+<script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
 let allProducts = [], currentPage = 1;
 const productsPerPage = 20;
