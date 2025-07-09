@@ -7,10 +7,19 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <style>
     body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
-    h1 { color: #005f73; }
+    h1 { color: #005f73; text-align: center; margin-bottom: 10px; }
     .swiper { width: 100%; height: 300px; margin-bottom: 20px; }
     .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-    .description { background: #fff; padding: 15px; border-radius: 10px; line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .description { background: #fff; padding: 15px; border-radius: 10px; line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1); white-space: pre-line; }
+    .not-found {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      color: #d32f2f;
+      font-size: 1.2rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
@@ -18,7 +27,7 @@
 <h1 id="productName">تفاصيل المنتج</h1>
 
 <!-- ✅ السلايدر -->
-<div class="swiper">
+<div class="swiper" id="slider" style="display: none;">
   <div class="swiper-wrapper" id="imageSlides">
     <!-- الصور هنا -->
   </div>
@@ -34,33 +43,43 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
+// رابط جدول التفاصيل
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
 
+// جلب اسم المنتج من الرابط
 const urlParams = new URLSearchParams(window.location.search);
-const productName = decodeURIComponent(urlParams.get("name") || "");
+const productName = decodeURIComponent(urlParams.get("name") || "").trim();
 document.getElementById("productName").textContent = productName;
 
+// جلب البيانات من Google Sheets
 fetch(sheetURL)
   .then(res => res.text())
   .then(csv => {
     const rows = csv.trim().split("\n").slice(1);
     const data = rows.map(row => {
-      const cols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-      const description = cols[0]?.replace(/^"|"$/g, '').trim() || "";
-      const imageURL = cols[1]?.replace(/^"|"$/g, '').trim() || "";
-      const name = cols[2]?.replace(/^"|"$/g, '').trim() || "";
-
-      return { name, imageURL, description };
+      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // تقسيم آمن
+      const name = cols[0]?.trim() || "";
+      const images = cols[1]?.trim() || "";
+      const desc = cols[2]?.trim() || "";
+      return {
+        name: name.toLowerCase(),
+        images: images.split(",").map(img => img.trim()),
+        desc
+      };
     });
 
-    const found = data.find(item => item.name === productName);
+    const found = data.find(item => item.name === productName.toLowerCase());
+
     if (found) {
-      // عرض الصورة
-      const slide = `<div class="swiper-slide"><img src="${found.imageURL}" alt="صورة المنتج"></div>`;
-      document.getElementById("imageSlides").innerHTML = slide;
+      // عرض الصور
+      const slides = found.images.map(img => `
+        <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
+      `).join("");
+      document.getElementById("imageSlides").innerHTML = slides;
+      document.getElementById("slider").style.display = "block";
 
       // عرض الوصف
-      document.getElementById("productDesc").textContent = found.description;
+      document.getElementById("productDesc").textContent = found.desc || "لا يوجد وصف متاح.";
 
       // تفعيل السلايدر
       new Swiper(".swiper", {
@@ -69,12 +88,16 @@ fetch(sheetURL)
         navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
       });
     } else {
-      document.getElementById("productDesc").textContent = "❌ لم يتم العثور على هذا المنتج.";
+      document.getElementById("productDesc").innerHTML = `
+        <div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>
+      `;
     }
   })
   .catch(err => {
-    document.getElementById("productDesc").textContent = "⚠️ حدث خطأ أثناء تحميل البيانات.";
-    console.error(err);
+    console.error("فشل في تحميل البيانات:", err);
+    document.getElementById("productDesc").innerHTML = `
+      <div class="not-found">⚠️ حدث خطأ أثناء تحميل البيانات.</div>
+    `;
   });
 </script>
 </body>
