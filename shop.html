@@ -172,8 +172,8 @@
 </div>
 <section class="products" id="productList">جاري تحميل المنتجات...</section>
 <section class="pagination" id="pagination"></section>
-<footer style="background: linear-gradient(to right, #005f73, #0a9396); padding: 1.5rem 1rem; text-align: center; color: #fff;">
-  <p style="margin: 0; font-size: 0.95rem;">جميع الحقوق محفوظة © 2025 - Beautiful Home</p>
+<footer>
+  <p>جميع الحقوق محفوظة © 2025 - Beautiful Home</p>
 </footer>
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
@@ -194,7 +194,9 @@ function toggleFavorite(p) { const index = favorites.findIndex(f => f.name === p
 
 function renderProducts(list) { const productList = document.getElementById("productList"); productList.innerHTML = ""; const start = (currentPage - 1) * productsPerPage; const end = start + productsPerPage; const paginatedItems = list.slice(start, end);
 
-paginatedItems.forEach(p => { const div = document.createElement("div"); div.className = "product"; div.innerHTML = <img src="${p.image}" alt="${p.name}" /> <h3>${p.name}</h3> <p style="font-weight: bold;">${p.price} دج</p> <a href="details.html?name=${encodeURIComponent(p.name)}" class="details-btn">📄 التفاصيل</a> <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a> <div class="actions" style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;"> <button onclick='addToCart(${JSON.stringify(p)})' style="background-color: #94d2bd; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">🛒 أضف للسلة</button> <button onclick='toggleFavorite(${JSON.stringify(p)})' class="favorites-btn ${isFavorite(p) ? 'active' : ''}" style="background-color: #ee9b00; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;"> ❤️ ${isFavorite(p) ? 'مفضّل' : 'أضف للمفضلة'} </button> </div>; productList.appendChild(div); }); renderPagination(list.length); updateCartCount(); }
+paginatedItems.forEach(p => { const div = document.createElement("div"); div.className = "product"; div.innerHTML = <img src="${p.image}" alt="${p.name}" /> <h3>${p.name}</h3> <p style="font-weight: bold;">${p.price} دج</p> <a href="details.html?name=${encodeURIComponent(p.name)}" class="details-btn">📄 التفاصيل</a> <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a> <div class="actions" style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;"> <button onclick='addToCart(${JSON.stringify(p)})' style="background-color: #94d2bd; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">🛒 أضف للسلة</button> <button onclick='toggleFavorite(${JSON.stringify(p)})' class="favorites-btn ${isFavorite(p) ? 'active' : ''}" style="background-color: #ee9b00; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">❤️ ${isFavorite(p) ? 'مفضّل' : 'أضف للمفضلة'}</button> </div>; productList.appendChild(div); });
+
+renderPagination(list.length); updateCartCount(); }
 
 function renderPagination(totalItems) { const totalPages = Math.ceil(totalItems / productsPerPage); const pagination = document.getElementById("pagination"); pagination.innerHTML = ""; for (let i = 1; i <= totalPages; i++) { const btn = document.createElement("button"); btn.textContent = i; if (i === currentPage) btn.className = "active-page"; btn.onclick = () => { currentPage = i; renderProducts(allProducts); window.scrollTo(0, 0); }; pagination.appendChild(btn); } }
 
@@ -210,7 +212,9 @@ function showAllProducts() { renderProducts(allProducts); toggleMenu(false); }
 
 function showFavorites() { renderProducts(favorites); }
 
-function updateClock() { const now = new Date(); const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' }; document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options); document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ'); document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now); } setInterval(updateClock, 1000); updateClock(); </script>
+function updateClock() { const now = new Date(); const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' }; document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options); document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ'); document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now); }
+
+setInterval(updateClock, 1000); updateClock(); </script>
 
 </body>
 </html>
