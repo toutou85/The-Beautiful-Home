@@ -6,33 +6,65 @@
   <title>تفاصيل المنتج</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <style>
-    body { font-family: Tahoma, sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
+    body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
     h1 { color: #005f73; text-align: center; margin-bottom: 10px; }
-    .swiper { width: 100%; height: 300px; margin-bottom: 20px; }
+
+    .swiper { width: 100%; height: 300px; margin-bottom: 20px; display: none; }
     .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-    .description { background: #fff; padding: 15px; border-radius: 10px; line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1); white-space: pre-line; }
-    .not-found { background: #fff; padding: 15px; border-radius: 10px; color: #d32f2f; font-size: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .actions { margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-    .actions button { padding: 8px 14px; font-size: 0.95rem; border: none; border-radius: 6px; cursor: pointer; }
-    .share { background: #0a9396; color: white; }
-    .like-btn { background: #ee9b00; color: white; }
-    .rating { text-align: center; margin-top: 10px; }
-    .stars span { font-size: 24px; cursor: pointer; color: gray; }
-    .stars span.selected { color: gold; }
-    .comments { margin-top: 25px; background: #fff; padding: 15px; border-radius: 10px; }
-    .comments h3 { margin-top: 0; color: #005f73; }
-    .comments textarea { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc; resize: vertical; }
-    .comments button { margin-top: 10px; background: #0077b6; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
-    .comment-list { margin-top: 15px; }
-    .comment-list p { background: #f1f1f1; padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; }
+
+    .description {
+      background: #fff; padding: 15px; border-radius: 10px;
+      line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      white-space: pre-line; margin-bottom: 20px;
+    }
+    .not-found {
+      background: #fff; padding: 15px; border-radius: 10px;
+      color: #d32f2f; font-size: 1.2rem; text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .rating-stars span {
+      font-size: 25px;
+      cursor: pointer;
+      color: #ccc;
+    }
+    .rating-stars span.active {
+      color: gold;
+    }
+
+    .comment-box, .comments-list {
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .comments-list div {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+
+    .share-btn {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 10px 15px;
+      background: #0a9396;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
 
 <h1 id="productName">تفاصيل المنتج</h1>
 
-<!-- ✅ السلايدر -->
-<div class="swiper" id="slider" style="display: none;">
+<!-- ✅ سلايدر الصور -->
+<div class="swiper" id="slider">
   <div class="swiper-wrapper" id="imageSlides"></div>
   <div class="swiper-button-next"></div>
   <div class="swiper-button-prev"></div>
@@ -40,119 +72,127 @@
 </div>
 
 <!-- ✅ وصف المنتج -->
-<div class="description" id="productDesc">جاري التحميل...</div>
+<div class="description" id="productDesc">⏳ جاري تحميل تفاصيل المنتج...</div>
 
-<!-- ✅ أزرار التفاعل -->
-<div class="actions">
-  <button class="share" onclick="shareProduct()">📤 مشاركة المنتج</button>
-  <button class="like-btn" onclick="likeProduct()">👍 أعجبني <span id="likeCount">0</span></button>
-</div>
-
-<!-- ✅ التقييم بالنجوم -->
-<div class="rating">
-  ⭐ التقييم:
-  <div class="stars" id="stars">
-    <span onclick="rate(1)">★</span>
-    <span onclick="rate(2)">★</span>
-    <span onclick="rate(3)">★</span>
-    <span onclick="rate(4)">★</span>
-    <span onclick="rate(5)">★</span>
+<!-- ✅ التقييم -->
+<div class="comment-box">
+  <h3>⭐ تقييمك للمنتج:</h3>
+  <div class="rating-stars" id="ratingStars">
+    <span data-rate="1">★</span>
+    <span data-rate="2">★</span>
+    <span data-rate="3">★</span>
+    <span data-rate="4">★</span>
+    <span data-rate="5">★</span>
+    <span id="ratingCount" style="font-size: 0.9rem; color: #555; margin-right: 10px;"></span>
   </div>
 </div>
 
-<!-- ✅ التعليقات -->
-<div class="comments">
-  <h3>💬 آراء الزبائن</h3>
-  <textarea id="commentInput" rows="3" placeholder="اكتب تعليقك هنا..."></textarea>
-  <button onclick="addComment()">نشر التعليق</button>
-  <div class="comment-list" id="commentList"></div>
+<!-- ✅ خانة التعليقات -->
+<div class="comment-box">
+  <h3>💬 أضف تعليق:</h3>
+  <textarea id="commentInput" rows="3" style="width:100%; border-radius: 5px; padding: 10px;"></textarea><br>
+  <button onclick="submitComment()" class="share-btn">إرسال التعليق</button>
 </div>
+
+<div class="comments-list" id="commentsList">
+  <h3>🗣️ آراء الزبائن:</h3>
+  <!-- التعليقات تظهر هنا -->
+</div>
+
+<!-- ✅ زر مشاركة المنتج -->
+<button onclick="shareProduct()" class="share-btn">📤 مشاركة المنتج</button>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
 const urlParams = new URLSearchParams(window.location.search);
-const productName = decodeURIComponent(urlParams.get("name") || "").trim();
-document.getElementById("productName").textContent = productName || "اسم غير محدد";
+const rowIndex = parseInt(urlParams.get("row")) || 0;
 
-if (!productName) {
-  document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ لم يتم تحديد اسم المنتج.</div>`;
+let productName = "", productDesc = "";
+
+if (rowIndex < 2) {
+  document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>`;
 } else {
   fetch(sheetURL)
     .then(res => res.text())
     .then(csv => {
       const rows = csv.trim().split("\n").slice(1);
-      const data = rows.map(row => {
-        const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        const name = cols[0]?.trim() || "";
-        const images = cols[1]?.trim() || "";
-        const desc = cols[2]?.trim() || "";
-        return {
-          name: name.toLowerCase(),
-          images: images.split(",").map(img => img.trim()),
-          desc
-        };
-      }).filter(item => item.name !== "");
+      const row = rows[rowIndex - 2];
+      if (!row) {
+        document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>`;
+        return;
+      }
 
-      const found = data.find(item => item.name === productName.toLowerCase());
+      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      productName = cols[0]?.trim() || "منتج غير معروف";
+      const images = cols[1]?.trim() || "";
+      productDesc = cols[2]?.trim() || "لا يوجد وصف لهذا المنتج.";
 
-      if (found) {
-        const slides = found.images.map(img => `<div class="swiper-slide"><img src="${img}" alt=""></div>`).join("");
-        document.getElementById("imageSlides").innerHTML = slides;
+      document.getElementById("productName").textContent = productName;
+
+      const imgList = images.split(",").map(img => img.trim()).filter(Boolean);
+      if (imgList.length > 0) {
         document.getElementById("slider").style.display = "block";
-        document.getElementById("productDesc").innerHTML = found.desc;
-
+        document.getElementById("imageSlides").innerHTML = imgList.map(img => `
+          <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
+        `).join("");
         new Swiper(".swiper", {
           loop: true,
           pagination: { el: ".swiper-pagination" },
-          navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+          navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+          }
         });
-      } else {
-        document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>`;
       }
+
+      document.getElementById("productDesc").innerHTML = productDesc;
+      loadComments();
+      loadRating();
     })
     .catch(err => {
-      console.error(err);
-      document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ خطأ في تحميل البيانات.</div>`;
+      console.error("فشل التحميل:", err);
+      document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ حدث خطأ أثناء تحميل البيانات.</div>`;
     });
 }
 
-// ✅ مشاركة المنتج
-function shareProduct() {
-  const name = document.getElementById("productName").textContent;
-  const desc = document.getElementById("productDesc").textContent;
-  const shareData = {
-    title: `منتج: ${name}`,
-    text: `${name}\n\n${desc}`,
-    url: window.location.href
-  };
-  navigator.share ? navigator.share(shareData) : alert("جهازك لا يدعم المشاركة المباشرة.");
-}
-
-// ✅ أعجبني
-let likeCount = 0;
-function likeProduct() {
-  likeCount++;
-  document.getElementById("likeCount").textContent = likeCount;
-}
-
-// ✅ تقييم النجوم
-function rate(star) {
-  const stars = document.querySelectorAll("#stars span");
-  stars.forEach((s, i) => {
-    s.classList.toggle("selected", i < star);
+// ⭐ التقييم
+document.querySelectorAll('#ratingStars span').forEach(star => {
+  star.addEventListener('click', () => {
+    const rate = parseInt(star.dataset.rate);
+    localStorage.setItem(`rate_${rowIndex}`, rate);
+    loadRating();
   });
+});
+function loadRating() {
+  const rate = parseInt(localStorage.getItem(`rate_${rowIndex}`)) || 0;
+  document.querySelectorAll('#ratingStars span').forEach(star => {
+    star.classList.toggle('active', parseInt(star.dataset.rate) <= rate);
+  });
+  document.getElementById("ratingCount").textContent = rate ? `(تم تقييمه بـ ${rate}★)` : "";
 }
 
-// ✅ التعليقات
-function addComment() {
-  const comment = document.getElementById("commentInput").value.trim();
-  if (comment) {
-    const p = document.createElement("p");
-    p.textContent = comment;
-    document.getElementById("commentList").appendChild(p);
-    document.getElementById("commentInput").value = "";
-  }
+// 💬 التعليقات
+function submitComment() {
+  const val = document.getElementById("commentInput").value.trim();
+  if (!val) return;
+  let comments = JSON.parse(localStorage.getItem(`comments_${rowIndex}`) || "[]");
+  comments.push(val);
+  localStorage.setItem(`comments_${rowIndex}`, JSON.stringify(comments));
+  document.getElementById("commentInput").value = "";
+  loadComments();
+}
+
+function loadComments() {
+  const container = document.getElementById("commentsList");
+  const comments = JSON.parse(localStorage.getItem(`comments_${rowIndex}`) || "[]");
+  container.innerHTML = "<h3>🗣️ آراء الزبائن:</h3>" + (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
+}
+
+// 📤 مشاركة
+function shareProduct() {
+  const text = `📦 ${productName}\n\n${productDesc.replace(/<br>/g, "\n")}\n\nرابط المنتج: ${location.href}`;
+  navigator.share ? navigator.share({ title: productName, text }) : navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ رابط المنتج"));
 }
 </script>
 </body>
