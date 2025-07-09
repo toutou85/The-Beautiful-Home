@@ -34,10 +34,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
-// رابط جدول التفاصيل
+// رابط جدول التفاصيل (ورقة 2)
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
 
-// جلب اسم المنتج من الرابط
+// اسم المنتج من الرابط
 const urlParams = new URLSearchParams(window.location.search);
 const productName = decodeURIComponent(urlParams.get("name") || "");
 document.getElementById("productName").textContent = productName;
@@ -48,10 +48,10 @@ fetch(sheetURL)
   .then(csv => {
     const rows = csv.trim().split("\n").slice(1);
     const data = rows.map(row => {
-      const [name, images, desc] = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // يفصل بشكل آمن
+      const [desc, images, name] = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // ترتيب: وصف، صورة، اسم
       return {
         name: name.trim(),
-        images: images.split(",").map(img => img.trim()),
+        images: images.replace(/"/g, "").split(",").map(img => img.trim()),
         desc: desc.trim()
       };
     });
