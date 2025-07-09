@@ -219,9 +219,10 @@ fetch(sheetURL)
   .then(text => {
     const rows = text.trim().split("\n").slice(1);
     allProducts = rows.map(row => {
-      const [name, image, price, category] = row.split(",");
-      return { name: name.trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
-    });
+  const cols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+  const [name, image, price, category] = cols || ["", "", "", ""];
+  return { name: name.replace(/"/g, "").trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
+});
     shuffleArray(allProducts);
     renderProducts(allProducts);
   });
