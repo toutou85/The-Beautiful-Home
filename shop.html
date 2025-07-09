@@ -214,7 +214,7 @@ function showFavorites() { renderProducts(favorites); }
 
 function updateClock() { const now = new Date(); const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' }; document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options); document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ'); document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now); }
 
-setInterval(updateClock, 1000); updateClock(); </script>
-
+setInterval(updateClock, 1000); updateClock(); 
+</script>
 </body>
 </html>
