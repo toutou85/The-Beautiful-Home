@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,49 +173,142 @@
 </div>
 <section class="products" id="productList">جاري تحميل المنتجات...</section>
 <section class="pagination" id="pagination"></section>
-<footer>
-  <p>جميع الحقوق محفوظة © 2025 - Beautiful Home</p>
+<footer style="background: linear-gradient(to right, #005f73, #0a9396); padding: 1.5rem 1rem; text-align: center; color: #fff;">
+  <p style="margin: 0; font-size: 0.95rem;">جميع الحقوق محفوظة © 2025 - Beautiful Home</p>
 </footer>
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
 let allProducts = [], currentPage = 1;
 const productsPerPage = 20;
 let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");fetch(sheetURL) .then(res => res.text()) .then(text => { const rows = text.trim().split("\n").slice(1); allProducts = rows.map(row => { const cols = row.match(/(".?"|[^",]+)(?=\s,|\s*$)/g); const [name, image, price, category] = cols || ["", "", "", ""]; return { name: name.replace(/"/g, "").trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" }; }); shuffleArray(allProducts); renderProducts(allProducts); });
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
-function shuffleArray(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } }
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(text => {
+    const rows = text.trim().split("\n").slice(1);
+    allProducts = rows.map(row => {
+      const cols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+      const [name, image, price, category] = cols || ["", "", "", ""];
+      return { name: name.replace(/"/g, "").trim(), image: image.trim(), price: price.trim(), category: category?.trim() || "" };
+    });
+    shuffleArray(allProducts);
+    renderProducts(allProducts);
+  });
 
-function updateCartCount() { const items = JSON.parse(localStorage.getItem("cart") || "[]"); document.getElementById("cartCount").textContent = items.length; }
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
 
-function addToCart(p) { cart.push(p); localStorage.setItem("cart", JSON.stringify(cart)); updateCartCount(); }
+function updateCartCount() {
+  const items = JSON.parse(localStorage.getItem("cart") || "[]");
+  document.getElementById("cartCount").textContent = items.length;
+}
 
-function isFavorite(p) { return favorites.some(f => f.name === p.name); }
+function addToCart(p) {
+  cart.push(p);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+}
 
-function toggleFavorite(p) { const index = favorites.findIndex(f => f.name === p.name); if (index !== -1) favorites.splice(index, 1); else favorites.push(p); localStorage.setItem("favorites", JSON.stringify(favorites)); renderProducts(allProducts); }
+function isFavorite(p) {
+  return favorites.some(f => f.name === p.name);
+}
 
-function renderProducts(list) { const productList = document.getElementById("productList"); productList.innerHTML = ""; const start = (currentPage - 1) * productsPerPage; const end = start + productsPerPage; const paginatedItems = list.slice(start, end);
+function toggleFavorite(p) {
+  const index = favorites.findIndex(f => f.name === p.name);
+  if (index !== -1) favorites.splice(index, 1);
+  else favorites.push(p);
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  renderProducts(allProducts);
+}
 
-paginatedItems.forEach(p => { const div = document.createElement("div"); div.className = "product"; div.innerHTML = <img src="${p.image}" alt="${p.name}" /> <h3>${p.name}</h3> <p style="font-weight: bold;">${p.price} دج</p> <a href="details.html?name=${encodeURIComponent(p.name)}" class="details-btn">📄 التفاصيل</a> <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a> <div class="actions" style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;"> <button onclick='addToCart(${JSON.stringify(p)})' style="background-color: #94d2bd; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">🛒 أضف للسلة</button> <button onclick='toggleFavorite(${JSON.stringify(p)})' class="favorites-btn ${isFavorite(p) ? 'active' : ''}" style="background-color: #ee9b00; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">❤️ ${isFavorite(p) ? 'مفضّل' : 'أضف للمفضلة'}</button> </div>; productList.appendChild(div); });
+function renderProducts(list) {
+  const productList = document.getElementById("productList");
+  productList.innerHTML = "";
+  const start = (currentPage - 1) * productsPerPage;
+  const end = start + productsPerPage;
+  const paginatedItems = list.slice(start, end);
 
-renderPagination(list.length); updateCartCount(); }
+  paginatedItems.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <img src="${p.image}" alt="${p.name}" />
+      <h3>${p.name}</h3>
+      <p style="font-weight: bold;">${p.price} دج</p>
+      <a href="details.html?name=${encodeURIComponent(p.name)}" class="details-btn">📄 التفاصيل</a>
+      <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a>
+      <div class="actions" style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
+        <button onclick='addToCart(${JSON.stringify(p)})' style="background-color: #94d2bd; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">🛒 أضف للسلة</button>
+        <button onclick='toggleFavorite(${JSON.stringify(p)})' class="favorites-btn ${isFavorite(p) ? 'active' : ''}" style="background-color: #ee9b00; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">
+          ❤️ ${isFavorite(p) ? 'مفضّل' : 'أضف للمفضلة'}
+        </button>
+      </div>
+    `;
+    productList.appendChild(div);
+  });
+  renderPagination(list.length);
+  updateCartCount();
+}
 
-function renderPagination(totalItems) { const totalPages = Math.ceil(totalItems / productsPerPage); const pagination = document.getElementById("pagination"); pagination.innerHTML = ""; for (let i = 1; i <= totalPages; i++) { const btn = document.createElement("button"); btn.textContent = i; if (i === currentPage) btn.className = "active-page"; btn.onclick = () => { currentPage = i; renderProducts(allProducts); window.scrollTo(0, 0); }; pagination.appendChild(btn); } }
+function renderPagination(totalItems) {
+  const totalPages = Math.ceil(totalItems / productsPerPage);
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = "";
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    if (i === currentPage) btn.className = "active-page";
+    btn.onclick = () => {
+      currentPage = i;
+      renderProducts(allProducts);
+      window.scrollTo(0, 0);
+    };
+    pagination.appendChild(btn);
+  }
+}
 
-function toggleMenu(show) { document.getElementById("sidebar").classList.toggle("active", show); document.getElementById("overlay").classList.toggle("active", show); }
+function toggleMenu(show) {
+  document.getElementById("sidebar").classList.toggle("active", show);
+  document.getElementById("overlay").classList.toggle("active", show);
+}
 
 document.getElementById("menuBtn").addEventListener("click", () => toggleMenu(true));
 
-function searchProducts() { const query = document.getElementById("searchInput").value.toLowerCase(); const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query)); currentPage = 1; renderProducts(filtered); }
+function searchProducts() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
+  currentPage = 1;
+  renderProducts(filtered);
+}
 
-function filterCategory(cat) { renderProducts(allProducts.filter(p => p.category.includes(cat))); toggleMenu(false); }
+function filterCategory(cat) {
+  renderProducts(allProducts.filter(p => p.category.includes(cat)));
+  toggleMenu(false);
+}
 
-function showAllProducts() { renderProducts(allProducts); toggleMenu(false); }
+function showAllProducts() {
+  renderProducts(allProducts);
+  toggleMenu(false);
+}
 
-function showFavorites() { renderProducts(favorites); }
+function showFavorites() {
+  renderProducts(favorites);
+}
 
-function updateClock() { const now = new Date(); const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' }; document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options); document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ'); document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now); }
-
-setInterval(updateClock, 1000); updateClock(); 
+function updateClock() {
+  const now = new Date();
+  const options = { timeZone: "Africa/Algiers", hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  document.getElementById("time").textContent = now.toLocaleTimeString('ar-DZ', options);
+  document.getElementById("gregorian").textContent = now.toLocaleDateString('ar-DZ');
+  document.getElementById("hijri").textContent = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { dateStyle: 'full', timeZone: 'Africa/Algiers' }).format(now);
+}
+setInterval(updateClock, 1000);
+updateClock();
 </script>
 </body>
 </html>
