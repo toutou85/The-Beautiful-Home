@@ -6,42 +6,25 @@
   <title>تفاصيل المنتج</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <style>
-    body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
+    body { font-family: Tahoma, sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
     h1 { color: #005f73; text-align: center; margin-bottom: 10px; }
     .swiper { width: 100%; height: 300px; margin-bottom: 20px; }
     .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-    .description {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      line-height: 1.7;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      white-space: pre-line;
-      margin-bottom: 20px;
-    }
-    .not-found {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      color: #d32f2f;
-      font-size: 1.2rem;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .buttons {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .buttons button {
-      margin: 5px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      background-color: #0a9396;
-      color: white;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
+    .description { background: #fff; padding: 15px; border-radius: 10px; line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1); white-space: pre-line; }
+    .not-found { background: #fff; padding: 15px; border-radius: 10px; color: #d32f2f; font-size: 1.2rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .actions { margin-top: 15px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .actions button { padding: 8px 14px; font-size: 0.95rem; border: none; border-radius: 6px; cursor: pointer; }
+    .share { background: #0a9396; color: white; }
+    .like-btn { background: #ee9b00; color: white; }
+    .rating { text-align: center; margin-top: 10px; }
+    .stars span { font-size: 24px; cursor: pointer; color: gray; }
+    .stars span.selected { color: gold; }
+    .comments { margin-top: 25px; background: #fff; padding: 15px; border-radius: 10px; }
+    .comments h3 { margin-top: 0; color: #005f73; }
+    .comments textarea { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc; resize: vertical; }
+    .comments button { margin-top: 10px; background: #0077b6; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .comment-list { margin-top: 15px; }
+    .comment-list p { background: #f1f1f1; padding: 8px 10px; border-radius: 6px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -50,9 +33,7 @@
 
 <!-- ✅ السلايدر -->
 <div class="swiper" id="slider" style="display: none;">
-  <div class="swiper-wrapper" id="imageSlides">
-    <!-- الصور -->
-  </div>
+  <div class="swiper-wrapper" id="imageSlides"></div>
   <div class="swiper-button-next"></div>
   <div class="swiper-button-prev"></div>
   <div class="swiper-pagination"></div>
@@ -61,89 +42,116 @@
 <!-- ✅ وصف المنتج -->
 <div class="description" id="productDesc">جاري التحميل...</div>
 
-<!-- ✅ أزرار النسخ والمشاركة -->
-<div class="buttons">
-  <button onclick="copyDescription()">📋 نسخ الوصف</button>
-  <button onclick="shareProduct()">📤 مشاركة</button>
+<!-- ✅ أزرار التفاعل -->
+<div class="actions">
+  <button class="share" onclick="shareProduct()">📤 مشاركة المنتج</button>
+  <button class="like-btn" onclick="likeProduct()">👍 أعجبني <span id="likeCount">0</span></button>
+</div>
+
+<!-- ✅ التقييم بالنجوم -->
+<div class="rating">
+  ⭐ التقييم:
+  <div class="stars" id="stars">
+    <span onclick="rate(1)">★</span>
+    <span onclick="rate(2)">★</span>
+    <span onclick="rate(3)">★</span>
+    <span onclick="rate(4)">★</span>
+    <span onclick="rate(5)">★</span>
+  </div>
+</div>
+
+<!-- ✅ التعليقات -->
+<div class="comments">
+  <h3>💬 آراء الزبائن</h3>
+  <textarea id="commentInput" rows="3" placeholder="اكتب تعليقك هنا..."></textarea>
+  <button onclick="addComment()">نشر التعليق</button>
+  <div class="comment-list" id="commentList"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
-
-// اسم المنتج من الرابط
 const urlParams = new URLSearchParams(window.location.search);
 const productName = decodeURIComponent(urlParams.get("name") || "").trim();
-document.getElementById("productName").textContent = productName;
+document.getElementById("productName").textContent = productName || "اسم غير محدد";
 
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(csv => {
-    const rows = csv.trim().split("\n").slice(1);
-    const data = rows.map(row => {
-      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-      const name = cols[0]?.trim() || "";
-      const images = cols[1]?.trim() || "";
-      const desc = cols[2]?.trim() || "";
-      return {
-        name: name.toLowerCase(),
-        images: images.split(",").map(img => img.trim()),
-        desc
-      };
+if (!productName) {
+  document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ لم يتم تحديد اسم المنتج.</div>`;
+} else {
+  fetch(sheetURL)
+    .then(res => res.text())
+    .then(csv => {
+      const rows = csv.trim().split("\n").slice(1);
+      const data = rows.map(row => {
+        const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        const name = cols[0]?.trim() || "";
+        const images = cols[1]?.trim() || "";
+        const desc = cols[2]?.trim() || "";
+        return {
+          name: name.toLowerCase(),
+          images: images.split(",").map(img => img.trim()),
+          desc
+        };
+      }).filter(item => item.name !== "");
+
+      const found = data.find(item => item.name === productName.toLowerCase());
+
+      if (found) {
+        const slides = found.images.map(img => `<div class="swiper-slide"><img src="${img}" alt=""></div>`).join("");
+        document.getElementById("imageSlides").innerHTML = slides;
+        document.getElementById("slider").style.display = "block";
+        document.getElementById("productDesc").innerHTML = found.desc;
+
+        new Swiper(".swiper", {
+          loop: true,
+          pagination: { el: ".swiper-pagination" },
+          navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+        });
+      } else {
+        document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>`;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ خطأ في تحميل البيانات.</div>`;
     });
+}
 
-    const found = data.find(item => item.name === productName.toLowerCase());
+// ✅ مشاركة المنتج
+function shareProduct() {
+  const name = document.getElementById("productName").textContent;
+  const desc = document.getElementById("productDesc").textContent;
+  const shareData = {
+    title: `منتج: ${name}`,
+    text: `${name}\n\n${desc}`,
+    url: window.location.href
+  };
+  navigator.share ? navigator.share(shareData) : alert("جهازك لا يدعم المشاركة المباشرة.");
+}
 
-    if (found) {
-      // الصور
-      const slides = found.images.map(img => `
-        <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
-      `).join("");
-      document.getElementById("imageSlides").innerHTML = slides;
-      document.getElementById("slider").style.display = "block";
+// ✅ أعجبني
+let likeCount = 0;
+function likeProduct() {
+  likeCount++;
+  document.getElementById("likeCount").textContent = likeCount;
+}
 
-      // ✅ عرض الوصف كما هو
-      document.getElementById("productDesc").innerHTML = found.desc || "لا يوجد وصف.";
-
-      // سلايدر
-      new Swiper(".swiper", {
-        loop: true,
-        pagination: { el: ".swiper-pagination" },
-        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
-      });
-    } else {
-      document.getElementById("productDesc").innerHTML = `
-        <div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>
-      `;
-    }
-  })
-  .catch(err => {
-    console.error("فشل تحميل البيانات:", err);
-    document.getElementById("productDesc").innerHTML = `
-      <div class="not-found">⚠️ حدث خطأ أثناء تحميل البيانات.</div>
-    `;
-  });
-
-// ✅ نسخ الوصف
-function copyDescription() {
-  const desc = document.getElementById("productDesc").innerText;
-  navigator.clipboard.writeText(desc).then(() => {
-    alert("✅ تم نسخ الوصف!");
-  }).catch(() => {
-    alert("❌ فشل النسخ.");
+// ✅ تقييم النجوم
+function rate(star) {
+  const stars = document.querySelectorAll("#stars span");
+  stars.forEach((s, i) => {
+    s.classList.toggle("selected", i < star);
   });
 }
 
-// ✅ مشاركة الرابط
-function shareProduct() {
-  if (navigator.share) {
-    navigator.share({
-      title: document.title,
-      text: `تفاصيل المنتج: ${productName}`,
-      url: window.location.href
-    }).catch(err => console.error("مشاركة فشلت", err));
-  } else {
-    alert("المشاركة غير مدعومة في هذا المتصفح.");
+// ✅ التعليقات
+function addComment() {
+  const comment = document.getElementById("commentInput").value.trim();
+  if (comment) {
+    const p = document.createElement("p");
+    p.textContent = comment;
+    document.getElementById("commentList").appendChild(p);
+    document.getElementById("commentInput").value = "";
   }
 }
 </script>
