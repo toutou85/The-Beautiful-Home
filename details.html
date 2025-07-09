@@ -52,7 +52,7 @@ const productName = decodeURIComponent(urlParams.get("name") || "").trim();
 document.getElementById("productName").textContent = productName;
 
 // جلب البيانات من Google Sheets
-fetch(sheetURL)
+fetch(https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv)
   .then(res => res.text())
   .then(csv => {
     const rows = csv.trim().split("\n").slice(1);
