@@ -6,28 +6,10 @@
   <title>تفاصيل المنتج</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <style>
-    body {
-      font-family: 'Tahoma', sans-serif;
-      margin: 0;
-      background: #f9f9f9;
-      padding: 20px;
-    }
-    h1 {
-      color: #005f73;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .swiper {
-      width: 100%;
-      height: 300px;
-      margin-bottom: 20px;
-    }
-    .swiper-slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 10px;
-    }
+    body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
+    h1 { color: #005f73; text-align: center; margin-bottom: 10px; }
+    .swiper { width: 100%; height: 300px; margin-bottom: 20px; }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
     .description {
       background: #fff;
       padding: 15px;
@@ -35,6 +17,7 @@
       line-height: 1.7;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       white-space: pre-line;
+      margin-bottom: 20px;
     }
     .not-found {
       background: #fff;
@@ -45,6 +28,20 @@
       text-align: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
+    .buttons {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .buttons button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0a9396;
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -54,7 +51,7 @@
 <!-- ✅ السلايدر -->
 <div class="swiper" id="slider" style="display: none;">
   <div class="swiper-wrapper" id="imageSlides">
-    <!-- سيتم تحميل الصور هنا -->
+    <!-- الصور -->
   </div>
   <div class="swiper-button-next"></div>
   <div class="swiper-button-prev"></div>
@@ -64,64 +61,91 @@
 <!-- ✅ وصف المنتج -->
 <div class="description" id="productDesc">جاري التحميل...</div>
 
+<!-- ✅ أزرار النسخ والمشاركة -->
+<div class="buttons">
+  <button onclick="copyDescription()">📋 نسخ الوصف</button>
+  <button onclick="shareProduct()">📤 مشاركة</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
-  // رابط Google Sheets بصيغة CSV
-  const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
 
-  // اسم المنتج من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const productName = decodeURIComponent(urlParams.get("name") || "").trim();
-  document.getElementById("productName").textContent = productName;
+// اسم المنتج من الرابط
+const urlParams = new URLSearchParams(window.location.search);
+const productName = decodeURIComponent(urlParams.get("name") || "").trim();
+document.getElementById("productName").textContent = productName;
 
-  // جلب البيانات من الجدول
-  fetch(sheetURL)
-    .then(res => res.text())
-    .then(csv => {
-      const rows = csv.trim().split("\n").slice(1);
-      const data = rows.map(row => {
-        const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // فصل آمن للحقول
-        const name = cols[0]?.trim() || "";
-        const images = cols[1]?.trim() || "";
-        const desc = cols[2]?.trim() || "";
-        return {
-          name: name.toLowerCase(),
-          images: images.split(",").map(img => img.trim()),
-          desc
-        };
-      });
-
-      const found = data.find(item => item.name === productName.toLowerCase());
-
-      if (found) {
-        // عرض الصور
-        const slides = found.images.map(img => `
-          <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
-        `).join("");
-        document.getElementById("imageSlides").innerHTML = slides;
-        document.getElementById("slider").style.display = "block";
-
-        // عرض الوصف
-        document.getElementById("productDesc").textContent = found.desc || "لا يوجد وصف متاح.";
-
-        // تفعيل السلايدر
-        new Swiper(".swiper", {
-          loop: true,
-          pagination: { el: ".swiper-pagination" },
-          navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
-        });
-      } else {
-        document.getElementById("productDesc").innerHTML = `
-          <div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>
-        `;
-      }
-    })
-    .catch(err => {
-      console.error("فشل في تحميل البيانات:", err);
-      document.getElementById("productDesc").innerHTML = `
-        <div class="not-found">⚠️ حدث خطأ أثناء تحميل البيانات.</div>
-      `;
+fetch(sheetURL)
+  .then(res => res.text())
+  .then(csv => {
+    const rows = csv.trim().split("\n").slice(1);
+    const data = rows.map(row => {
+      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+      const name = cols[0]?.trim() || "";
+      const images = cols[1]?.trim() || "";
+      const desc = cols[2]?.trim() || "";
+      return {
+        name: name.toLowerCase(),
+        images: images.split(",").map(img => img.trim()),
+        desc
+      };
     });
+
+    const found = data.find(item => item.name === productName.toLowerCase());
+
+    if (found) {
+      // الصور
+      const slides = found.images.map(img => `
+        <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
+      `).join("");
+      document.getElementById("imageSlides").innerHTML = slides;
+      document.getElementById("slider").style.display = "block";
+
+      // ✅ عرض الوصف كما هو
+      document.getElementById("productDesc").innerHTML = found.desc || "لا يوجد وصف.";
+
+      // سلايدر
+      new Swiper(".swiper", {
+        loop: true,
+        pagination: { el: ".swiper-pagination" },
+        navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+      });
+    } else {
+      document.getElementById("productDesc").innerHTML = `
+        <div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>
+      `;
+    }
+  })
+  .catch(err => {
+    console.error("فشل تحميل البيانات:", err);
+    document.getElementById("productDesc").innerHTML = `
+      <div class="not-found">⚠️ حدث خطأ أثناء تحميل البيانات.</div>
+    `;
+  });
+
+// ✅ نسخ الوصف
+function copyDescription() {
+  const desc = document.getElementById("productDesc").innerText;
+  navigator.clipboard.writeText(desc).then(() => {
+    alert("✅ تم نسخ الوصف!");
+  }).catch(() => {
+    alert("❌ فشل النسخ.");
+  });
+}
+
+// ✅ مشاركة الرابط
+function shareProduct() {
+  if (navigator.share) {
+    navigator.share({
+      title: document.title,
+      text: `تفاصيل المنتج: ${productName}`,
+      url: window.location.href
+    }).catch(err => console.error("مشاركة فشلت", err));
+  } else {
+    alert("المشاركة غير مدعومة في هذا المتصفح.");
+  }
+}
 </script>
 </body>
 </html>
