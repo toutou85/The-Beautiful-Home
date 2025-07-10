@@ -4,13 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تفاصيل المنتج</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <style>
     body { font-family: Tahoma, sans-serif; background: #f9f9f9; margin: 0; padding: 20px; }
-    h1 { color: #0a9396; text-align: center; }
-    .box { background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .image-box img { width: 100%; max-width: 400px; border-radius: 10px; display: block; margin: auto; }
-    .desc { white-space: pre-line; line-height: 1.6; }
-    .error { color: red; text-align: center; font-size: 1.2rem; margin-top: 40px; }
+    h1 { color: #0a9396; text-align: center; margin-bottom: 10px; }
+
+    .swiper { width: 100%; height: 300px; margin-bottom: 20px; display: none; }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+
+    .desc-box {
+      background: #fff; padding: 15px; border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); white-space: pre-line;
+      line-height: 1.7; margin-bottom: 20px;
+    }
+
+    .error {
+      color: red; text-align: center; font-size: 1.2rem; margin-top: 40px;
+    }
+
     .share-btn {
       display: block; margin: 20px auto; background: #0a9396; color: #fff;
       padding: 10px 20px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
@@ -20,15 +31,25 @@
 <body>
 
 <h1 id="title">تفاصيل المنتج</h1>
-<div class="box image-box" id="imageContainer"></div>
-<div class="box desc" id="description">⏳ جاري تحميل التفاصيل...</div>
+
+<!-- ✅ سلايدر الصور -->
+<div class="swiper" id="slider">
+  <div class="swiper-wrapper" id="imageSlides"></div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-pagination"></div>
+</div>
+
+<!-- ✅ وصف المنتج -->
+<div class="desc-box" id="description">⏳ جاري تحميل تفاصيل المنتج...</div>
+
+<!-- ✅ زر مشاركة -->
 <button class="share-btn" onclick="shareProduct()">📤 مشاركة المنتج</button>
 
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
-
-const params = new URLSearchParams(window.location.search);
-const rowIndex = parseInt(params.get("row") || "0");
+const rowIndex = parseInt(new URLSearchParams(window.location.search).get("row")) || 0;
 
 if (rowIndex < 2) {
   showError("❌ رقم الصف غير صالح. يجب أن يكون 2 أو أكثر.");
@@ -36,17 +57,32 @@ if (rowIndex < 2) {
   fetch(sheetURL)
     .then(res => res.text())
     .then(csv => {
-      const rows = csv.trim().split("\n").slice(1); // حذف العناوين
+      const rows = csv.trim().split("\n").slice(1); // حذف العنوان
       const row = rows[rowIndex - 2];
       if (!row) return showError("❌ لم يتم العثور على المنتج.");
 
-      const [name, image, desc] = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.trim());
+      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.trim());
+      const name = cols[0] || "منتج بدون اسم";
+      const images = (cols[1] || "").split(",").map(img => img.trim()).filter(Boolean);
+      const desc = cols[2] || "لا يوجد وصف.";
 
-      document.getElementById("title").textContent = name || "منتج";
-      document.getElementById("imageContainer").innerHTML = `<img src="${image}" alt="${name}">`;
-      document.getElementById("description").textContent = desc || "لا يوجد وصف.";
-      window.productName = name;
-      window.productDesc = desc;
+      document.getElementById("title").textContent = name;
+      document.getElementById("description").textContent = desc;
+
+      if (images.length > 0) {
+        const slider = document.getElementById("slider");
+        slider.style.display = "block";
+        document.getElementById("imageSlides").innerHTML = images.map(img => `
+          <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
+        `).join("");
+        new Swiper(".swiper", {
+          loop: true,
+          pagination: { el: ".swiper-pagination" },
+          navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+        });
+      }
+
+      window.productData = { name, desc, link: location.href };
     })
     .catch(() => showError("⚠️ حدث خطأ أثناء تحميل البيانات."));
 }
@@ -56,10 +92,10 @@ function showError(msg) {
 }
 
 function shareProduct() {
-  const link = window.location.href;
-  const text = `📦 ${window.productName}\n\n${window.productDesc}\n\n📎 رابط المنتج: ${link}`;
+  const { name, desc, link } = window.productData || {};
+  const text = `📦 ${name || "منتج"}\n\n${desc || ""}\n\n🔗 ${link}`;
   if (navigator.share) {
-    navigator.share({ title: window.productName, text });
+    navigator.share({ title: name, text });
   } else {
     navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ رابط المنتج"));
   }
