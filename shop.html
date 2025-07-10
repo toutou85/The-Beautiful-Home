@@ -240,7 +240,7 @@ function renderProducts(list) {
       <img src="${p.image}" alt="${p.name}" />
       <h3>${p.name}</h3>
       <p style="font-weight: bold;">${p.price} دج</p>
-      <a href="details.html?name=${encodeURIComponent(p.name)}" class="details-btn">📄 التفاصيل</a>
+      <a href="details.html?row=${allProducts.indexOf(p) + 2}" class="details-btn">📄 التفاصيل</a>
       <a href="order.html?product=${encodeURIComponent(p.name)}&price=${p.price}" class="order-btn">🛒 اطلب الآن</a>
       <div class="actions" style="margin-top: 10px; display: flex; justify-content: center; gap: 10px;">
         <button onclick='addToCart(${JSON.stringify(p)})' style="background-color: #94d2bd; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer;">🛒 أضف للسلة</button>
