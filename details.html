@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,173 +7,110 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <style>
     body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
-    h1 { color: #005f73; text-align: center; margin-bottom: 10px; }.swiper { width: 100%; height: 300px; margin-bottom: 20px; display: none; }
-.swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
+    h1 { color: #005f73; text-align: center; }
 
-.description {
-  background: #fff; padding: 15px; border-radius: 10px;
-  line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  white-space: pre-line; margin-bottom: 20px;
-}
+    .swiper { width: 100%; height: 300px; margin-bottom: 20px; display: none; }
+    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
 
-.not-found {
-  background: #fff; padding: 15px; border-radius: 10px;
-  color: #d32f2f; font-size: 1.2rem; text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+    .description {
+      background: #fff; padding: 15px; border-radius: 10px;
+      line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      white-space: pre-line; margin-bottom: 20px;
+    }
 
-.rating-stars span {
-  font-size: 25px;
-  cursor: pointer;
-  color: #ccc;
-}
-.rating-stars span.active {
-  color: gold;
-}
+    .not-found {
+      background: #fff; padding: 15px; border-radius: 10px;
+      color: #d32f2f; font-size: 1.2rem; text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-.comment-box, .comments-list {
-  background: #fff;
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.comments-list div {
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
-}
-
-.share-btn, .order-btn {
-  margin-top: 15px;
-  display: inline-block;
-  padding: 10px 15px;
-  background: #0a9396;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  text-decoration: none;
-}
-
+    .share-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #0a9396;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
   </style>
 </head>
-<body><h1 id="productName">تفاصيل المنتج</h1>
+<body>
+
+<h1 id="productName">تفاصيل المنتج</h1>
+
+<!-- ✅ الصور -->
 <div class="swiper" id="slider">
   <div class="swiper-wrapper" id="imageSlides"></div>
   <div class="swiper-button-next"></div>
   <div class="swiper-button-prev"></div>
   <div class="swiper-pagination"></div>
 </div>
-<div class="description" id="productDesc">⏳ جاري تحميل تفاصيل المنتج...</div><div class="comment-box">
-  <h3>⭐ تقييمك للمنتج:</h3>
-  <div class="rating-stars" id="ratingStars">
-    <span data-rate="1">★</span>
-    <span data-rate="2">★</span>
-    <span data-rate="3">★</span>
-    <span data-rate="4">★</span>
-    <span data-rate="5">★</span>
-    <span id="ratingCount" style="font-size: 0.9rem; color: #555; margin-right: 10px;"></span>
-  </div>
-</div><div class="comment-box">
-  <h3>💬 أضف تعليق:</h3>
-  <textarea id="commentInput" rows="3" style="width:100%; border-radius: 5px; padding: 10px;"></textarea><br>
-  <button onclick="submitComment()" class="share-btn">إرسال التعليق</button>
-</div><div class="comments-list" id="commentsList">
-  <h3>🗣️ آراء الزبائن:</h3>
-</div><a href="#" id="orderBtn" class="order-btn">🛒 اطلب الآن</a> <button onclick="shareProduct()" class="share-btn">📤 مشاركة المنتج</button>
 
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script><script>
+<!-- ✅ الوصف -->
+<div class="description" id="productDesc">⏳ جاري تحميل تفاصيل المنتج...</div>
+
+<!-- ✅ زر مشاركة -->
+<button class="share-btn" onclick="shareProduct()">📤 مشاركة المنتج</button>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script>
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?gid=1873815062&single=true&output=csv";
-const urlParams = new URLSearchParams(window.location.search);
-const rowIndex = parseInt(urlParams.get("row")) || 0;
-
-let productName = "", productDesc = "";
+const rowIndex = parseInt(new URLSearchParams(window.location.search).get("row")) || 0;
 
 if (rowIndex < 2) {
-  document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ رقم الصف غير صالح.</div>`;
+  document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ رقم الصف غير صالح. يجب أن يكون 2 أو أكثر.</div>`;
 } else {
   fetch(sheetURL)
     .then(res => res.text())
     .then(csv => {
-      const rows = csv.trim().split("\n").slice(1);
+      const rows = csv.trim().split("\n").slice(1); // إزالة العنوان
       const row = rows[rowIndex - 2];
       if (!row) {
-        document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ المنتج غير موجود.</div>`;
+        document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ لا يوجد منتج في هذا الصف.</div>`;
         return;
       }
-      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-      productName = cols[0]?.trim() || "منتج غير معروف";
-      const images = cols[1]?.trim() || "";
-      productDesc = cols[2]?.trim() || "لا يوجد وصف.";
 
-      document.getElementById("productName").textContent = productName;
-      document.getElementById("productDesc").textContent = productDesc;
-      document.getElementById("orderBtn").href = `order.html?product=${encodeURIComponent(productName)}`;
+      const [name, image, desc] = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(x => x?.trim() || "");
 
-      const imgList = images.split(",").map(img => img.trim()).filter(Boolean);
-      if (imgList.length) {
+      document.getElementById("productName").textContent = name || "منتج غير معروف";
+      document.getElementById("productDesc").textContent = desc || "لا يوجد وصف متاح.";
+
+      if (image) {
         document.getElementById("slider").style.display = "block";
-        document.getElementById("imageSlides").innerHTML = imgList.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`).join("");
+        document.getElementById("imageSlides").innerHTML = `
+          <div class="swiper-slide"><img src="${image}" alt="صورة المنتج"></div>
+        `;
         new Swiper(".swiper", {
           loop: true,
           pagination: { el: ".swiper-pagination" },
-          navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+          navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+          }
         });
       }
-      loadComments();
-      loadRating();
     })
     .catch(err => {
-      console.error("فشل التحميل:", err);
-      document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ خطأ أثناء تحميل البيانات.</div>`;
+      console.error(err);
+      document.getElementById("productDesc").innerHTML = `<div class="not-found">⚠️ حدث خطأ أثناء تحميل البيانات.</div>`;
     });
 }
 
-// ⭐ التقييم
-function loadRating() {
-  const rate = parseInt(localStorage.getItem(`rate_${rowIndex}`)) || 0;
-  document.querySelectorAll('#ratingStars span').forEach(star => {
-    star.classList.toggle('active', parseInt(star.dataset.rate) <= rate);
-  });
-  document.getElementById("ratingCount").textContent = rate ? `(تم تقييمه بـ ${rate}★)` : "";
-}
-
-document.querySelectorAll('#ratingStars span').forEach(star => {
-  star.addEventListener('click', () => {
-    const rate = parseInt(star.dataset.rate);
-    localStorage.setItem(`rate_${rowIndex}`, rate);
-    loadRating();
-  });
-});
-
-// 💬 التعليقات
-function submitComment() {
-  const val = document.getElementById("commentInput").value.trim();
-  if (!val) return;
-  let comments = JSON.parse(localStorage.getItem(`comments_${rowIndex}`) || "[]");
-  comments.push(val);
-  localStorage.setItem(`comments_${rowIndex}`, JSON.stringify(comments));
-  document.getElementById("commentInput").value = "";
-  loadComments();
-}
-
-function loadComments() {
-  const container = document.getElementById("commentsList");
-  const comments = JSON.parse(localStorage.getItem(`comments_${rowIndex}`) || "[]");
-  container.innerHTML = "<h3>🗣️ آراء الزبائن:</h3>" + (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
-}
-
-// 📤 مشاركة
+// مشاركة المنتج
 function shareProduct() {
-  const text = `📦 ${productName}\n\n${productDesc}\n\nرابط المنتج: ${location.href}`;
+  const name = document.getElementById("productName").textContent;
+  const desc = document.getElementById("productDesc").textContent;
+  const url = window.location.href;
+  const text = `📦 ${name}\n\n${desc}\n\nرابط المنتج: ${url}`;
   if (navigator.share) {
-    navigator.share({ title: productName, text });
+    navigator.share({ title: name, text });
   } else {
-    navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ رابط المنتج"));
+    navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ رابط المنتج."));
   }
 }
-</script></body>
+</script>
+</body>
 </html>
