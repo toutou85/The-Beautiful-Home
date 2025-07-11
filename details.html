@@ -105,8 +105,10 @@ fetch(sheetURL)
 const row = rows[requestedRow - 1]; //
     if (!row) return;
 
-    const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
-    const images = [img1, img2, img3, img4, img5, img6, img7].filter(img => img && img.trim());
+    const name  = row[0] || "";
+const desc  = row[1] || "";
+const images = row.slice(2, 9).filter(img => img && img.trim());
+const price = row[9] || "";
 
     document.getElementById("productName").textContent = name;
     document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
