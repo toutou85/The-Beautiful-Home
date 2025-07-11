@@ -2,194 +2,93 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تفاصيل المنتج</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>زر أعجبني</title>
   <style>
-    body { font-family: 'Tahoma', sans-serif; margin: 0; background: #f9f9f9; padding: 20px; }
-    h1 { color: #005f73; text-align: center; margin-bottom: 10px; }
-    .swiper { width: 100%; height: 300px; margin-bottom: 20px; display: none; }
-    .swiper-slide img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; }
-
-    .description, .comment-box, .comments-list {
-      background: #fff; padding: 15px; border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 20px;
-    }
-
-    .description table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    .description th, .description td {
-      border: 1px solid #ccc;
-      padding: 8px;
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
       text-align: center;
     }
-    .description th {
-      background-color: #f1f1f1;
+
+    .like-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    #likeBtn {
+      background: #ffb703;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      transition: background 0.3s ease;
+    }
+
+    #likeBtn.liked {
+      background-color: #219ebc;
+    }
+
+    #likeCount {
+      font-size: 1.4rem;
+      font-weight: bold;
       color: #333;
     }
 
-    .not-found {
-      background: #fff; padding: 15px; border-radius: 10px;
-      color: #d32f2f; font-size: 1.2rem; text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
+    @media (max-width: 480px) {
+      #likeBtn {
+        font-size: 1rem;
+        padding: 10px 15px;
+      }
 
-    .rating-stars span {
-      font-size: 25px; cursor: pointer; color: #ccc;
-    }
-    .rating-stars span.active { color: gold; }
-    .comments-list div {
-      margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;
-    }
-
-    .share-btn {
-      margin-top: 15px; display: inline-block;
-      padding: 10px 15px; background: #0a9396;
-      color: #fff; border: none; border-radius: 8px;
-      cursor: pointer; font-size: 0.9rem;
-    }
-
-    .angry-btn {
-      background: #d62828; color: white;
-      border: none; padding: 10px;
-      margin-top: 10px; border-radius: 8px;
-      cursor: pointer;
+      #likeCount {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-<h1 id="productName">تفاصيل المنتج</h1>
+  <h1>هل أعجبك هذا المنتج؟</h1>
 
-<!-- ✅ سلايدر الصور -->
-<div class="swiper" id="slider">
-  <div class="swiper-wrapper" id="imageSlides"></div>
-  <div class="swiper-button-next"></div>
-  <div class="swiper-button-prev"></div>
-  <div class="swiper-pagination"></div>
-</div>
-
-<!-- ✅ وصف المنتج -->
-<div class="description" id="productDesc">⏳ جاري تحميل تفاصيل المنتج...</div>
-
-<!-- ✅ التقييم -->
-<div class="comment-box">
-  <h3>⭐ تقييمك للمنتج:</h3>
-  <div class="rating-stars" id="ratingStars">
-    <span data-rate="1">★</span>
-    <span data-rate="2">★</span>
-    <span data-rate="3">★</span>
-    <span data-rate="4">★</span>
-    <span data-rate="5">★</span>
-    <span id="ratingCount" style="font-size: 0.9rem; color: #555; margin-right: 10px;"></span>
+  <div class="like-box">
+    <button onclick="handleLike()" id="likeBtn">👍 أعجبني</button>
+    <span id="likeCount">0</span>
   </div>
-  <button class="angry-btn" onclick="markAngry()">😡 لم يعجبني</button>
-</div>
 
-<!-- ✅ خانة التعليقات -->
-<div class="comment-box">
-  <h3>💬 أضف تعليق:</h3>
-  <textarea id="commentInput" rows="3" style="width:100%; border-radius: 5px; padding: 10px;"></textarea><br>
-  <button onclick="submitComment()" class="share-btn">إرسال التعليق</button>
-</div>
+  <script>
+    // استخراج رقم المنتج من رابط الصفحة إن وُجد
+    const rowIndex = new URLSearchParams(window.location.search).get("row") || "default";
+    const likeKey = `like_${rowIndex}`;
 
-<div class="comments-list" id="commentsList">
-  <h3>🗣️ آراء الزبائن:</h3>
-</div>
-
-<!-- ✅ زر مشاركة -->
-<button onclick="shareProduct()" class="share-btn">📤 مشاركة المنتج</button>
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-<script>
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
-const urlParams = new URLSearchParams(window.location.search);
-const rowIndex = parseInt(urlParams.get("row")) || 0;
-let productName = "", productDesc = "";
-
-if (rowIndex < 2) {
-  document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ رقم الصف غير صالح.</div>`;
-} else {
-  fetch(sheetURL)
-    .then(res => res.text())
-    .then(csv => {
-      const rows = csv.trim().split("\n").slice(1);
-      const row = rows[rowIndex - 2];
-      if (!row) {
-        document.getElementById("productDesc").innerHTML = `<div class="not-found">❌ لم يتم العثور على هذا المنتج.</div>`;
-        return;
+    function loadLikes() {
+      const count = parseInt(localStorage.getItem(likeKey)) || 0;
+      document.getElementById("likeCount").textContent = count;
+      if (count > 0) {
+        document.getElementById("likeBtn").classList.add("liked");
       }
-      const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-      productName = cols[0]?.trim() || "منتج غير معروف";
-      const images = cols[1]?.trim() || "";
-      productDesc = cols[2]?.trim() || "لا يوجد وصف.";
+    }
 
-      document.getElementById("productName").textContent = productName;
+    function handleLike() {
+      let count = parseInt(localStorage.getItem(likeKey)) || 0;
+      count++;
+      localStorage.setItem(likeKey, count);
+      document.getElementById("likeCount").textContent = count;
+      document.getElementById("likeBtn").classList.add("liked");
+    }
 
-      const imgList = images.split(",").map(img => img.trim()).filter(Boolean);
-      if (imgList.length > 0) {
-        document.getElementById("slider").style.display = "block";
-        document.getElementById("imageSlides").innerHTML = imgList.map(img => `
-          <div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>
-        `).join("");
-        new Swiper(".swiper", {
-          loop: true,
-          pagination: { el: ".swiper-pagination" },
-          navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
-        });
-      }
+    // عند تحميل الصفحة
+    window.addEventListener("load", loadLikes);
+  </script>
 
-      document.getElementById("productDesc").innerHTML = productDesc;
-      loadComments();
-      loadRating();
-    });
-}
-
-// ⭐ تقييم النجوم
-document.querySelectorAll('#ratingStars span').forEach(star => {
-  star.addEventListener('click', () => {
-    const rate = parseInt(star.dataset.rate);
-    localStorage.setItem(`rate_${rowIndex}`, rate);
-    loadRating();
-  });
-});
-function loadRating() {
-  const rate = parseInt(localStorage.getItem(`rate_${rowIndex}`)) || 0;
-  document.querySelectorAll('#ratingStars span').forEach(star => {
-    star.classList.toggle('active', parseInt(star.dataset.rate) <= rate);
-  });
-  document.getElementById("ratingCount").textContent = rate ? `(تم تقييمه بـ ${rate}★)` : "";
-}
-
-// 😡 زر الأعصاب
-function markAngry() {
-  alert("🙁 تم تسجيل أنك غير راضٍ عن هذا المنتج.");
-}
-
-// 💬 التعليقات
-function submitComment() {
-  const val = document.getElementById("commentInput").value.trim();
-  if (!val) return;
-  let comments = JSON.parse(localStorage.getItem(`comments_${rowIndex}`) || "[]");
-  comments.push(val);
-  localStorage.setItem(`comments_${rowIndex}`, JSON.stringify(comments));
-  document.getElementById("commentInput").value = "";
-  loadComments();
-}
-function loadComments() {
-  const container = document.getElementById("commentsList");
-  const comments = JSON.parse(localStorage.getItem(`comments_${rowIndex}`) || "[]");
-  container.innerHTML = "<h3>🗣️ آراء الزبائن:</h3>" + (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
-}
-
-// 📤 مشاركة
-function shareProduct() {
-  const text = `📦 ${productName}\n\n${productDesc.replace(/<br>/g, "\n")}\n\nرابط المنتج: ${location.href}`;
-  navigator.share ? navigator.share({ title: productName, text }) : navigator.clipboard.writeText(text).then(() => alert("✅ تم نسخ رابط المنتج"));
-}
-</script>
 </body>
 </html>
