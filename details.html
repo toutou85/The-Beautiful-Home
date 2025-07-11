@@ -90,7 +90,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
-    const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "2") - 1; // يحوّل الصف الحقيقي إلى index
+    const requestedRow = parseInt(new URLSearchParams(location.search).get("row") || "2");
 const productKey = "product_" + (rowIndex + 1); // نحتفظ بالرقم الأصلي للعرض المحلي
 
 fetch(sheetURL)
@@ -102,8 +102,7 @@ fetch(sheetURL)
         m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
       );
     });
-
-    const row = rows[rowIndex]; // بدون  حتى يكون مثل Google Sheets تمامًا
+const row = rows[requestedRow - 1]; // -1 لأن أول صف في rows هو عنوان الجدولتمامًا
     if (!row) return;
 
     const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
