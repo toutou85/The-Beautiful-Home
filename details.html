@@ -86,36 +86,16 @@
 </head>
 <body>
 
-<h1 id="productName">خيمة ألعاب للأطفال</h1>
-
-<!-- ✅ سلايدر الصور -->
-<div class="swiper">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide"><img src="https://scontent.falg7-1.fna.fbcdn.net/v/t39.30808-6/513545716_122167957154565728_6710395876518421243_n.jpg?stp=dst-jpg_p526x296&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFnTL-FXWf7eKKn2FvugCf2IG70ykDuX-0sCnqNDYMQA3lVL-fXKi_ZkX4g9iQ12yO_0r8k6Rwb5-bddm4PaR7J&_nc_ohc=sSmS7w1iubIQ7kNvgH4QmwO&_nc_ht=scontent.falg7-1.fna&oh=00_AfACDfXik99OVnSkHEnPSTtIT3NNJK-AEzAog-KCmGZBOQ&oe=66E12EAD" alt="صورة 1"></div>
-    <div class="swiper-slide"><img src="https://example.com/your-second-image.jpg" alt="صورة 2"></div>
-  </div>
+<h1 id="productName">⏳ جاري تحميل المنتج...</h1>
+<div class="swiper" id="slider" style="display:none">
+  <div class="swiper-wrapper" id="imageSlides"></div>
   <div class="swiper-pagination"></div>
 </div>
-
-<!-- ✅ وصف المنتج -->
-<div class="description" id="productDesc">
-  <p>امنح طفلك مساحة مرحة وخاصة مع هذه الخيمة الملونة سهلة التركيب. صُممت لتحفز الخيال وتشجع على اللعب النشط، تأتي مع 50 كرة بلاستيكية ملونة. مناسبة للاستعمال الداخلي والخارجي، كما أنها سهلة الطي والتخزين.</p>
-  <ul>
-    <li>📐 الأبعاد: 90 × 65 × 65 سم</li>
-    <li>🎈 تحتوي على: 10 كرات للعب</li>
-    <li>🧵 الخامات: قماش بوليستر وهيكل خفيف</li>
-    <li>🏡 الاستعمال: داخلي وخارجي</li>
-    <li>👜 سهلة الحمل والتخزين</li>
-  </ul>
-</div>
-
-<!-- ✅ زر الإعجاب -->
+<div class="description" id="productDesc">⏳ جاري تحميل الوصف...</div>
 <div class="description">
   <button class="like-btn" onclick="likeProduct()">👍 أعجبني</button>
   <span class="like-count" id="likeCount"></span>
 </div>
-
-<!-- ✅ التقييم -->
 <div class="comment-box">
   <h3>⭐ تقييمك للمنتج:</h3>
   <div class="rating-stars" id="ratingStars">
@@ -127,77 +107,91 @@
     <span id="ratingCount" class="like-count"></span>
   </div>
 </div>
-
-<!-- ✅ خانة التعليقات -->
 <div class="comment-box">
   <h3>💬 أضف تعليق:</h3>
   <textarea id="commentInput" rows="3" style="width:100%; border-radius: 5px; padding: 10px;"></textarea><br>
   <button onclick="submitComment()" class="like-btn">إرسال التعليق</button>
 </div>
-
-<!-- ✅ عرض التعليقات -->
 <div class="comments-list" id="commentsList">
   <h3>🗣️ آراء الزبائن:</h3>
 </div>
 
-<!-- ✅ تحميل Swiper -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
-  new Swiper('.swiper', {
-    loop: true,
-    pagination: { el: '.swiper-pagination' },
-  });
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
+const urlParams = new URLSearchParams(window.location.search);
+const rowIndex = parseInt(urlParams.get("row"));
 
-  // ⭐ تقييم النجوم
-  document.querySelectorAll('#ratingStars span').forEach(star => {
-    star.addEventListener('click', () => {
-      const rate = parseInt(star.dataset.rate);
-      localStorage.setItem(`rate`, rate);
-      loadRating();
-    });
-  });
-  function loadRating() {
-    const rate = parseInt(localStorage.getItem(`rate`)) || 0;
-    document.querySelectorAll('#ratingStars span').forEach(star => {
-      star.classList.toggle('active', parseInt(star.dataset.rate) <= rate);
-    });
-    document.getElementById("ratingCount").textContent = rate ? `(تم تقييمه بـ ${rate}★)` : "";
+fetch(sheetURL).then(r => r.text()).then(csv => {
+  const rows = csv.trim().split("\n").slice(1);
+  const row = rows[rowIndex - 2];
+  if (!row) return;
+  const cols = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+  const name = cols[0] || "منتج";
+  const desc = cols[1] || "لا يوجد وصف";
+  const images = cols.slice(2, 9).filter(Boolean);
+
+  document.getElementById("productName").textContent = name;
+  document.getElementById("productDesc").innerHTML = desc;
+
+  if (images.length) {
+    document.getElementById("slider").style.display = "block";
+    document.getElementById("imageSlides").innerHTML = images.map(url => `<div class='swiper-slide'><img src='${url}'></div>`).join("");
+    new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
   }
 
-  // 💬 التعليقات
-  function submitComment() {
-    const val = document.getElementById("commentInput").value.trim();
-    if (!val) return;
-    let comments = JSON.parse(localStorage.getItem(`comments`) || "[]");
-    comments.push(val);
-    localStorage.setItem(`comments`, JSON.stringify(comments));
-    document.getElementById("commentInput").value = "";
-    loadComments();
-  }
-  function loadComments() {
-    const container = document.getElementById("commentsList");
-    const comments = JSON.parse(localStorage.getItem(`comments`) || "[]");
-    container.innerHTML = "<h3>🗣️ آراء الزبائن:</h3>" + (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
-  }
+  loadRating();
+  loadComments();
+  loadLikes();
+});
 
-  // 👍 زر الإعجاب
-  function likeProduct() {
-    let count = parseInt(localStorage.getItem('likes') || "0");
+function likeProduct() {
+  const key = `like_${rowIndex}`;
+  let count = parseInt(localStorage.getItem(key) || 0);
+  if (!localStorage.getItem(key + '_clicked')) {
     count++;
-    localStorage.setItem('likes', count);
-    document.getElementById("likeCount").textContent = `(${count}) أعجبهم المنتج`;
+    localStorage.setItem(key, count);
+    localStorage.setItem(key + '_clicked', true);
   }
-  function loadLikes() {
-    let count = parseInt(localStorage.getItem('likes') || "0");
-    document.getElementById("likeCount").textContent = count ? `(${count}) أعجبهم المنتج` : "";
-  }
+  document.getElementById("likeCount").textContent = `(${count}) أعجبهم المنتج`;
+}
+function loadLikes() {
+  const key = `like_${rowIndex}`;
+  const count = parseInt(localStorage.getItem(key) || 0);
+  document.getElementById("likeCount").textContent = count ? `(${count}) أعجبهم المنتج` : "";
+}
 
-  window.onload = function () {
+function submitComment() {
+  const val = document.getElementById("commentInput").value.trim();
+  if (!val) return;
+  const key = `comments_${rowIndex}`;
+  let comments = JSON.parse(localStorage.getItem(key) || "[]");
+  comments.push(val);
+  localStorage.setItem(key, JSON.stringify(comments));
+  document.getElementById("commentInput").value = "";
+  loadComments();
+}
+function loadComments() {
+  const container = document.getElementById("commentsList");
+  const key = `comments_${rowIndex}`;
+  const comments = JSON.parse(localStorage.getItem(key) || "[]");
+  container.innerHTML = "<h3>🗣️ آراء الزبائن:</h3>" + (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
+}
+
+function loadRating() {
+  const rate = parseInt(localStorage.getItem(`rate_${rowIndex}`)) || 0;
+  document.querySelectorAll('#ratingStars span').forEach(star => {
+    star.classList.toggle('active', parseInt(star.dataset.rate) <= rate);
+  });
+  document.getElementById("ratingCount").textContent = rate ? `(تم تقييمه بـ ${rate}★)` : "";
+}
+document.querySelectorAll('#ratingStars span').forEach(star => {
+  star.addEventListener('click', () => {
+    const rate = parseInt(star.dataset.rate);
+    localStorage.setItem(`rate_${rowIndex}`, rate);
     loadRating();
-    loadComments();
-    loadLikes();
-  }
+  });
+});
 </script>
 </body>
 </html>
-
