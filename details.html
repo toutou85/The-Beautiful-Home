@@ -161,11 +161,26 @@
       location.href = `order.html?product=${name}&price=${price}`;
     }
 
-    function goToCart() {
-      const name = encodeURIComponent(document.getElementById("productName").textContent);
-      location.href = `cart.html?product=${name}`;
-    }
+  function goToCart() {
+  const name = document.getElementById("productName").textContent;
+  const priceText = document.getElementById("productPrice").textContent;
+  const price = parseInt(priceText.replace(/[^\d]/g, "")) || 0;
 
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  // التأكد إذا كان المنتج مضاف سابقًا
+  const existing = cart.find(item => item.name === name);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ name, price, quantity: 1 });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // الانتقال إلى صفحة السلة
+  location.href = "cart.html";
+}
     window.onload = function () {
       loadRating(); loadComments(); loadLikes();
     }
