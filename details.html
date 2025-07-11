@@ -105,13 +105,13 @@ fetch(sheetURL)
 const row = rows[requestedRow - 1]; //
     if (!row) return;
 while (row.length < 10) row.push("");
-    const name  = row[0] || "";
-const desc  = row[1] || "";
+   const name  = row[0]?.trim() || "";
+const desc  = row[1]?.trim() || "";
 const images = row.slice(2, 9).filter(img => img && img.trim());
 const price = row[9] || "";
 
-    document.getElementById("productName").textContent = name;
-    document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
+document.getElementById("productName").innerText = name;
+document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
     console.log("الوصف:", desc);
     document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price || "غير متوفر"} دج</div>`;
 console.log("السعر:", price);
