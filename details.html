@@ -104,7 +104,7 @@ fetch(sheetURL)
     });
 const row = rows[requestedRow - 1]; //
     if (!row) return;
-
+while (row.length < 10) row.push("");
     const name  = row[0] || "";
 const desc  = row[1] || "";
 const images = row.slice(2, 9).filter(img => img && img.trim());
