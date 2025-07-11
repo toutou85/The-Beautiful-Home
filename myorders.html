@@ -255,6 +255,11 @@ window.onload = function () {
   }
 };
 </script>
-
+<div id="footer-container"></div>
+<script>
+  fetch("footer.html")
+    .then(res => res.text())
+    .then(html => document.getElementById("footer-container").innerHTML = html);
+</script>
 </body>
 </html>
