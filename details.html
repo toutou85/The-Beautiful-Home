@@ -23,14 +23,16 @@
       padding: 5px 0;
       border-bottom: 1px solid #eee;
     }
-    .like-btn {
+    .like-btn, .share-btn {
       background: #28a745; color: white;
       padding: 10px 15px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      margin: 5px 5px 0 0;
     }
     #likeCount { margin-right: 10px; color: #444; }
+    .price-tag { font-size: 1.2rem; font-weight: bold; color: #d62828; margin-bottom: 10px; }
     @media (max-width: 600px) {
       .swiper { height: 220px; }
     }
@@ -46,12 +48,16 @@
       <div class="swiper-pagination"></div>
     </div>
 
+    <!-- ✅ السعر -->
+    <div class="description" id="productPrice"></div>
+
     <!-- ✅ وصف المنتج -->
     <div class="description" id="productDesc">⏳ جاري تحميل الوصف...</div>
 
-    <!-- ✅ زر أعجبني -->
+    <!-- ✅ زر أعجبني ومشاركة -->
     <div class="description">
       <button class="like-btn" onclick="likeProduct()">👍 أعجبني</button>
+      <button class="share-btn" onclick="shareProduct()">📤 مشاركة المنتج</button>
       <span id="likeCount"></span>
     </div>
 
@@ -92,9 +98,13 @@
         const rows = parseCSV(csv);
         if (!rows[rowIndex - 2]) return;
 
-        const [name, desc, ...images] = rows[rowIndex - 2];
+        const [name, desc, ...rest] = rows[rowIndex - 2];
+        const images = rest.slice(0, 7);  // الصور من العمود 3 إلى 9
+        const price = rest[7] || "السعر غير محدد";
+
         document.getElementById("productName").textContent = name;
         document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
+        document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price} دج</div>`;
 
         const validImages = images.filter(img => img && img.trim());
         if (validImages.length) {
@@ -159,6 +169,25 @@
       const comments = JSON.parse(localStorage.getItem(`comments_${productKey}`) || "[]");
       container.innerHTML = "<h3>🗣️ التعليقات:</h3>" +
         (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
+    }
+
+    // 📤 مشاركة
+    function shareProduct() {
+      const name = document.getElementById("productName").textContent;
+      const link = location.href;
+      const text = `📦 ${name}\nشاهد المنتج هنا:\n${link}`;
+      if (navigator.share) {
+        navigator.share({ title: name, text, url: link });
+      } else {
+        navigator.clipboard.writeText(link);
+        alert("✅ تم نسخ رابط المنتج!");
+      }
+    }
+
+    window.onload = function () {
+      loadRating();
+      loadComments();
+      loadLikes();
     }
   </script>
 </body>
