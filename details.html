@@ -101,6 +101,11 @@ const rows = csv.split("\n").slice(1).map(r => {
     m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
   );
 });
+        const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1");
+const row = rows[rowIndex - 1]; // مهم: ناقص واحد لأن الفهرس يبدأ من 0
+
+if (!row) return; // إذا الصف غير موجود
+const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
 
         if (!rows[rowIndex - 1]) return;
 
