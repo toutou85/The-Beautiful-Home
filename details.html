@@ -110,8 +110,9 @@ const row = rows[requestedRow - 1]; //
 
     document.getElementById("productName").textContent = name;
     document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
+    console.log("الوصف:", desc);
     document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price || "غير متوفر"} دج</div>`;
-
+console.log("السعر:", price);
     if (images.length) {
       const slides = images.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
       document.getElementById("imageSlides").innerHTML = slides.join("");
