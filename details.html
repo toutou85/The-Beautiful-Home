@@ -93,40 +93,36 @@
     const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1"); // يبدأ من الصف 2
     const productKey = "product_" + rowIndex;
 
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(csv => {
-const rows = csv.split("\n").slice(1).map(r => {
-  return [...r.matchAll(/("([^"]|"")*"|[^,]*)(?=,|$)/g)].map(m =>
-    m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
-  );
-});
-        const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1");
-const row = rows[rowIndex - 1]; // مهم: ناقص واحد لأن الفهرس يبدأ من 0
+   fetch(sheetURL)
+  .then(res => res.text())
+  .then(csv => {
+    const rows = csv.split("\n").slice(1).map(r => {
+      return [...r.matchAll(/("([^"]|"")*"|[^,]*)(?=,|$)/g)].map(m =>
+        m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
+      );
+    });
 
-if (!row) return; // إذا الصف غير موجود
-const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
+    const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1");
+    const row = rows[rowIndex - 1]; // نحافظ على الترتيب الأصلي
 
-        if (!rows[rowIndex - 1]) return;
+    if (!row) return;
 
-        const [name, desc, ...rest] = rows[rowIndex - 1];
-        const images = rest.slice(0, 7);
-        const price = rest[7] || "السعر غير متوفر";
+    const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
+    const images = [img1, img2, img3, img4, img5, img6, img7].filter(img => img && img.trim());
 
-        document.getElementById("productName").textContent = name;
-        document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
-        document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price} دج</div>`;
+    document.getElementById("productName").textContent = name;
+    document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
+    document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price || "غير متوفر"} دج</div>`;
 
-        const validImages = images.filter(img => img.trim());
-        if (validImages.length) {
-          const slides = validImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
-          document.getElementById("imageSlides").innerHTML = slides.join("");
-          document.getElementById("slider").style.display = "block";
-          new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
-        }
+    if (images.length) {
+      const slides = images.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
+      document.getElementById("imageSlides").innerHTML = slides.join("");
+      document.getElementById("slider").style.display = "block";
+      new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
+    }
 
-        loadRating(); loadComments(); loadLikes();
-      });
+    loadRating(); loadComments(); loadLikes();
+  });
 
     // التقييم
     document.querySelectorAll('#ratingStars span[data-rate]').forEach(star => {
@@ -186,10 +182,12 @@ const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
     }
 
     // الطلب والسلة
-    function goToOrder() {
-      const name = encodeURIComponent(document.getElementById("productName").textContent);
-      location.href = `order.html?product=${name}`;
-    }
+function goToOrder() {
+  const name = encodeURIComponent(document.getElementById("productName").textContent);
+  const price = encodeURIComponent(document.getElementById("productPrice").textContent.replace("💰 السعر: ", "").replace(" دج", "").trim());
+  location.href = `order.html?product=${name}&price=${price}`;
+}
+
     function goToCart() {
       const name = encodeURIComponent(document.getElementById("productName").textContent);
       location.href = `cart.html?product=${name}`;
