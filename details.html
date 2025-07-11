@@ -23,7 +23,7 @@
       padding: 5px 0;
       border-bottom: 1px solid #eee;
     }
-    .like-btn, .share-btn {
+    .btn {
       background: #28a745; color: white;
       padding: 10px 15px;
       border: none;
@@ -31,6 +31,8 @@
       cursor: pointer;
       margin: 5px 5px 0 0;
     }
+    .btn.secondary { background: #007bff; }
+    .btn.danger { background: #e83e8c; }
     #likeCount { margin-right: 10px; color: #444; }
     .price-tag { font-size: 1.2rem; font-weight: bold; color: #d62828; margin-bottom: 10px; }
     @media (max-width: 600px) {
@@ -42,26 +44,28 @@
   <div class="container">
     <h1 id="productName">تفاصيل المنتج</h1>
 
-    <!-- ✅ سلايدر الصور -->
     <div class="swiper" id="slider" style="display: none;">
       <div class="swiper-wrapper" id="imageSlides"></div>
       <div class="swiper-pagination"></div>
     </div>
 
-    <!-- ✅ السعر -->
     <div class="description" id="productPrice"></div>
-
-    <!-- ✅ وصف المنتج -->
     <div class="description" id="productDesc">⏳ جاري تحميل الوصف...</div>
 
-    <!-- ✅ زر أعجبني ومشاركة -->
+    <!-- زر الإعجاب والمشاركة -->
     <div class="description">
-      <button class="like-btn" onclick="likeProduct()">👍 أعجبني</button>
-      <button class="share-btn" onclick="shareProduct()">📤 مشاركة المنتج</button>
+      <button class="btn" onclick="likeProduct()">👍 أعجبني</button>
+      <button class="btn secondary" onclick="shareProduct()">📤 مشاركة المنتج</button>
       <span id="likeCount"></span>
     </div>
 
-    <!-- ✅ تقييم النجوم -->
+    <!-- أزرار الطلب والسلة -->
+    <div class="description">
+      <button class="btn danger" onclick="goToOrder()">🔄 طلب المنتج</button>
+      <button class="btn secondary" onclick="goToCart()">🛒 أضف إلى السلة</button>
+    </div>
+
+    <!-- التقييم -->
     <div class="comment-box">
       <h3>⭐ تقييمك:</h3>
       <div class="rating-stars" id="ratingStars">
@@ -74,62 +78,52 @@
       </div>
     </div>
 
-    <!-- ✅ التعليقات -->
+    <!-- التعليقات -->
     <div class="comment-box">
       <h3>💬 أضف تعليقك:</h3>
       <textarea id="commentInput" rows="3" style="width: 100%; border-radius: 5px;"></textarea><br>
-      <button onclick="submitComment()" class="like-btn">إرسال</button>
+      <button onclick="submitComment()" class="btn">إرسال</button>
     </div>
-
-    <div class="comments-list" id="commentsList">
-      <h3>🗣️ التعليقات:</h3>
-    </div>
+    <div class="comments-list" id="commentsList"><h3>🗣️ التعليقات:</h3></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script>
-   const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
-  const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1"); // افتراضيًا المنتج الأول
-  const productKey = "product_" + rowIndex;
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
+    const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1"); // يبدأ من الصف 2
+    const productKey = "product_" + rowIndex;
 
-  fetch(sheetURL)
-    .then(res => res.text())
-    .then(csv => {
-      const rows = parseCSV(csv);
-      const dataRows = rows.filter(r => r[0] && r[1]); // فقط الصفوف التي فيها اسم ووصف
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.split("\n").slice(1).map(r => {
+          return [...r.matchAll(/("([^"]|"")*"|[^,]*)(?=,|$)/g)].map(m =>
+            m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
+          );
+        }).filter(r => r.length >= 2); // فقط الصفوف التي فيها اسم ووصف
 
-      if (!dataRows[rowIndex - 1]) return;
+        if (!rows[rowIndex - 1]) return;
 
-      const [name, desc, ...rest] = dataRows[rowIndex - 1];
-      const images = rest.slice(0, 7);
-      const price = rest[7] || "السعر غير محدد";
+        const [name, desc, ...rest] = rows[rowIndex - 1];
+        const images = rest.slice(0, 7);
+        const price = rest[7] || "السعر غير متوفر";
 
-      document.getElementById("productName").textContent = name;
-      document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
-      document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price} دج</div>`;
+        document.getElementById("productName").textContent = name;
+        document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
+        document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price} دج</div>`;
 
-      const validImages = images.filter(img => img && img.trim());
-      if (validImages.length) {
-        const slideContainer = document.getElementById("imageSlides");
-        slideContainer.innerHTML = validImages.map(img => `
-          <div class="swiper-slide"><img src="${img.trim()}" alt="صورة المنتج"></div>
-        `).join("");
-        document.getElementById("slider").style.display = "block";
-        new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
-      }
+        const validImages = images.filter(img => img.trim());
+        if (validImages.length) {
+          const slides = validImages.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
+          document.getElementById("imageSlides").innerHTML = slides.join("");
+          document.getElementById("slider").style.display = "block";
+          new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
+        }
 
-      loadRating();
-      loadComments();
-      loadLikes();
-    });
+        loadRating(); loadComments(); loadLikes();
+      });
 
-  function parseCSV(str) {
-    return str.split("\n").slice(1).map(line =>
-      [...line.matchAll(/("([^"]|"")*"|[^,]+|)(?=,|$)/g)].map(m => m[0].replace(/^"|"$/g, '').replace(/""/g, '"'))
-    );
-  }
-
-    // ⭐ التقييم
+    // التقييم
     document.querySelectorAll('#ratingStars span[data-rate]').forEach(star => {
       star.addEventListener('click', () => {
         localStorage.setItem(`rating_${productKey}`, star.dataset.rate);
@@ -144,7 +138,7 @@
       document.getElementById("ratingCount").textContent = rate ? `(تم التقييم بـ ${rate}★)` : "";
     }
 
-    // 👍 الإعجاب
+    // الإعجاب
     function likeProduct() {
       let count = parseInt(localStorage.getItem(`likes_${productKey}`) || 0) + 1;
       localStorage.setItem(`likes_${productKey}`, count);
@@ -155,7 +149,7 @@
       document.getElementById("likeCount").textContent = count ? `(${count}) أعجبهم المنتج` : "";
     }
 
-    // 💬 التعليقات
+    // التعليقات
     function submitComment() {
       const input = document.getElementById("commentInput");
       const val = input.value.trim();
@@ -173,7 +167,7 @@
         (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
     }
 
-    // 📤 مشاركة
+    // مشاركة المنتج
     function shareProduct() {
       const name = document.getElementById("productName").textContent;
       const link = location.href;
@@ -184,6 +178,16 @@
         navigator.clipboard.writeText(link);
         alert("✅ تم نسخ رابط المنتج!");
       }
+    }
+
+    // الطلب والسلة
+    function goToOrder() {
+      const name = encodeURIComponent(document.getElementById("productName").textContent);
+      location.href = `order.html?product=${name}`;
+    }
+    function goToCart() {
+      const name = encodeURIComponent(document.getElementById("productName").textContent);
+      location.href = `cart.html?product=${name}`;
     }
 
     window.onload = function () {
