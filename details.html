@@ -10,105 +10,112 @@
       font-family: 'Tahoma', sans-serif;
       margin: 0;
       background: #f9f9f9;
-      padding: 10px;
+      padding: 20px;
     }
-
     h1 {
+      color: #005f73;
       text-align: center;
-      color: #0a9396;
+      margin-bottom: 10px;
     }
-
     .swiper {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       height: 300px;
       margin: auto;
+      margin-bottom: 20px;
       border-radius: 10px;
       overflow: hidden;
     }
-
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
     .swiper-slide img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      display: block;
       pointer-events: none;
       user-select: none;
     }
-
     .description, .comment-box, .comments-list {
-      background: white;
+      background: #fff;
       padding: 15px;
-      margin: 15px auto;
-      max-width: 600px;
       border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
-
     .rating-stars span {
-      font-size: 30px;
+      font-size: 25px;
       cursor: pointer;
       color: #ccc;
     }
-
     .rating-stars span.active {
       color: gold;
     }
-
-    #likeBtn {
-      background: #d62828;
-      color: white;
-      border: none;
+    .comments-list div {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    .like-btn {
+      display: inline-block;
       padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 10px;
-    }
-
-    .share-btn {
-      display: block;
-      margin: 20px auto;
-      background: #0a9396;
+      background: #198754;
       color: white;
-      border: none;
-      padding: 10px 20px;
       border-radius: 8px;
-      font-size: 1rem;
+      font-size: 0.9rem;
+      margin-top: 10px;
       cursor: pointer;
+      border: none;
     }
-
-    @media (max-width: 480px) {
-      .swiper {
-        height: 220px;
-      }
+    .like-count {
+      font-size: 0.9rem;
+      color: #555;
+      margin-right: 10px;
+    }
+    @media (max-width: 600px) {
+      .swiper { height: 250px; }
+      h1 { font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
 
-<h1>🎪 خيمة أطفال ملونة</h1>
+<h1 id="productName">خيمة ألعاب للأطفال</h1>
 
+<!-- ✅ سلايدر الصور -->
 <div class="swiper">
   <div class="swiper-wrapper">
-    <div class="swiper-slide"><img src="https://via.placeholder.com/500x300/ffa07a/000000?text=Image+1" alt="صورة 1"></div>
-    <div class="swiper-slide"><img src="https://via.placeholder.com/500x300/98fb98/000000?text=Image+2" alt="صورة 2"></div>
-    <div class="swiper-slide"><img src="https://via.placeholder.com/500x300/87ceeb/000000?text=Image+3" alt="صورة 3"></div>
+    <div class="swiper-slide"><img src="https://scontent.falg7-1.fna.fbcdn.net/v/t39.30808-6/513545716_122167957154565728_6710395876518421243_n.jpg?stp=dst-jpg_p526x296&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFnTL-FXWf7eKKn2FvugCf2IG70ykDuX-0sCnqNDYMQA3lVL-fXKi_ZkX4g9iQ12yO_0r8k6Rwb5-bddm4PaR7J&_nc_ohc=sSmS7w1iubIQ7kNvgH4QmwO&_nc_ht=scontent.falg7-1.fna&oh=00_AfACDfXik99OVnSkHEnPSTtIT3NNJK-AEzAog-KCmGZBOQ&oe=66E12EAD" alt="صورة 1"></div>
+    <div class="swiper-slide"><img src="https://example.com/your-second-image.jpg" alt="صورة 2"></div>
   </div>
   <div class="swiper-pagination"></div>
 </div>
 
-<div class="description">
-  <p>وفّر لطفلك مساحة ممتعة وخاصة مع هذه الخيمة القابلة للطي بألوان زاهية! صُمّمت لتحفيز الخيال وتشجيع اللعب النشط، وتأتي مع 10 كرات ملونة.</p>
+<!-- ✅ وصف المنتج -->
+<div class="description" id="productDesc">
+  <p>امنح طفلك مساحة مرحة وخاصة مع هذه الخيمة الملونة سهلة التركيب. صُممت لتحفز الخيال وتشجع على اللعب النشط، تأتي مع 50 كرة بلاستيكية ملونة. مناسبة للاستعمال الداخلي والخارجي، كما أنها سهلة الطي والتخزين.</p>
   <ul>
-    <li>📏 الأبعاد: 90 × 65 × 65 سم</li>
-    <li>🎁 تشمل: 10 كرات بلاستيكية</li>
-    <li>🧵 المواد: بوليستر وهيكل خفيف</li>
-    <li>🏠 للاستخدام داخل المنزل وخارجه</li>
-    <li>👜 سهلة النقل والتخزين</li>
+    <li>📐 الأبعاد: 90 × 65 × 65 سم</li>
+    <li>🎈 تحتوي على: 10 كرات للعب</li>
+    <li>🧵 الخامات: قماش بوليستر وهيكل خفيف</li>
+    <li>🏡 الاستعمال: داخلي وخارجي</li>
+    <li>👜 سهلة الحمل والتخزين</li>
   </ul>
 </div>
 
+<!-- ✅ زر الإعجاب -->
+<div class="description">
+  <button class="like-btn" onclick="likeProduct()">👍 أعجبني</button>
+  <span class="like-count" id="likeCount"></span>
+</div>
+
+<!-- ✅ التقييم -->
 <div class="comment-box">
   <h3>⭐ تقييمك للمنتج:</h3>
   <div class="rating-stars" id="ratingStars">
@@ -117,76 +124,80 @@
     <span data-rate="3">★</span>
     <span data-rate="4">★</span>
     <span data-rate="5">★</span>
-    <span id="ratingCount" style="font-size: 0.9rem; color: #555; margin-right: 10px;"></span>
+    <span id="ratingCount" class="like-count"></span>
   </div>
-  <button id="likeBtn">❤️ أعجبني (<span id="likeCount">0</span>)</button>
 </div>
 
+<!-- ✅ خانة التعليقات -->
 <div class="comment-box">
   <h3>💬 أضف تعليق:</h3>
   <textarea id="commentInput" rows="3" style="width:100%; border-radius: 5px; padding: 10px;"></textarea><br>
-  <button onclick="submitComment()" class="share-btn">📨 إرسال التعليق</button>
+  <button onclick="submitComment()" class="like-btn">إرسال التعليق</button>
 </div>
 
+<!-- ✅ عرض التعليقات -->
 <div class="comments-list" id="commentsList">
   <h3>🗣️ آراء الزبائن:</h3>
 </div>
 
+<!-- ✅ تحميل Swiper -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script>
-  // سلايدر الصور
-  new Swiper(".swiper", {
+  new Swiper('.swiper', {
     loop: true,
-    pagination: { el: ".swiper-pagination" }
+    pagination: { el: '.swiper-pagination' },
   });
 
-  // تقييم النجوم
-  const ratingKey = "rate_tente";
+  // ⭐ تقييم النجوم
   document.querySelectorAll('#ratingStars span').forEach(star => {
     star.addEventListener('click', () => {
       const rate = parseInt(star.dataset.rate);
-      localStorage.setItem(ratingKey, rate);
+      localStorage.setItem(`rate`, rate);
       loadRating();
     });
   });
-
   function loadRating() {
-    const rate = parseInt(localStorage.getItem(ratingKey)) || 0;
+    const rate = parseInt(localStorage.getItem(`rate`)) || 0;
     document.querySelectorAll('#ratingStars span').forEach(star => {
       star.classList.toggle('active', parseInt(star.dataset.rate) <= rate);
     });
     document.getElementById("ratingCount").textContent = rate ? `(تم تقييمه بـ ${rate}★)` : "";
   }
-  loadRating();
 
-  // زر الإعجاب
-  const likeKey = "likes_tente";
-  document.getElementById("likeBtn").addEventListener("click", () => {
-    let count = parseInt(localStorage.getItem(likeKey)) || 0;
-    count++;
-    localStorage.setItem(likeKey, count);
-    document.getElementById("likeCount").textContent = count;
-  });
-  document.getElementById("likeCount").textContent = localStorage.getItem(likeKey) || 0;
-
-  // التعليقات
-  const commentsKey = "comments_tente";
+  // 💬 التعليقات
   function submitComment() {
     const val = document.getElementById("commentInput").value.trim();
     if (!val) return;
-    let comments = JSON.parse(localStorage.getItem(commentsKey) || "[]");
+    let comments = JSON.parse(localStorage.getItem(`comments`) || "[]");
     comments.push(val);
-    localStorage.setItem(commentsKey, JSON.stringify(comments));
+    localStorage.setItem(`comments`, JSON.stringify(comments));
     document.getElementById("commentInput").value = "";
     loadComments();
   }
-
   function loadComments() {
     const container = document.getElementById("commentsList");
-    const comments = JSON.parse(localStorage.getItem(commentsKey) || "[]");
+    const comments = JSON.parse(localStorage.getItem(`comments`) || "[]");
     container.innerHTML = "<h3>🗣️ آراء الزبائن:</h3>" + (comments.length ? comments.map(c => `<div>• ${c}</div>`).join("") : "<p>لا توجد تعليقات بعد.</p>");
   }
-  loadComments();
+
+  // 👍 زر الإعجاب
+  function likeProduct() {
+    let count = parseInt(localStorage.getItem('likes') || "0");
+    count++;
+    localStorage.setItem('likes', count);
+    document.getElementById("likeCount").textContent = `(${count}) أعجبهم المنتج`;
+  }
+  function loadLikes() {
+    let count = parseInt(localStorage.getItem('likes') || "0");
+    document.getElementById("likeCount").textContent = count ? `(${count}) أعجبهم المنتج` : "";
+  }
+
+  window.onload = function () {
+    loadRating();
+    loadComments();
+    loadLikes();
+  }
 </script>
 </body>
 </html>
+
