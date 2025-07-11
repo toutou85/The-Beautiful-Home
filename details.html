@@ -91,7 +91,7 @@
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
     const requestedRow = parseInt(new URLSearchParams(location.search).get("row") || "2");
-const productKey = "product_" + (rowIndex + 1); // نحتفظ بالرقم الأصلي للعرض المحلي
+const productKey = "product_" + (requestedRow + 1); // نحتفظ بالرقم الأصلي للعرض المحلي
 
 fetch(sheetURL)
   .then(res => res.text())
