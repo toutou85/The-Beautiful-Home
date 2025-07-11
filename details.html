@@ -102,7 +102,7 @@ fetch(sheetURL)
         m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
       );
     });
-const row = rows[requestedRow - 1]; // -1 لأن أول صف في rows هو عنوان الجدولتمامًا
+const row = rows[requestedRow - 1]; //
     if (!row) return;
 
     const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
