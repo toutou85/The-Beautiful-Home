@@ -97,13 +97,13 @@ fetch(sheetURL)
   .then(res => res.text())
   .then(csv => {
     const lines = csv.trim().split("\n");
-    const rows = lines.slice(1).map(line => {
+    const rows = lines.map(line => {
       return [...line.matchAll(/("([^"]|"")*"|[^,]*)(?=,|$)/g)].map(m =>
         m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
       );
     });
 
-    const row = rows[rowIndex - 1]; // نستخدم rowIndex الذي عرفناه في الأعلى
+    const row = rows[rowIndex]; // بدون -1 حتى يكون مثل Google Sheets تمامًا
     if (!row) return;
 
     const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
