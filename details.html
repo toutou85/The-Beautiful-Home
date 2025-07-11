@@ -103,7 +103,7 @@ fetch(sheetURL)
       );
     });
 
-    const row = rows[rowIndex]; // بدون -2 حتى يكون مثل Google Sheets تمامًا
+    const row = rows[rowIndex]; // بدون -1 حتى يكون مثل Google Sheets تمامًا
     if (!row) return;
 
     const [name, desc, img1, img2, img3, img4, img5, img6, img7, price] = row;
