@@ -15,14 +15,9 @@
       background: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .rating-stars span {
-      font-size: 25px; cursor: pointer; color: #ccc;
-    }
+    .rating-stars span { font-size: 25px; cursor: pointer; color: #ccc; }
     .rating-stars span.active { color: gold; }
-    .comments-list div {
-      padding: 5px 0;
-      border-bottom: 1px solid #eee;
-    }
+    .comments-list div { padding: 5px 0; border-bottom: 1px solid #eee; }
     .btn {
       background: #28a745; color: white;
       padding: 10px 15px;
@@ -35,9 +30,7 @@
     .btn.danger { background: #e83e8c; }
     #likeCount { margin-right: 10px; color: #444; }
     .price-tag { font-size: 1.2rem; font-weight: bold; color: #d62828; margin-bottom: 10px; }
-    @media (max-width: 600px) {
-      .swiper { height: 220px; }
-    }
+    @media (max-width: 600px) { .swiper { height: 220px; } }
   </style>
 </head>
 <body>
@@ -52,20 +45,17 @@
     <div class="description" id="productPrice"></div>
     <div class="description" id="productDesc">⏳ جاري تحميل الوصف...</div>
 
-    <!-- زر الإعجاب والمشاركة -->
     <div class="description">
       <button class="btn" onclick="likeProduct()">👍 أعجبني</button>
       <button class="btn secondary" onclick="shareProduct()">📤 مشاركة المنتج</button>
       <span id="likeCount"></span>
     </div>
 
-    <!-- أزرار الطلب والسلة -->
     <div class="description">
       <button class="btn danger" onclick="goToOrder()">🔄 طلب المنتج</button>
       <button class="btn secondary" onclick="goToCart()">🛒 أضف إلى السلة</button>
     </div>
 
-    <!-- التقييم -->
     <div class="comment-box">
       <h3>⭐ تقييمك:</h3>
       <div class="rating-stars" id="ratingStars">
@@ -78,7 +68,6 @@
       </div>
     </div>
 
-    <!-- التعليقات -->
     <div class="comment-box">
       <h3>💬 أضف تعليقك:</h3>
       <textarea id="commentInput" rows="3" style="width: 100%; border-radius: 5px;"></textarea><br>
@@ -89,43 +78,28 @@
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
+    const apiURL = "https://script.google.com/macros/s/AKfycbyTvkMV577qtFNTRQvIldqstZlVkJDUv2d6RsyExDPyzNYUVZURpbg_I8meJblsTttlnw/exec";
     const requestedRow = parseInt(new URLSearchParams(location.search).get("row") || "2");
-const productKey = "product_" + (requestedRow + 1); // نحتفظ بالرقم الأصلي للعرض المحلي
+    const productKey = "product_" + requestedRow;
 
-fetch(sheetURL)
-  .then(res => res.text())
-  .then(csv => {
-    const lines = csv.trim().split("\n");
-    const rows = lines.map(line => {
-      return [...line.matchAll(/("([^"]|"")*"|[^,]*)(?=,|$)/g)].map(m =>
-        m[0].replace(/^"|"$/g, '').replace(/""/g, '"')
-      );
-    });
-const row = rows[requestedRow - 1]; //
-    if (!row) return;
-while (row.length < 10) row.push("");
-   const name  = row[0]?.trim() || "";
-const desc  = row[1]?.trim() || "";
-const images = row.slice(2, 9).filter(img => img && img.trim());
-const price = row[9] || "";
+    fetch(`${apiURL}?row=${requestedRow}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) return alert(data.error);
 
-document.getElementById("productName").innerText = name;
-document.getElementById("productDesc").innerHTML = (desc || "❗ لا يوجد وصف متاح حالياً").replace(/\n/g, "<br>");
+        document.getElementById("productName").textContent = data.name;
+        document.getElementById("productDesc").innerHTML = data.desc.replace(/\n/g, "<br>");
+        document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${data.price || "غير متوفر"} دج</div>`;
 
-    console.log("الوصف:", desc);
-    document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price || "غير متوفر"} دج</div>`;
-console.log("السعر:", price);
-    if (images.length) {
-      const slides = images.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
-      document.getElementById("imageSlides").innerHTML = slides.join("");
-      document.getElementById("slider").style.display = "block";
-      new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
-    }
+        if (data.images && data.images.length) {
+          const slides = data.images.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
+          document.getElementById("imageSlides").innerHTML = slides.join("");
+          document.getElementById("slider").style.display = "block";
+          new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
+        }
 
-    loadRating(); loadComments(); loadLikes();
-  });
-
+        loadRating(); loadComments(); loadLikes();
+      });
 
     // التقييم
     document.querySelectorAll('#ratingStars span[data-rate]').forEach(star => {
@@ -184,12 +158,11 @@ console.log("السعر:", price);
       }
     }
 
-    // الطلب والسلة
-function goToOrder() {
-  const name = encodeURIComponent(document.getElementById("productName").textContent);
-  const price = encodeURIComponent(document.getElementById("productPrice").textContent.replace("💰 السعر: ", "").replace(" دج", "").trim());
-  location.href = `order.html?product=${name}&price=${price}`;
-}
+    function goToOrder() {
+      const name = encodeURIComponent(document.getElementById("productName").textContent);
+      const price = encodeURIComponent(document.getElementById("productPrice").textContent.replace("💰 السعر: ", "").replace(" دج", "").trim());
+      location.href = `order.html?product=${name}&price=${price}`;
+    }
 
     function goToCart() {
       const name = encodeURIComponent(document.getElementById("productName").textContent);
@@ -197,9 +170,7 @@ function goToOrder() {
     }
 
     window.onload = function () {
-      loadRating();
-      loadComments();
-      loadLikes();
+      loadRating(); loadComments(); loadLikes();
     }
   </script>
 </body>
