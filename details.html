@@ -88,44 +88,46 @@
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
-    const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "0");
-    const productKey = "product_" + rowIndex;
+   const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQS3w2ozEHEwXxM8y7-5GT5vS-zUhN2q4fEyhhez5YR_qtXdf4I2YhUxbZ-GzmLLbEPGUSnJpgOQwet/pub?gid=0&single=true&output=csv";
+  const rowIndex = parseInt(new URLSearchParams(location.search).get("row") || "1"); // افتراضيًا المنتج الأول
+  const productKey = "product_" + rowIndex;
 
-    fetch(sheetURL)
-      .then(res => res.text())
-      .then(csv => {
-        const rows = parseCSV(csv);
-        if (!rows[rowIndex - 2]) return;
+  fetch(sheetURL)
+    .then(res => res.text())
+    .then(csv => {
+      const rows = parseCSV(csv);
+      const dataRows = rows.filter(r => r[0] && r[1]); // فقط الصفوف التي فيها اسم ووصف
 
-        const [name, desc, ...rest] = rows[rowIndex - 2];
-        const images = rest.slice(0, 7);  // الصور من العمود 3 إلى 9
-        const price = rest[7] || "السعر غير محدد";
+      if (!dataRows[rowIndex - 1]) return;
 
-        document.getElementById("productName").textContent = name;
-        document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
-        document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price} دج</div>`;
+      const [name, desc, ...rest] = dataRows[rowIndex - 1];
+      const images = rest.slice(0, 7);
+      const price = rest[7] || "السعر غير محدد";
 
-        const validImages = images.filter(img => img && img.trim());
-        if (validImages.length) {
-          const slideContainer = document.getElementById("imageSlides");
-          slideContainer.innerHTML = validImages.map(img => `
-            <div class="swiper-slide"><img src="${img.trim()}" alt="صورة المنتج"></div>
-          `).join("");
-          document.getElementById("slider").style.display = "block";
-          new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
-        }
+      document.getElementById("productName").textContent = name;
+      document.getElementById("productDesc").innerHTML = desc.replace(/\n/g, "<br>");
+      document.getElementById("productPrice").innerHTML = `<div class="price-tag">💰 السعر: ${price} دج</div>`;
 
-        loadRating();
-        loadComments();
-        loadLikes();
-      });
+      const validImages = images.filter(img => img && img.trim());
+      if (validImages.length) {
+        const slideContainer = document.getElementById("imageSlides");
+        slideContainer.innerHTML = validImages.map(img => `
+          <div class="swiper-slide"><img src="${img.trim()}" alt="صورة المنتج"></div>
+        `).join("");
+        document.getElementById("slider").style.display = "block";
+        new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
+      }
 
-    function parseCSV(str) {
-      return str.split("\n").slice(1).map(line =>
-        [...line.matchAll(/("([^"]|"")*"|[^,]+|)(?=,|$)/g)].map(m => m[0].replace(/^"|"$/g, '').replace(/""/g, '"'))
-      );
-    }
+      loadRating();
+      loadComments();
+      loadLikes();
+    });
+
+  function parseCSV(str) {
+    return str.split("\n").slice(1).map(line =>
+      [...line.matchAll(/("([^"]|"")*"|[^,]+|)(?=,|$)/g)].map(m => m[0].replace(/^"|"$/g, '').replace(/""/g, '"'))
+    );
+  }
 
     // ⭐ التقييم
     document.querySelectorAll('#ratingStars span[data-rate]').forEach(star => {
