@@ -92,14 +92,7 @@
           const slides = data.images.map(img => `<div class="swiper-slide"><img src="${img}" alt="صورة المنتج"></div>`);
           document.getElementById("imageSlides").innerHTML = slides.join("");
           document.getElementById("slider").style.display = "block";
-          new Swiper(".swiper", {
-  loop: true,
-  pagination: { el: ".swiper-pagination" },
-  autoplay: {
-    delay: 3000, // 3 ثواني بين كل صورة
-    disableOnInteraction: false // لا توقف التشغيل بعد التفاعل
-  }
-});
+          new Swiper(".swiper", { loop: true, pagination: { el: ".swiper-pagination" } });
 
         loadRating(); loadComments(); loadLikes();
       });
