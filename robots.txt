@@ -1,0 +1,4 @@
+
+User-agent: *
+Allow: /
+Sitemap: https://toutou85.github.io/The-Beautiful-Home/sitemap.xml
