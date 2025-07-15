@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الاشتراك في تنبيهات المنتجات - Beautiful Home</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+    h2 {
+      color: #005f73;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    input[type="email"] {
+      padding: 10px;
+      width: 90%;
+      margin: 10px 0;
+      border: 2px solid #0a9396;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      background: #0a9396;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📧 اشترك لتصلك إشعارات المنتجات الجديدة</h2>
+  <form id="subscribeForm">
+    <input type="email" name="email" id="emailInput" placeholder="أدخل بريدك الإلكتروني" required />
+    <br>
+    <button type="submit">📨 اشترك الآن</button>
+    <p id="msg"></p>
+  </form>
+
+  <script>
+    document.getElementById("subscribeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const email = document.getElementById("emailInput").value;
+      fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+        method: "POST",
+        body: new URLSearchParams({ email })
+      })
+      .then(res => res.text())
+      .then(msg => document.getElementById("msg").textContent = msg)
+      .catch(() => document.getElementById("msg").textContent = "❌ حدث خطأ أثناء الإرسال.");
+    });
+  </script>
+
+</body>
+</html>
