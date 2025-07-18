@@ -342,7 +342,7 @@ if (lastVisit !== today) {
   fetch("https://ipinfo.io/json?token=f09f825a41aa4d")
     .then(res => res.json())
     .then(data => {
-      fetch("https://script.google.com/macros/s/AKfycbz08twP1tjH_oVkm9wwNDGaA_WE6HArsNOIbKGGbiRnDPjBR329HNBq0HXXOGNPjAOP/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbytWlnrXbmNOPM-0IgtGXbw3LUOWJmggZGfEXRizWdX7QhDHGQbfAMAInMmG3LRzkxL/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
