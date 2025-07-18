@@ -331,5 +331,20 @@ updateClock();
     .then(res => res.text())
     .then(html => document.getElementById("footer-container").innerHTML = html);
 </script>
+    <script>
+    // عداد الزوار اليومي الحقيقي (مرة واحدة في اليوم فقط)
+    const counterUrl = "https://script.google.com/macros/s/AKfycby5HBJenPvjINfHWWLFs1JZipcNX7SYAzvbcoyBfQ1S33Z8vmJ9ur8R7MXTMJwVPMaB/exec";
+    const todayKey = 'visited_' + new Date().toISOString().slice(0, 10);
+
+    if (!localStorage.getItem(todayKey)) {
+      fetch(counterUrl)
+        .then(res => res.text())
+        .then(data => {
+          localStorage.setItem(todayKey, 'true');
+          console.log("✅ تم تسجيل زيارة اليوم");
+        })
+        .catch(err => console.error("❌ خطأ في تسجيل الزيارة:", err));
+    }
+  </script>
 </body>
 </html>
