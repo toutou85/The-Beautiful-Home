@@ -331,20 +331,33 @@ updateClock();
     .then(res => res.text())
     .then(html => document.getElementById("footer-container").innerHTML = html);
 </script>
-    <script>
-    // عداد الزوار اليومي الحقيقي (مرة واحدة في اليوم فقط)
-    const counterUrl = "https://script.google.com/macros/s/AKfycbz7Uhem3SvzCkQl3_RfYcGO5QK3cVZ4KeWEmBdUiPqRLRA2NjcheWbcxqYZXKsw1no_/exec";
-    const todayKey = 'visited_' + new Date().toISOString().slice(0, 10);
+   <script>
+const today = new Date().toISOString().slice(0, 10);
+const visitorId = localStorage.getItem("visitorId") || crypto.randomUUID();
+localStorage.setItem("visitorId", visitorId);
 
-    if (!localStorage.getItem(todayKey)) {
-      fetch(counterUrl)
-        .then(res => res.text())
-        .then(data => {
-          localStorage.setItem(todayKey, 'true');
-          console.log("✅ تم تسجيل زيارة اليوم");
+const lastVisit = localStorage.getItem("lastVisit-" + window.location.pathname);
+
+if (lastVisit !== today) {
+  fetch("https://ipinfo.io/json?token=f09f825a41aa4d")
+    .then(res => res.json())
+    .then(data => {
+      fetch("https://script.google.com/macros/s/AKfycbz08twP1tjH_oVkm9wwNDGaA_WE6HArsNOIbKGGbiRnDPjBR329HNBq0HXXOGNPjAOP/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: today,
+          visitorId: visitorId,
+          page: window.location.pathname.replace("/", "") || "home",
+          country: data.country,
+          city: data.city
         })
-        .catch(err => console.error("❌ خطأ في تسجيل الزيارة:", err));
-    }
-  </script>
+      }).then(() => {
+        localStorage.setItem("lastVisit-" + window.location.pathname, today);
+      }).catch(err => console.log("خطأ أثناء الإرسال:", err));
+    }).catch(error => console.log("فشل الحصول على ip:", error));
+}
+</script>
+
 </body>
 </html>
