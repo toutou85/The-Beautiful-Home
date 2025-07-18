@@ -339,7 +339,7 @@ localStorage.setItem("visitorId", visitorId);
 fetch("https://ipinfo.io/json?token=f09f825a41aa4d")
   .then(res => res.json())
   .then(data => {
-    fetch("https://script.google.com/macros/s/AKfycbwUR-eLQX_55dLv-Q8ztrowRvrxWsTdpKYXx5uunNTyYt_4leUyeFGG_kqxXBj8AAE4/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbyM1goc-z1cIV7sNgUGqzkqM7OCDX_uFWBarBxXCwfqyqEcLHUGsKvB-VK8uUyjom9I/exec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
