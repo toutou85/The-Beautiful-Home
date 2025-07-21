@@ -140,17 +140,25 @@
     }  
   
     // مشاركة المنتج  
-    function shareProduct() {  
-      const name = document.getElementById("productName").textContent;  
-      const link = location.href;  
-      const text = `📦 ${name}\nشاهد المنتج هنا:\n${link}`;  
-      if (navigator.share) {  
-        navigator.share({ title: name, text, url: link });  
-      } else {  
-        navigator.clipboard.writeText(link);  
-        alert("✅ تم نسخ رابط المنتج!");  
-      }  
-    }  
+    function shareProduct() {
+  const name = document.getElementById("productName").textContent;
+  const desc = document.getElementById("productDesc").textContent;
+  const image = document.querySelector("#imageSlides img")?.src || "";
+  const link = location.href;
+
+  const text = `📦 ${name}\n📝 ${desc}\n\nأطلب المنتج:\n${link}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: name,
+      text: text,
+      url: image || link, // بعض التطبيقات تأخذ الصورة من url تلقائياً
+    });
+  } else {
+    navigator.clipboard.writeText(text);
+    alert("✅ تم نسخ وصف المنتج مع الرابط!");
+  }
+}
   
     function goToOrder() {  
       const name = encodeURIComponent(document.getElementById("productName").textContent);  
