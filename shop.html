@@ -185,31 +185,26 @@ body {
   <p style="margin: 0; font-size: 0.95rem;">جميع الحقوق محفوظة © 2025 - Beautiful Home</p>
 </footer>
 <script>
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGmRO6TOlY4g8QiNx6jZJPESabHQeKvtGLHgm614oIPdfLXhSeE7YZSdHSvKhLkIvcKSgFcmuJz6gr/pub?output=csv";
+const sheetURL = "https://script.google.com/macros/s/AKfycbygvfcXWg6VCh7WtTZx4RmBU3h7Dr32jKlkH2RsPG2bLIRPxz66SwV95DnqqEQ5pQef/exec";
 let allProducts = [], currentPage = 1;
 const productsPerPage = 10;
 let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
 fetch(sheetURL)
-  .then(res => res.text())
-  .then(text => {
-    const rows = text.trim().split("\n").slice(1);
-   allProducts = rows.map((row, i) => {
-  const cols = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
-  const [name, image, price, category] = cols || ["", "", "", ""];
-  return {
-    name: name.replace(/"/g, "").trim(),
-    image: image.trim(),
-    price: price.trim(),
-    category: category?.trim() || "",
-    sheetRow: i + 2 // 👈 الصف الحقيقي في الشيت
-  };
-});
-
+  .then(res => res.json())
+  .then(data => {
+    allProducts = data.map((p, i) => ({
+      name: p.nom,
+      image: p.image,
+      price: p.prix,
+      category: "", // 👈 فارغ لأن API لا يعيد الفئة حاليًا
+      sheetRow: i + 2
+    }));
     shuffleArray(allProducts);
     renderProducts(allProducts);
   });
+
 
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
