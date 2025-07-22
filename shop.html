@@ -353,11 +353,22 @@ fetch("https://ipinfo.io/json?token=f09f825a41aa4d")
   });
 
 </script>
-   <script>  
-  // عند دخول الزبون للصفحة يتم تسجيل زيارة  
-  fetch("https://script.google.com/macros/s/AKfycbwfrAQXbSK-NBNaGnKvbCQVaYZ8IHK59hx5ycaAq9sVwqzUdEf7O76kWE2G65xs5Cq2/exec", {  
-    method: "POST"  
-  });  
+<script>
+  const URL = "https://script.google.com/macros/s/AKfycbzt7wUXdmDdhZIyZp8XzgU8vgjIzQWVp1mdE3zqzVGfGhsIryawHWSQLcjKfBLDFQ_K/exec";
+
+  window.addEventListener("load", () => {
+    if (!localStorage.getItem("visitedOnce")) {
+      fetch(URL, { method: "POST" })
+        .then(() => {
+          localStorage.setItem("visitedOnce", "true");
+          console.log("✅ زيارة مسجلة");
+        })
+        .catch((e) => console.error("⚠️ خطأ في التسجيل", e));
+    } else {
+      console.log("⛔ تم تسجيل هذه الزيارة من قبل");
+    }
+  });
 </script>
+
 </body>
 </html>
