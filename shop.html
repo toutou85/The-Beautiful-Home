@@ -42,19 +42,22 @@
       font-size: 0.85rem;
       color: #dff;
     }
-    .sidebar {
-      position: fixed;
-      top: 215px;
-      right: -100%;
-      width: max-content;
-      max-width: 300px;
-      height: 100%;
-      background: rgba(255,255,255,0.95);
-      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-      transition: right 0.3s ease-in-out;
-      z-index: 999;
-      padding: 1rem;
-    }
+.sidebar {
+  position: fixed;
+  top: 215px;
+  right: -100%;
+  width: max-content;
+  max-width: 300px;
+  height: auto; /* بدل height: 100%; */
+  max-height: calc(100vh - 215px); /* أقصى طول حسب المسافة من الأعلى */
+  overflow-y: auto; /* إضافة تمرير في حال تجاوز الطول */
+  background: rgba(255,255,255,0.95);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  transition: right 0.3s ease-in-out;
+  z-index: 999;
+  padding: 1rem;
+}
+    
     .sidebar.active { right: 0; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar ul li {
