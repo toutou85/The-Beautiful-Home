@@ -171,8 +171,7 @@ body {
 <div id="searchBar">
   <input type="text" id="searchInput" placeholder="🔍 ابحث عن منتج..." oninput="searchProducts()" />
 </div>
-<div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
-<div class="sidebar" id="sidebar">
+<div class="overlay" id="overlay" onclick="toggleMenu(false)"></div><div class="sidebar" id="sidebar">
   <ul>
     <li onclick="showAllProducts()">📦 جميع المنتجات</li>
     <li onclick="filterCategory('المطبخ')">المطبخ</li>
@@ -182,13 +181,21 @@ body {
     <li onclick="filterCategory('صيف')">صيف</li>
     <li onclick="filterCategory('إلكترونية')">إلكترونية</li>
     <li onclick="filterCategory('ملحقات')">ملحقات السيارات والدراجات</li>
+    
+    <!-- زر فضاء العمرة -->
+    <li>
+      <a href="https://tariq-al-omra.netlify.app/" target="_blank" style="color:#005f73; text-decoration:none; font-weight:bold;">
+        🌙 فضاء العمرة
+      </a>
+    </li>
+    
+    <!-- زر إشعارات المنتجات -->
+    <li>
+      <a href="subscribe.html" style="color:#005f73; text-decoration:none; font-weight:bold;">
+        📩 إشعارات المنتجات
+      </a>
+    </li>
   </ul>
-<li>
-  <a href="https://tariq-al-omra.netlify.app/" target="_blank" style="color: #fff;">
-    🌙 فضاء العمرة
-  </a>
-<a href="subscribe.html">📩 إشعارات المنتجات</a>
-</li>
 </div>
 <section class="products" id="productList">جاري تحميل المنتجات...</section>
 <section class="pagination" id="pagination"></section>
